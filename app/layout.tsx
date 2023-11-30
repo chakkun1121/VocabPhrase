@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import RecoilProvider from "@/app/_components/recoil";
 
 export const metadata: Metadata = {
   title: "VocabPhrase",
@@ -13,7 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
-      <body>{children}</body>
+      <RecoilProvider>
+        <body>{children}</body>
+      </RecoilProvider>
     </html>
   );
 }
