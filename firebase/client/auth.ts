@@ -9,13 +9,19 @@ import { useCallback, useEffect, useState } from "react";
 import { atom, useRecoilValue, useSetRecoilState } from "recoil";
 
 import { auth } from "../";
+import { recoilPersist } from "recoil-persist";
 
 const provider = new GoogleAuthProvider();
 
 type UserState = User | null | undefined;
+const { persistAtom } = recoilPersist({
+  key: "userState",
+  storage: typeof window === "undefined" ? undefined : localStorage, // or settionStorage
+});
 export const userState = atom<UserState>({
   key: "userState",
   default: undefined,
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const useUser = () => {
