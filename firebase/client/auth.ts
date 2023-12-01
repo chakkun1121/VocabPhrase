@@ -12,6 +12,8 @@ import { auth } from "../";
 import { recoilPersist } from "recoil-persist";
 
 const provider = new GoogleAuthProvider();
+provider.addScope("https://www.googleapis.com/auth/drive.appdata");
+provider.addScope("https://www.googleapis.com/auth/drive.file	");
 
 type UserState = User | null | undefined;
 const { persistAtom } = recoilPersist({
