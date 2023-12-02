@@ -1,29 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import Menu from "./menu";
-import listFiles from "@/googledrive";
-import { useToken, useUser } from "@/firebase/client/auth";
-import { useRouter } from "next/navigation";
 
 export default function LeftBar() {
   const [isShow, setIsShow] = useState(true);
-  const user = useUser();
-  const router = useRouter();
-  const token = useToken();
-  if (!user) {
-    router.push("/login");
-  }
-  useEffect(() => {
-    (async () => {
-      console.log(token);
-      if (!user || !token) return;
-      const files = await listFiles(token, "");
-      console.log(files);
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   return (
     <>
       <div

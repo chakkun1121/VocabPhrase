@@ -3,11 +3,11 @@
 import { useSignin, useUser } from "@/firebase/client/auth";
 import { redirect } from "next/navigation";
 
-export default function Login({ searchParams: { redirectTo = "/" } }) {
+export default function Login() {
   const user = useUser();
   const [signIn] = useSignin();
   if (user) {
-    redirect(redirectTo);
+    redirect("/");
   }
   return (
     <div className="flex flex-col items-center">
