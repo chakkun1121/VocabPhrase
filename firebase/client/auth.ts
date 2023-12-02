@@ -25,10 +25,17 @@ export const userState = atom<UserState>({
   default: undefined,
   effects_UNSTABLE: [persistAtom],
 });
-
+export const tokenState = atom<string | undefined>({
+  key: "tokenState",
+  default: undefined,
+});
 export const useUser = () => {
   const user = useRecoilValue(userState);
   return user;
+};
+export const useToken = () => {
+  const token = useRecoilValue(tokenState);
+  return token;
 };
 
 export const useAuth = () => {
@@ -50,6 +57,7 @@ export const useSignin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<AuthError>();
   const setUser = useSetRecoilState(userState);
+  const setToken = useSetRecoilState(tokenState);
 
   const signIn = useCallback(async () => {
     setLoading(true);
@@ -57,6 +65,9 @@ export const useSignin = () => {
 
     try {
       const user = await signInWithPopup(auth, provider);
+      const credential = GoogleAuthProvider.credentialFromResult(user);
+      const token = credential?.accessToken;
+      setToken(token);
       setUser(user.user);
 
       return user;
