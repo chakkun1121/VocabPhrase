@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import RecoilProvider from "@/app/_components/recoil";
+import NextAuthProvider from "./providers/NextAuth";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://vocab-phrase.vercel.app"),
@@ -21,9 +22,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
-      <RecoilProvider>
-        <body>{children}</body>
-      </RecoilProvider>
+      <NextAuthProvider>
+        <RecoilProvider>
+          <body>{children}</body>
+        </RecoilProvider>
+      </NextAuthProvider>
     </html>
   );
 }
