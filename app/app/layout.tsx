@@ -6,8 +6,8 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex flex-col h-screen">
       <Header />
-      <div className="flex flex-1 overflow-y-scroll">
-        <div className="flex-none">
+      <div className="flex flex-1">
+        <div className="flex-none h-full">
           <LeftBar />
         </div>
         <div className="flex-1">{children}</div>

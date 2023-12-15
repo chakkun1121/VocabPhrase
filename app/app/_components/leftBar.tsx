@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import Menu from "./menu";
+import RecentFile from "./recentFile";
 
 export default function LeftBar() {
   const [isShow, setIsShow] = useState(true);
@@ -11,17 +11,9 @@ export default function LeftBar() {
       <div
         className={`${
           isShow ? "w-96" : "w-0"
-        } h-full bg-JungleGreen-100 duration-500 flex flex-col`}
+        } h-full bg-JungleGreen-100 duration-500 `}
       >
-        {isShow && (
-          <>
-            <div className="flex-1">{/* resent files */}</div>
-            <hr className="border border-black" />
-            <nav className="flex-none">
-              <Menu />
-            </nav>
-          </>
-        )}
+        {isShow && <RecentFile />}
       </div>
       <button
         onClick={() => {
