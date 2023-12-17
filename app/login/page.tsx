@@ -9,19 +9,24 @@ export default function Login({
   searchParams: { redirectTo: string };
 }) {
   const { data: session, status } = useSession();
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
+  // if (status === "loading") {
+  //   return <div>Loading...</div>;
+  // }
   console.log(session);
   if (session) {
     redirect(redirectTo);
   }
   return (
-    <div className="flex flex-col items-center">
-      <h1>ログイン</h1>
-      <button onClick={() => signIn("google", {}, { prompt: "login" })}>
-        ログイン
-      </button>
-    </div>
+    <>
+      <div className="flex flex-col items-center">
+        <h1>ログイン</h1>
+        <button
+          onClick={() => signIn("google", {}, { prompt: "login" })}
+          disabled={status === "loading"}
+        >
+          ログイン
+        </button>
+      </div>
+    </>
   );
 }
