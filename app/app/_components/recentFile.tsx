@@ -3,8 +3,18 @@ import Link from "next/link";
 import { IoMdOpen } from "react-icons/io";
 import { FaGoogleDrive } from "react-icons/fa";
 import { GoUpload } from "react-icons/go";
+import { google } from "googleapis";
+import { GoogleAuth } from "google-auth-library";
+import { useSession } from "next-auth/react";
+import listFiles from "@/googledrive";
+import { getToken } from "next-auth/jwt";
 
 export default function RecentFile() {
+  const { data: session } = useSession();
+  console.log(session);
+  const token = session?.accessToken;
+  console.log(token);
+  listFiles(session?.accessToken, "root");
   const recentFile: { title: string; fileID: string }[] = [
     {
       title: "test",
