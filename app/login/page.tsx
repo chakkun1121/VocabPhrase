@@ -23,11 +23,7 @@ export default function Login({
               "google",
               {},
               {
-                scope: [
-                  "https://www.googleapis.com/auth/drive.appdata",
-                  "https://www.googleapis.com/auth/drive.install",
-                  "https://www.googleapis.com/auth/drive.file",
-                ].join(" "),
+        
                 prompt: "login",
               }
             )
