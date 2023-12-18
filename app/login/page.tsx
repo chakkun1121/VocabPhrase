@@ -9,9 +9,6 @@ export default function Login({
   searchParams: { redirectTo: string };
 }) {
   const { data: session, status } = useSession();
-  // if (status === "loading") {
-  //   return <div>Loading...</div>;
-  // }
   console.log(session);
   if (session) {
     redirect(redirectTo);
@@ -21,7 +18,20 @@ export default function Login({
       <div className="flex flex-col items-center">
         <h1>ログイン</h1>
         <button
-          onClick={() => signIn("google", {}, { prompt: "login" })}
+          onClick={() =>
+            signIn(
+              "google",
+              {},
+              {
+                scope: [
+                  "https://www.googleapis.com/auth/drive.appdata",
+                  "https://www.googleapis.com/auth/drive.install",
+                  "https://www.googleapis.com/auth/drive.file",
+                ].join(" "),
+                prompt: "login",
+              }
+            )
+          }
           disabled={status === "loading"}
         >
           ログイン
