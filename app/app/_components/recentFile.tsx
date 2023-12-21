@@ -6,6 +6,7 @@ import { GoUpload } from "react-icons/go";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { customSession } from "../../../@types/customSession";
+import { useRouter } from "next/navigation";
 export default function RecentFile() {
   const { data: session }: { data: customSession | null } =
     useSession() as unknown as { data: customSession };
@@ -13,6 +14,7 @@ export default function RecentFile() {
     { title: string; fileID: string }[]
   >([]);
   const token = session?.accessToken;
+  const router = useRouter();
   useEffect(() => {
     (async () => {
       try {
@@ -38,7 +40,33 @@ export default function RecentFile() {
         console.error(e);
       }
     })();
-  }, [token]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  async function createFile() {
+    try {
+      const response = await fetch(
+        "https://www.googleapis.com/drive/v3/files",
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + token,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: "newFile.vocabphrase",
+            mimeType: "application/vocabphrase",
+          }),
+        }
+      );
+      console.log(response);
+      const file = await response.json();
+      console.log(file);
+      router.push(`/app?fileID=${file?.id}`);
+    } catch (e) {
+      console.error(e);
+    }
+  }
   return (
     <div className="flex flex-col h-full">
       <div className="flex-none">
@@ -72,6 +100,7 @@ export default function RecentFile() {
         <button
           className="w-full rounded-full bg-Pizazz-400 hover:bg-Pizazz-300 py-4 text-white flex items-center justify-center gap-2"
           title="ファイルを新規作成する"
+          onClick={createFile}
         >
           <FaPlus />
           新規作成
