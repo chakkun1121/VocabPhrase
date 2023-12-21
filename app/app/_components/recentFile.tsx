@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { IoMdOpen } from "react-icons/io";
-import { FaGoogleDrive } from "react-icons/fa";
+import { FaGoogleDrive, FaPlus } from "react-icons/fa";
 import { GoUpload } from "react-icons/go";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -28,7 +28,6 @@ export default function RecentFile() {
           .catch((e) => {
             throw e;
           });
-        console.log(files);
         setRecentFile(
           files.map((file: { name: string; id: string }) => ({
             title: file.name,
@@ -36,7 +35,7 @@ export default function RecentFile() {
           }))
         );
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
     })();
   }, [token]);
@@ -72,6 +71,13 @@ export default function RecentFile() {
       <div className="flex-none p-4 flex flex-col gap-4">
         <button
           className="w-full rounded-full bg-Pizazz-400 hover:bg-Pizazz-300 py-4 text-white flex items-center justify-center gap-2"
+          title="ファイルを新規作成する"
+        >
+          <FaPlus />
+          新規作成
+        </button>
+        <button
+          className="w-full rounded-full bg-Pizazz-400 hover:bg-Pizazz-300 py-4 text-white flex items-center justify-center gap-2"
           title="google driveからファイルを開く"
         >
           <FaGoogleDrive />
@@ -79,7 +85,7 @@ export default function RecentFile() {
         </button>
         <button
           className="w-full rounded-full bg-gray-300 hover:bg-gray-400 py-4 flex items-center justify-center gap-2"
-          title="google driveからファイルを開く"
+          title="ローカルファイルをアップロードする"
         >
           <GoUpload />
           アップロード
