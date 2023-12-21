@@ -40,19 +40,6 @@ export default function RecentFile() {
       }
     })();
   }, [token]);
-  //   {
-  //     title: "test",
-  //     fileID: "test",
-  //   },
-  //   {
-  //     title: "test2-long-long-long-long-long-long-title",
-  //     fileID: "test2",
-  //   },
-  //   {
-  //     title: "test3",
-  //     fileID: "test3",
-  //   },
-  // ];
   return (
     <div className="flex flex-col h-full">
       <div className="flex-none">
