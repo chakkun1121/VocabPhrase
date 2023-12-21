@@ -16,17 +16,22 @@ export default function RecentFile() {
   const token = session?.accessToken;
   const router = useRouter();
   useEffect(() => {
+    if (!token) return;
     (async () => {
       try {
-        const files = await fetch("/api/drive/listFiles", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-            q: "'appDataFolder' in parents",
-          },
-        })
+        const files = await fetch(
+          // ゴミ箱内がうまく処理できない
+          "https://www.googleapis.com/drive/v3/files?trashed=false",
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              Authorization: "Bearer " + token,
+            },
+          }
+        )
           .then((res) => res.json())
+          .then((res) => res.files)
           .catch((e) => {
             throw e;
           });
@@ -40,9 +45,9 @@ export default function RecentFile() {
         console.error(e);
       }
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [token]);
   async function createFile() {
+    // TODO: 作成したファイルが左に追加されない問題をどうにかする
     try {
       const response = await fetch(
         "https://www.googleapis.com/drive/v3/files",
@@ -59,9 +64,7 @@ export default function RecentFile() {
           }),
         }
       );
-      console.log(response);
       const file = await response.json();
-      console.log(file);
       router.push(`/app?fileID=${file?.id}`);
     } catch (e) {
       console.error(e);
