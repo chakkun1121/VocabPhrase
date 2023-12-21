@@ -1,8 +1,12 @@
 import Header from "./_components/header";
 import { ReactNode } from "react";
 import LeftBar from "./_components/leftBar";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
-export default function AppLayout({ children }: { children: ReactNode }) {
+export default async function AppLayout({ children }: { children: ReactNode }) {
+  const session = await getServerSession();
+  if (!session) redirect("/login?redirectTo=/app");
   return (
     <div className="flex flex-col h-screen">
       <Header />

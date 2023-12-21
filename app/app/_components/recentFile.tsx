@@ -3,32 +3,55 @@ import Link from "next/link";
 import { IoMdOpen } from "react-icons/io";
 import { FaGoogleDrive } from "react-icons/fa";
 import { GoUpload } from "react-icons/go";
-import { google } from "googleapis";
-import { GoogleAuth } from "google-auth-library";
 import { useSession } from "next-auth/react";
-import listFiles from "@/googledrive";
-import { getToken } from "next-auth/jwt";
+import { useEffect, useState } from "react";
 
 export default function RecentFile() {
   const { data: session } = useSession();
-  console.log(session);
+  const [recentFile, setRecentFile] = useState<
+    { title: string; fileID: string }[]
+  >([]);
   const token = session?.accessToken;
-  console.log(token);
-  listFiles(session?.accessToken, "root");
-  const recentFile: { title: string; fileID: string }[] = [
-    {
-      title: "test",
-      fileID: "test",
-    },
-    {
-      title: "test2-long-long-long-long-long-long-title",
-      fileID: "test2",
-    },
-    {
-      title: "test3",
-      fileID: "test3",
-    },
-  ];
+  useEffect(() => {
+    (async () => {
+      try {
+        const files = await fetch("/api/drive/listFiles", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+            q: "'appDataFolder' in parents",
+          },
+        })
+          .then((res) => res.json())
+          .catch((e) => {
+            throw e;
+          });
+        console.log(files);
+        setRecentFile(
+          files.map((file: { name: string; id: string }) => ({
+            title: file.name,
+            fileID: file.id,
+          }))
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    })();
+  }, [token]);
+  //   {
+  //     title: "test",
+  //     fileID: "test",
+  //   },
+  //   {
+  //     title: "test2-long-long-long-long-long-long-title",
+  //     fileID: "test2",
+  //   },
+  //   {
+  //     title: "test3",
+  //     fileID: "test3",
+  //   },
+  // ];
   return (
     <div className="flex flex-col h-full">
       <div className="flex-none">
