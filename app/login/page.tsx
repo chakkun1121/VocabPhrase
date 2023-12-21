@@ -1,38 +1,16 @@
-"use client";
-
-import { signIn, useSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import LoginPage from "./LoginPage";
 
-export default function Login({
+export default async function Login({
   searchParams: { redirectTo = "/" },
 }: {
   searchParams: { redirectTo: string };
 }) {
-  const { data: session, status } = useSession();
+  const session = await getServerSession();
   console.log(session);
   if (session) {
     redirect(redirectTo);
   }
-  return (
-    <>
-      <div className="flex flex-col items-center">
-        <h1>ログイン</h1>
-        <button
-          onClick={() =>
-            signIn(
-              "google",
-              {},
-              {
-        
-                prompt: "login",
-              }
-            )
-          }
-          disabled={status === "loading"}
-        >
-          ログイン
-        </button>
-      </div>
-    </>
-  );
+  return <LoginPage />;
 }
