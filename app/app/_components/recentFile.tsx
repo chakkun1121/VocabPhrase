@@ -7,6 +7,8 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { customSession } from "../../../@types/customSession";
 import { useRouter } from "next/navigation";
+import { IoReload } from "react-icons/io5";
+
 export default function RecentFile() {
   const { data: session }: { data: customSession | null } =
     useSession() as unknown as { data: customSession };
@@ -15,36 +17,38 @@ export default function RecentFile() {
   >([]);
   const token = session?.accessToken;
   const router = useRouter();
+  async function getRecentFile() {
+    try {
+      const files = await fetch(
+        // ゴミ箱内がうまく処理できない
+        "https://www.googleapis.com/drive/v3/files?trashed=false",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((res) => res.files)
+        .catch((e) => {
+          throw e;
+        });
+      setRecentFile(
+        files.map((file: { name: string; id: string }) => ({
+          title: file.name,
+          fileID: file.id,
+        }))
+      );
+    } catch (e) {
+      console.error(e);
+    }
+  }
   useEffect(() => {
     if (!token) return;
-    (async () => {
-      try {
-        const files = await fetch(
-          // ゴミ箱内がうまく処理できない
-          "https://www.googleapis.com/drive/v3/files?trashed=false",
-          {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-              Authorization: "Bearer " + token,
-            },
-          }
-        )
-          .then((res) => res.json())
-          .then((res) => res.files)
-          .catch((e) => {
-            throw e;
-          });
-        setRecentFile(
-          files.map((file: { name: string; id: string }) => ({
-            title: file.name,
-            fileID: file.id,
-          }))
-        );
-      } catch (e) {
-        console.error(e);
-      }
-    })();
+    getRecentFile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
   async function createFile() {
     // TODO: 作成したファイルが左に追加されない問題をどうにかする
@@ -72,8 +76,11 @@ export default function RecentFile() {
   }
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-none">
+      <div className="flex-none flex items-center justify-between p-2">
         <p className="text-heading-S">最近使用したファイル</p>
+        <button onClick={getRecentFile} title="更新">
+          <IoReload />
+        </button>
       </div>
       <div className="flex-1">
         <ul className="p-4 flex flex-col gap-4 overflow-y-scroll h-full">
