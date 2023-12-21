@@ -14,7 +14,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
         <div className="flex-none h-full">
           <LeftBar />
         </div>
-        <div className="flex-1">{children}</div>
+        <div className="flex-1 overflow-y-scroll">{children}</div>
         <div className="flex-none">{/* right bar */}</div>
       </div>
     </div>
