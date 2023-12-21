@@ -1,3 +1,7 @@
-export default function App() {
+export default function App({
+  searchParams: { fileID },
+}: {
+  searchParams: { fileID?: string };
+}) {
   return <></>;
 }
