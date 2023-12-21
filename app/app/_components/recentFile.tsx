@@ -5,9 +5,10 @@ import { FaGoogleDrive } from "react-icons/fa";
 import { GoUpload } from "react-icons/go";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-
+import { customSession } from "../../../@types/customSession";
 export default function RecentFile() {
-  const { data: session } = useSession();
+  const { data: session }: { data: customSession | null } =
+    useSession() as unknown as { data: customSession };
   const [recentFile, setRecentFile] = useState<
     { title: string; fileID: string }[]
   >([]);

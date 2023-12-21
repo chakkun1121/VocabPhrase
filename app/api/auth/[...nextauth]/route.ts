@@ -1,5 +1,6 @@
-import NextAuth from "next-auth";
+import NextAuth, { Session } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { customSession } from "../../../../@types/customSession";
 
 const handler = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
@@ -29,7 +30,7 @@ const handler = NextAuth({
       return token;
     },
     //セッションがチェックされた時に呼ばれる
-    async session({ session, token, user }) {
+    async session({ session, token }: { session: Session & { accessToken?: string }, token: any }) {
       session.accessToken = token.accessToken;
       return session;
     },
