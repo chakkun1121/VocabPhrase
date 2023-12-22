@@ -5,6 +5,7 @@ import { fileType } from "@/@types/fileType";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import EditMenu from "./EditMenu";
+import { getFileContent, getFileInfo, updateFileInfo, uploadFile } from "@/googledrive";
 
 export function FileMenu({ fileID }: { fileID: string }) {
   const [title, setTitle] = useState(""); //拡張子付き
@@ -15,37 +16,9 @@ export function FileMenu({ fileID }: { fileID: string }) {
   useEffect(() => {
     (async () => {
       if (!token) return;
-      const fetchOptions = {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          Authorization: "Bearer " + token,
-        },
-      };
       try {
-        const fileInfo = await fetch(
-          "https://www.googleapis.com/drive/v3/files/" + fileID,
-          fetchOptions
-        )
-          .then((res) => res.json())
-          .catch((e) => {
-            throw e;
-          });
-        setTitle(fileInfo.name);
-        const fileContent = await fetch(
-          `https://www.googleapis.com/drive/v3/files/${fileID}?alt=media`,
-          fetchOptions
-        )
-          .then((res) => {
-            console.log(res);
-            return res;
-          })
-          .then((res) => res.text())
-          .then((res) => JSON.parse(res))
-          .catch((e) => {
-            throw e;
-          });
-        setFileContent(fileContent);
+        setTitle((await getFileInfo(token, fileID)).name);
+        setFileContent(JSON.parse(await getFileContent(token, fileID)));
       } catch (e) {
         // 空ファイルでは "SyntaxError: Unexpected end of JSON input" を吐くが問題なし
         console.error(e);
@@ -55,35 +28,19 @@ export function FileMenu({ fileID }: { fileID: string }) {
   useEffect(() => {
     (async () => {
       if (!token) return;
-      const newFileInfo = await fetch(
-        `https://www.googleapis.com/drive/v3/files/${fileID}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify({ name: title }),
-        }
-      ).then((res) => res.json());
-      console.log("newFileInfo", newFileInfo);
+      const newFileInfo = await updateFileInfo(token, fileID, {
+        name: title,
+      });
     })();
   }, [fileID, title, token]);
   useEffect(() => {
     (async () => {
       if (!token) return;
-      const newFileContent = await fetch(
-        `https://www.googleapis.com/upload/drive/v3/files/${fileID}?uploadType=media`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify(fileContent),
-        }
-      ).then((res) => res.json());
-      console.log("newFileContent", newFileContent);
+      const newFileContent = await uploadFile(
+        token,
+        fileID,
+        JSON.stringify(fileContent)
+      );
     })();
   }, [fileID, fileContent, token]);
   return (
@@ -98,3 +55,4 @@ export function FileMenu({ fileID }: { fileID: string }) {
     />
   );
 }
+
