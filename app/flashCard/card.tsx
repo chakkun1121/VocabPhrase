@@ -9,11 +9,11 @@ import { useEffect, useState } from "react";
 export default function Card({ field }: { field: string }) {
   const [fileContent, setFileContent] = useState<fileType>({ content: [] });
   const [title, setTitle] = useState("");
+  const { data: session }: { data: customSession | null } =
+    useSession() as unknown as { data: customSession };
+  const token = session?.accessToken;
   useEffect(() => {
     (async () => {
-      const { data: session }: { data: customSession | null } =
-        useSession() as unknown as { data: customSession };
-      const token = session?.accessToken;
       if (!token) return;
       setTitle((await getFileInfo(token, field)).name);
       setFileContent(JSON.parse(await getFileContent(token, field)));
