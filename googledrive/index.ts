@@ -1,5 +1,5 @@
-export async function getFileInfo(token: string, fileId: string) {
-  return await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}`, {
+export function getFileInfo(token: string, fileId: string) {
+  return fetch(`https://www.googleapis.com/drive/v3/files/${fileId}`, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -11,8 +11,8 @@ export async function getFileInfo(token: string, fileId: string) {
       throw e;
     });
 }
-export async function getFileContent(token: string, fileId: string) {
-  return await fetch(
+export function getFileContent(token: string, fileId: string) {
+  return fetch(
     `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
     {
       method: "GET",
@@ -27,12 +27,12 @@ export async function getFileContent(token: string, fileId: string) {
       throw e;
     });
 }
-export async function uploadFile(
+export function uploadFile(
   token: string,
   fileId: string,
   fileContent: string
 ) {
-  return await fetch(
+  return fetch(
     `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
     {
       method: "PATCH",
@@ -44,12 +44,12 @@ export async function uploadFile(
     }
   ).then((res) => res.json());
 }
-export async function updateFileInfo(
+export function updateFileInfo(
   token: string,
   fileId: string,
   newFileInfo: object
 ) {
-  return await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}`, {
+  return fetch(`https://www.googleapis.com/drive/v3/files/${fileId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
