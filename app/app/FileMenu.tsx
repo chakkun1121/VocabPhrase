@@ -69,8 +69,26 @@ export function FileMenu({ fileID }: { fileID: string }) {
       console.log("newFileInfo", newFileInfo);
     })();
   }, [fileID, title, token]);
+  useEffect(() => {
+    (async () => {
+      if (!token) return;
+      const newFileContent = await fetch(
+        `https://www.googleapis.com/upload/drive/v3/files/${fileID}?uploadType=media`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify(fileContent),
+        }
+      ).then((res) => res.json());
+      console.log("newFileContent", newFileContent);
+    })();
+  }, [fileID, fileContent, token]);
   return (
     <EditMenu
+      key={fileID}
       title={title.split(".").slice(0, -1).join(".")}
       setTitle={(newTitle) => {
         setTitle(newTitle + ".vocabphrase");

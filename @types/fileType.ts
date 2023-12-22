@@ -4,5 +4,5 @@ export type fileType = {
     en: string;
     ja: string;
     options?: object;
-  }[];
+  }[]; //これ以外は作らない
 };
