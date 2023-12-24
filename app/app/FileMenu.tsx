@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { uuidv7 as createUUID } from "uuidv7";
 import EditMenu from "./EditMenu";
 import { PiCardsThin } from "react-icons/pi";
-
 import {
   getFileContent,
   getFileInfo,
@@ -15,8 +14,6 @@ import {
   uploadFile,
 } from "@/googledrive";
 import { FaPlus } from "react-icons/fa";
-import { MdDeleteOutline } from "react-icons/md";
-import Link from "next/link";
 
 export function FileMenu({ fileID }: { fileID: string }) {
   const [title, setTitle] = useState(""); //拡張子付き
@@ -47,6 +44,7 @@ export function FileMenu({ fileID }: { fileID: string }) {
   useEffect(() => {
     (async () => {
       if (!token) return;
+      if(fileContent?.content?.length === 0) return;
       const newFileContent = await uploadFile(
         token,
         fileID,
