@@ -18,6 +18,7 @@ import { FaPlus } from "react-icons/fa";
 export function FileMenu({ fileID }: { fileID: string }) {
   const [title, setTitle] = useState(""); //拡張子付き
   const [fileContent, setFileContent] = useState<fileType>({ content: [] });
+  const [loading, setLoading] = useState(true);
   const { data: session }: { data: customSession | null } =
     useSession() as unknown as { data: customSession };
   const token = session?.accessToken;
@@ -27,6 +28,7 @@ export function FileMenu({ fileID }: { fileID: string }) {
       try {
         setTitle((await getFileInfo(token, fileID)).name);
         setFileContent(JSON.parse(await getFileContent(token, fileID)));
+        setLoading(false);
       } catch (e) {
         // 空ファイルでは "SyntaxError: Unexpected end of JSON input" を吐くが問題なし
         console.error(e);
@@ -44,7 +46,7 @@ export function FileMenu({ fileID }: { fileID: string }) {
   useEffect(() => {
     (async () => {
       if (!token) return;
-      if(fileContent?.content?.length === 0) return;
+      if (fileContent?.content?.length === 0) return;
       const newFileContent = await uploadFile(
         token,
         fileID,
@@ -52,6 +54,7 @@ export function FileMenu({ fileID }: { fileID: string }) {
       );
     })();
   }, [fileID, fileContent, token]);
+  if (loading) return <div className="text-center p-4">loading...</div>;
   return (
     <div className="">
       <nav className="sticky">
