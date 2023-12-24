@@ -16,6 +16,10 @@ import {
 import { FaPlus } from "react-icons/fa";
 
 export function FileMenu({ fileID }: { fileID: string }) {
+  const [contentController, setContentController] = useState(
+    new AbortController()
+  );
+  const [titleController, setTitleController] = useState(new AbortController());
   const [title, setTitle] = useState(""); //拡張子付き
   const [fileContent, setFileContent] = useState<fileType>({ content: [] });
   const [loading, setLoading] = useState(true);
@@ -38,19 +42,36 @@ export function FileMenu({ fileID }: { fileID: string }) {
   useEffect(() => {
     (async () => {
       if (!token) return;
-      const newFileInfo = await updateFileInfo(token, fileID, {
-        name: title,
-      });
+      if (title === "") return;
+      titleController.abort(
+        "ファイル名を正しく保存するためにキャンセルしました"
+      );
+      const newController = new AbortController();
+      setTitleController(newController);
+      const newFileInfo = await updateFileInfo(
+        token,
+        fileID,
+        {
+          name: title,
+        },
+        newController.signal
+      );
     })();
   }, [fileID, title, token]);
   useEffect(() => {
     (async () => {
       if (!token) return;
       if (fileContent?.content?.length === 0) return;
+      contentController.abort(
+        "ファイル内容を正しく保存するためにキャンセルしました"
+      );
+      const newController = new AbortController();
+      setContentController(newController);
       const newFileContent = await uploadFile(
         token,
         fileID,
-        JSON.stringify(fileContent)
+        JSON.stringify(fileContent),
+        newController.signal
       );
     })();
   }, [fileID, fileContent, token]);
