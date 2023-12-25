@@ -61,12 +61,12 @@ export default function FlashCard({
           className="flex-1 border h-8"
           style={{
             background: `linear-gradient(to right, #dbb946 ${
-              (questionIndex + 1 / questionList.length) * 100
-            }%, #f4f8f9 ${(questionIndex + 1 / questionList.length) * 100}%)`,
+              ((questionIndex + 1) / questionList.length) * 100
+            }%, #f4f8f9 ${((questionIndex + 1) / questionList.length) * 100}%)`,
           }}
         >
           <p className="text-center">
-            {questionIndex + 1}/{fileContent.content.length}
+            {questionIndex + 1}/{questionList.length}
           </p>
         </div>
         <button onClick={next}>次へ</button>
