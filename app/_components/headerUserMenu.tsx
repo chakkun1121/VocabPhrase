@@ -3,7 +3,6 @@ import Link from "next/link";
 
 export default async function HeaderUserMenu() {
   const session = await getServerSession();
-  console.log(session?.user);
   return (
     <>
       <div className="flex-none items-center flex">

@@ -8,7 +8,6 @@ export default async function Login({
   searchParams: { redirectTo: string };
 }) {
   const session = await getServerSession();
-  console.log(session);
   if (session) {
     redirect(redirectTo);
   }
