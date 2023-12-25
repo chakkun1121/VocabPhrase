@@ -40,6 +40,9 @@ export default function EditMenu({
             key={field.id}
             className="flex gap-4 p-4 bg-gray-200 rounded items-center"
           >
+            <div className="flex-none flex items-center">
+              <p>{index + 1}</p>
+            </div>
             <div className="flex flex-col gap-4 flex-1">
               <input
                 className="rounded p-2"
