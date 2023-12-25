@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang="ja">
       <NextAuthProvider>
         <RecoilProvider>
-          <body>{children}</body>
+          <body className="min-h-screen">{children}</body>
         </RecoilProvider>
       </NextAuthProvider>
     </html>

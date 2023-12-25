@@ -7,7 +7,5 @@ export default function FlashCard({
   searchParams: { fileId?: string };
 }) {
   if (!fileId) redirect("/app");
-  return (
-    <Card field={fileId}/>
-  )
+  return <Card fileId={fileId} />;
 }
