@@ -6,19 +6,19 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex flex-col gap-4 h-screen">
       <Header />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 p-4">{children}</main>
       <footer className="flex-none text-center p-4 bg-BahamaBlue-700 text-white justify-center">
         <p>© 2023 chakkun1121</p>
         <div className="flex justify-center gap-4">
           <Link
             className="text-white hover:text-white visited:text-white"
-            href=""
+            href="/terms"
           >
             利用規約
           </Link>
           <Link
             className="text-white hover:text-white visited:text-white"
-            href=""
+            href="/privacy"
           >
             プライバシーポリシー
           </Link>

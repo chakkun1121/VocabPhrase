@@ -59,6 +59,7 @@ export function FileMenu({ fileID }: { fileID: string }) {
         newController.signal
       );
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileID, title, token]);
   useEffect(() => {
     (async () => {
@@ -76,6 +77,7 @@ export function FileMenu({ fileID }: { fileID: string }) {
         newController.signal
       );
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileID, fileContent, token]);
   if (loading) return <div className="text-center p-4">loading...</div>;
   return (
