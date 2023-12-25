@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { fileType } from "@/@types/fileType";
 import { flashCardSettings } from "@/@types/flashCardSettings";
 import { IoChevronBackSharp } from "react-icons/io5";
+import { useHotkeys } from "react-hotkeys-hook";
 export default function FlashCard({
   fileContent,
   flashCardSettings,
@@ -47,6 +48,9 @@ export default function FlashCard({
       setQuestionIndex(questionIndex - 1);
     }
   }
+  useHotkeys("right", next);
+  useHotkeys("left", back);
+
   const currentQuestion = fileContent.content.find(
     (c) => c.id === questionList[questionIndex]
   );
@@ -93,6 +97,7 @@ function CardMain({
   currentQuestion: fileType["content"][0];
 }) {
   const [isShowAnswer, setIsShowAnswer] = useState<boolean>(false);
+  useHotkeys("space", () => setIsShowAnswer(true));
   return (
     <div className="flex-1 w-full flex flex-col gap-4 justify-center  ">
       <div className="mx-auto bg-gray-100 rounded w-full grid gap-4 p-4">
