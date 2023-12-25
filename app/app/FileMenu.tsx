@@ -104,9 +104,17 @@ export function FileMenu({ fileID }: { fileID: string }) {
           </div>
           <div className="flex gap-4">
             <a
-              className="flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 text-black hover:text-black visited:text-black"
+              className={`flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 text-black hover:text-black visited:text-black ${
+                fileContent.content.length === 0 &&
+                "pointer-events-none text-gray-600"
+              }`}
               href={"/flashCard?fileId=" + fileID}
               target="_blank"
+              title={
+                fileContent.content.length === 0
+                  ? "コンテンツがない状態ではフラッシュカードを利用できません。"
+                  : undefined
+              }
             >
               <PiCardsThin />
               フラッシュカード

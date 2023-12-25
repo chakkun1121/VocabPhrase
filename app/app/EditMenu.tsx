@@ -2,9 +2,14 @@
 import { fileType } from "@/@types/fileType";
 import { uuidv7 as createUUID } from "uuidv7";
 import { MdDeleteOutline } from "react-icons/md";
-import { LuGripVertical } from "react-icons/lu";
 import { FaPlus } from "react-icons/fa";
-import { ButtonHTMLAttributes, DetailedHTMLProps, useEffect } from "react";
+import {
+  ButtonHTMLAttributes,
+  DetailedHTMLProps,
+  useEffect,
+  useState,
+} from "react";
+import ImportForm from "./ImportForm";
 
 export default function EditMenu({
   title,
@@ -17,6 +22,7 @@ export default function EditMenu({
   fileContent: fileType;
   setFileContent: (fileContent: fileType) => void;
 }) {
+  const [isShowImportBox, setIsShowImportBox] = useState(false);
   return (
     <div className="flex flex-col h-full p-4 gap-4">
       <div className="flex-none">
@@ -34,6 +40,9 @@ export default function EditMenu({
             key={field.id}
             className="flex gap-4 p-4 bg-gray-200 rounded items-center"
           >
+            <div className="flex-none flex items-center">
+              <p>{index + 1}</p>
+            </div>
             <div className="flex flex-col gap-4 flex-1">
               <input
                 className="rounded p-2"
@@ -78,20 +87,38 @@ export default function EditMenu({
             </div>
           </div>
         ))}
-        <button
-          className="flex gap-4 p-4 bg-gray-200 hover:bg-gray-300 rounded-full items-center justify-center"
-          onClick={() => {
-            setFileContent({
-              content: [
-                ...fileContent.content,
-                { id: createUUID(), en: "", ja: "" },
-              ],
-            });
-          }}
-          title="追加"
-        >
-          <FaPlus />
-        </button>
+        {fileContent.content.length === 0 && isShowImportBox && (
+          <ImportForm
+            close={() => setIsShowImportBox(false)}
+            setFileContent={setFileContent}
+          />
+        )}
+        {!isShowImportBox && (
+          <div className="flex gap-4">
+            {fileContent.content.length === 0 && (
+              <button
+                className="flex flex-none gap-4 p-4 bg-gray-200 hover:bg-gray-300 rounded-full items-center justify-center"
+                onClick={() => setIsShowImportBox(true)}
+              >
+                インポート
+              </button>
+            )}
+            <button
+              className="flex flex-1 gap-4 p-4 bg-gray-200 hover:bg-gray-300 rounded-full items-center justify-center"
+              onClick={() => {
+                setFileContent({
+                  content: [
+                    ...fileContent.content,
+                    { id: createUUID(), en: "", ja: "" },
+                  ],
+                });
+              }}
+              title="追加"
+            >
+              <FaPlus />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

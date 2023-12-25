@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { fileType } from "@/@types/fileType";
 import { flashCardSettings } from "@/@types/flashCardSettings";
+import { IoChevronBackSharp } from "react-icons/io5";
+import { useHotkeys } from "react-hotkeys-hook";
 export default function FlashCard({
   fileContent,
   flashCardSettings,
@@ -46,6 +48,9 @@ export default function FlashCard({
       setQuestionIndex(questionIndex - 1);
     }
   }
+  useHotkeys("right", next);
+  useHotkeys("left", back);
+
   const currentQuestion = fileContent.content.find(
     (c) => c.id === questionList[questionIndex]
   );
@@ -55,21 +60,33 @@ export default function FlashCard({
         currentQuestion={currentQuestion as fileType["content"][0]}
         key={currentQuestion?.id}
       />
-      <nav className="flex-none flex items-center gap-4">
-        <button onClick={back}>戻る</button>
+      <nav className="flex-none flex items-stretch gap-4">
+        <button
+          onClick={back}
+          className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 aspect-square"
+          title="戻る"
+        >
+          <IoChevronBackSharp />
+        </button>
         <div
-          className="flex-1 border h-8"
+          className="flex-1 border p-2 rounded flex items-center justify-center"
           style={{
             background: `linear-gradient(to right, #dbb946 ${
               ((questionIndex + 1) / questionList.length) * 100
             }%, #f4f8f9 ${((questionIndex + 1) / questionList.length) * 100}%)`,
           }}
         >
-          <p className="text-center">
+          <p className="text-center select-none">
             {questionIndex + 1}/{questionList.length}
           </p>
         </div>
-        <button onClick={next}>次へ</button>
+        <button
+          onClick={next}
+          className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 aspect-square"
+          title="次へ"
+        >
+          <IoChevronBackSharp className="transform rotate-180" />
+        </button>
       </nav>
     </div>
   );
@@ -80,19 +97,26 @@ function CardMain({
   currentQuestion: fileType["content"][0];
 }) {
   const [isShowAnswer, setIsShowAnswer] = useState<boolean>(false);
+  useHotkeys("space", () => setIsShowAnswer(true));
   return (
-    <div className="flex-1 w-full flex flex-col gap-4 justify-center">
-      <p className="text-heading-S p-4">{currentQuestion?.ja}</p>
-      {isShowAnswer ? (
-        <p className="text-heading-S p-4">{currentQuestion?.en}</p>
-      ) : (
-        <button
-          className="text-heading-S w-full text-center bg-gray-100 rounded hover:bg-gray-200 p-4"
-          onClick={() => setIsShowAnswer(true)}
-        >
-          答えを見る
-        </button>
-      )}
+    <div className="flex-1 w-full flex flex-col gap-4 justify-center  ">
+      <div className="mx-auto bg-gray-100 rounded w-full grid gap-4 p-4">
+        <p className="text-heading-S p-4 bg-gray-200 rounded">
+          {currentQuestion?.ja}
+        </p>
+        {isShowAnswer ? (
+          <p className="text-heading-S p-4 bg-gray-200 rounded">
+            {currentQuestion?.en}
+          </p>
+        ) : (
+          <button
+            className="text-heading-S w-full text-center bg-gray-200 rounded hover:bg-gray-300 p-4"
+            onClick={() => setIsShowAnswer(true)}
+          >
+            答えを見る
+          </button>
+        )}
+      </div>
     </div>
   );
 }
