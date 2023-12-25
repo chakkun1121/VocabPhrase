@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import RecoilProvider from "@/app/_components/recoil";
 import NextAuthProvider from "./providers/NextAuth";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://vocab-phrase.vercel.app"),
@@ -22,6 +23,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
+      {process.env.NODE_ENV === "production" && (
+        <GoogleAnalytics gaId="G-XXXXXXXXXXX" />
+      )}
       <NextAuthProvider>
         <RecoilProvider>
           <body className="min-h-screen">{children}</body>
