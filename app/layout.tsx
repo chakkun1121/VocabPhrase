@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       {process.env.NODE_ENV === "production" && (
-        <GoogleAnalytics gaId="G-XXXXXXXXXXX" />
+        <GoogleAnalytics gaId="G-MNPB0JEZCF" />
       )}
       <NextAuthProvider>
         <RecoilProvider>
