@@ -14,6 +14,7 @@ import {
   uploadFile,
 } from "@/googledrive";
 import { FaPlus } from "react-icons/fa";
+import { useHotkeys } from "react-hotkeys-hook";
 
 export function FileMenu({ fileID }: { fileID: string }) {
   const [contentController, setContentController] = useState(
@@ -41,44 +42,49 @@ export function FileMenu({ fileID }: { fileID: string }) {
       }
     })();
   }, [token, fileID]);
+  async function saveFileContent() {
+    if (!token) return;
+    if (title === "") return;
+    titleController.abort("ファイル名を正しく保存するためにキャンセルしました");
+    const newController = new AbortController();
+    setTitleController(newController);
+    const newFileInfo = await updateFileInfo(
+      token,
+      fileID,
+      {
+        name: title,
+      },
+      newController.signal
+    );
+  }
+  async function saveFileInfo() {
+    if (!token) return;
+    if (fileContent?.content?.length === 0) return;
+    contentController.abort(
+      "ファイル内容を正しく保存するためにキャンセルしました"
+    );
+    const newController = new AbortController();
+    setContentController(newController);
+    const newFileContent = await uploadFile(
+      token,
+      fileID,
+      JSON.stringify(fileContent),
+      newController.signal
+    );
+  }
   useEffect(() => {
-    (async () => {
-      if (!token) return;
-      if (title === "") return;
-      titleController.abort(
-        "ファイル名を正しく保存するためにキャンセルしました"
-      );
-      const newController = new AbortController();
-      setTitleController(newController);
-      const newFileInfo = await updateFileInfo(
-        token,
-        fileID,
-        {
-          name: title,
-        },
-        newController.signal
-      );
-    })();
+    saveFileContent();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileID, title, token]);
   useEffect(() => {
-    (async () => {
-      if (!token) return;
-      if (fileContent?.content?.length === 0) return;
-      contentController.abort(
-        "ファイル内容を正しく保存するためにキャンセルしました"
-      );
-      const newController = new AbortController();
-      setContentController(newController);
-      const newFileContent = await uploadFile(
-        token,
-        fileID,
-        JSON.stringify(fileContent),
-        newController.signal
-      );
-    })();
+    saveFileInfo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileID, fileContent, token]);
+  useHotkeys("ctrl+s", (e) => {
+    e.preventDefault();
+    saveFileContent();
+    saveFileInfo();
+  });
   if (loading) return <div className="text-center p-4">loading...</div>;
   return (
     <div className="">
