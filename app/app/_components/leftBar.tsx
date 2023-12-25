@@ -11,7 +11,10 @@ export default function LeftBar() {
       <div
         className={`${
           isShow ? "w-96" : "w-0"
-        } h-full bg-JungleGreen-100 duration-500 `}
+          } h-full bg-JungleGreen-100 duration-500 sticky bottom-0 `}
+        style={{
+          gridArea: "2 / 1 / 3 / 2",
+        }}
       >
         {isShow && <RecentFile />}
       </div>

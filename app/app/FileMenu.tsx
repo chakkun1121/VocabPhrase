@@ -36,6 +36,8 @@ export function FileMenu({ fileID }: { fileID: string }) {
       } catch (e) {
         // 空ファイルでは "SyntaxError: Unexpected end of JSON input" を吐くが問題なし
         console.error(e);
+        setFileContent({ content: [] });
+        setLoading(false);
       }
     })();
   }, [token, fileID]);

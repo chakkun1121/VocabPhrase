@@ -115,20 +115,20 @@ export default function RecentFile() {
           <FaPlus />
           新規作成
         </button>
-        <button
+        {/* <button
           className="w-full rounded-full bg-Pizazz-400 hover:bg-Pizazz-300 py-4 text-white flex items-center justify-center gap-2"
           title="google driveからファイルを開く"
         >
           <FaGoogleDrive />
           ファイルを開く
-        </button>
-        <button
+        </button> */}
+        {/* <button
           className="w-full rounded-full bg-gray-300 hover:bg-gray-400 py-4 flex items-center justify-center gap-2"
           title="ローカルファイルをアップロードする"
         >
           <GoUpload />
           アップロード
-        </button>
+        </button> */}
       </div>
     </div>
   );
