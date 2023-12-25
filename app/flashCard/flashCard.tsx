@@ -3,6 +3,8 @@ import { fileType } from "@/@types/fileType";
 import { flashCardSettings } from "@/@types/flashCardSettings";
 import { IoChevronBackSharp } from "react-icons/io5";
 import { useHotkeys } from "react-hotkeys-hook";
+import { FaStop } from "react-icons/fa";
+import { AiOutlineSound } from "react-icons/ai";
 export default function FlashCard({
   fileContent,
   flashCardSettings,
@@ -104,19 +106,49 @@ function CardMain({
         <p className="text-heading-S p-4 bg-gray-200 rounded">
           {currentQuestion?.ja}
         </p>
-        {isShowAnswer ? (
-          <p className="text-heading-S p-4 bg-gray-200 rounded">
-            {currentQuestion?.en}
-          </p>
-        ) : (
-          <button
-            className="text-heading-S w-full text-center bg-gray-200 rounded hover:bg-gray-300 p-4"
-            onClick={() => setIsShowAnswer(true)}
-          >
-            答えを見る
-          </button>
-        )}
+        <div className="flex items-center gap-4">
+          {isShowAnswer ? (
+            <p className="text-heading-S p-4 bg-gray-200 rounded flex-1">
+              {currentQuestion?.en}
+            </p>
+          ) : (
+            <button
+              className="text-heading-S w-full text-center bg-gray-200 rounded hover:bg-gray-300 p-4 flex-1"
+              onClick={() => setIsShowAnswer(true)}
+            >
+              答えを見る
+            </button>
+          )}
+          <SpeechButton text={currentQuestion?.en} />
+        </div>
       </div>
     </div>
+  );
+}
+function SpeechButton({ text, lang = "en" }: { text: string; lang?: string }) {
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  function speech() {
+    stop();
+    setIsSpeaking(true);
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = lang;
+    speechSynthesis.speak(utterance);
+    utterance.onend = () => setIsSpeaking(false);
+  }
+  function stop() {
+    setIsSpeaking(false);
+    speechSynthesis.cancel();
+  }
+  useHotkeys("s,r", () => {
+    isSpeaking ? stop() : speech();
+  });
+  return (
+    <button
+      onClick={isSpeaking ? stop : speech}
+      title={isSpeaking ? "停止" : "再生"}
+      className="rounded-full aspect-square  bg-gray-200 hover:bg-gray-300 p-4 w-16 h-16 grid place-items-center"
+    >
+      {isSpeaking ? <FaStop /> : <AiOutlineSound />}
+    </button>
   );
 }
