@@ -10,7 +10,7 @@ export default function Header() {
       }}
     >
       <HeaderAppTitle />
-      <HeaderUserMenu />
+      {/* <HeaderUserMenu /> */}
     </header>
   );
 }

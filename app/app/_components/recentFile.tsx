@@ -91,7 +91,7 @@ export default function RecentFile() {
                   href={`./app?fileID=${file.fileID}`}
                   className="text-black hover:text-black visited:text-black flex-1 truncate"
                 >
-                  {file.title}
+                  {file.title.split(".").slice(0, -1).join(".")}
                 </Link>
                 <Link
                   href={`./app?fileID=${file.fileID}`}
