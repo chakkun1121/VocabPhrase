@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import LoginPage from "./LoginPage";
+import { Metadata } from "next";
 
 export default async function Login({
   searchParams: { redirectTo = "/" },
@@ -13,3 +14,7 @@ export default async function Login({
   }
   return <LoginPage />;
 }
+export const metadata: Metadata = {
+  title: "ログイン",
+  robots: "noindex",
+};

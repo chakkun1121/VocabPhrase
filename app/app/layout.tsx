@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import LeftBar from "./_components/leftBar";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
 
 export default async function AppLayout({ children }: { children: ReactNode }) {
   const session = await getServerSession();
@@ -29,3 +30,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     </div>
   );
 }
+export const metadata: Metadata = {
+  title: "アプリ",
+  robots: "noindex",
+};

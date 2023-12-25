@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     default: "VocabPhrase | chakkun1121",
     template: "%s | VocabPhrase | chakkun1121",
   },
-  description: "VocabPhrase",
+  description: "英文、英単語専用のweb単語帳アプリ VocabPhrase です。",
   alternates: {
     canonical: "/",
   },

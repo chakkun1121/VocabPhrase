@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import LogoutPage from "./LogoutPage";
+import { Metadata } from "next";
 
 export default async function Login({
   searchParams: { redirectTo = "/" },
@@ -14,3 +15,7 @@ export default async function Login({
   }
   return <LogoutPage />;
 }
+export const metadata: Metadata = {
+  title: "ログアウト",
+  robots: "noindex",
+};
