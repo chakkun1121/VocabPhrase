@@ -9,7 +9,7 @@ import { customSession } from "../../../@types/customSession";
 import { useRouter } from "next/navigation";
 import { IoReload } from "react-icons/io5";
 
-export default function RecentFile() {
+export default function RecentFile({ hidden }: { hidden: boolean }) {
   const { data: session }: { data: customSession | null } =
     useSession() as unknown as { data: customSession };
   const [recentFile, setRecentFile] = useState<
@@ -75,7 +75,7 @@ export default function RecentFile() {
     }
   }
   return (
-    <div className="flex flex-col h-full">
+    <div className={`flex flex-col h-full ${hidden && "hidden"}`}>
       <div className="flex-none flex items-center justify-between p-2">
         <p className="text-heading-S">最近使用したファイル</p>
         <button onClick={getRecentFile} title="更新">
