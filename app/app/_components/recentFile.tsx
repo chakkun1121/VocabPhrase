@@ -1,15 +1,17 @@
 "use client";
 import Link from "next/link";
 import { IoMdOpen } from "react-icons/io";
-import { FaGoogleDrive, FaPlus } from "react-icons/fa";
+import { FaGoogleDrive } from "react-icons/fa";
 import { GoUpload } from "react-icons/go";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { customSession } from "../../../@types/customSession";
 import { useRouter } from "next/navigation";
 import { IoReload } from "react-icons/io5";
+import LeftBarButtons from "./LeftBarButtons";
 
 export default function RecentFile({ hidden }: { hidden: boolean }) {
+  const [isLoading, setIsLoading] = useState(true);
   const { data: session }: { data: customSession | null } =
     useSession() as unknown as { data: customSession };
   const [recentFile, setRecentFile] = useState<
@@ -18,6 +20,7 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
   const token = session?.accessToken;
   const router = useRouter();
   async function getRecentFile() {
+    setIsLoading(true);
     try {
       const files = await fetch(
         // ゴミ箱内がうまく処理できない
@@ -43,37 +46,18 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
       );
     } catch (e) {
       console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   }
   useEffect(() => {
-    if (!token) return;
-    getRecentFile();
+    (async () => {
+      if (!token) return;
+      await getRecentFile();
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
-  async function createFile() {
-    // TODO: 作成したファイルが左に追加されない問題をどうにかする
-    try {
-      const response = await fetch(
-        "https://www.googleapis.com/drive/v3/files",
-        {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + token,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: "newFile.vocabphrase",
-            mimeType: "application/vocabphrase",
-          }),
-        }
-      );
-      const file = await response.json();
-      router.push(`/app?fileID=${file?.id}`);
-    } catch (e) {
-      console.error(e);
-    }
-  }
+
   return (
     <div className={`flex flex-col h-full ${hidden && "hidden"}`}>
       <div className="flex-none flex items-center justify-between p-2">
@@ -83,53 +67,38 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
         </button>
       </div>
       <div className="flex-1">
-        <ul className="p-4 flex flex-col gap-4 overflow-y-scroll h-full">
-          {recentFile.map((file) => (
-            <li key={file.fileID} className="list-none">
-              <div className="flex items-center gap-2">
-                <Link
-                  href={`./app?fileID=${file.fileID}`}
-                  className="text-black hover:text-black visited:text-black flex-1 truncate"
-                >
-                  {file.title.split(".").slice(0, -1).join(".")}
-                </Link>
-                <Link
-                  href={`./app?fileID=${file.fileID}`}
-                  target="_blank"
-                  aria-label="新しいタブで開く"
-                  className="text-black hover:text-black visited:text-black flex-none"
-                >
-                  <IoMdOpen />
-                </Link>
-              </div>
-            </li>
-          ))}
-        </ul>
+        {isLoading ? (
+          <p className="text-center">loading...</p>
+        ) : (
+          <ul className="p-4 flex flex-col gap-4 overflow-y-scroll h-full">
+            {recentFile ? (
+              recentFile.map((file) => (
+                <li key={file.fileID} className="list-none">
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={`./app?fileID=${file.fileID}`}
+                      className="text-black hover:text-black visited:text-black flex-1 truncate"
+                    >
+                      {file.title.split(".").slice(0, -1).join(".")}
+                    </Link>
+                    <Link
+                      href={`./app?fileID=${file.fileID}`}
+                      target="_blank"
+                      aria-label="新しいタブで開く"
+                      className="text-black hover:text-black visited:text-black flex-none"
+                    >
+                      <IoMdOpen />
+                    </Link>
+                  </div>
+                </li>
+              ))
+            ) : (
+              <p className="text-center">ファイルが見つかりませんでした</p>
+            )}
+          </ul>
+        )}
       </div>
-      <div className="flex-none p-4 flex flex-col gap-4">
-        <button
-          className="w-full rounded-full bg-Pizazz-400 hover:bg-Pizazz-300 py-4 text-white flex items-center justify-center gap-2"
-          title="ファイルを新規作成する"
-          onClick={createFile}
-        >
-          <FaPlus />
-          新規作成
-        </button>
-        {/* <button
-          className="w-full rounded-full bg-Pizazz-400 hover:bg-Pizazz-300 py-4 text-white flex items-center justify-center gap-2"
-          title="google driveからファイルを開く"
-        >
-          <FaGoogleDrive />
-          ファイルを開く
-        </button> */}
-        {/* <button
-          className="w-full rounded-full bg-gray-300 hover:bg-gray-400 py-4 flex items-center justify-center gap-2"
-          title="ローカルファイルをアップロードする"
-        >
-          <GoUpload />
-          アップロード
-        </button> */}
-      </div>
+      <LeftBarButtons />
     </div>
   );
 }

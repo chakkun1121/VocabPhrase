@@ -6,7 +6,7 @@ import RecentFile from "./recentFile";
 
 export default function LeftBar() {
   const [isShow, setIsShow] = useState(true);
-  const [isShowContent, setIsShowContent] = useState(false);
+  const [isShowContent, setIsShowContent] = useState(true);
   useEffect(() => {
     if (isShow) {
       setTimeout(() => {
