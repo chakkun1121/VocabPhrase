@@ -21,34 +21,29 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
   const router = useRouter();
   async function getRecentFile() {
     setIsLoading(true);
-    try {
-      const files = await fetch(
-        // ゴミ箱内がうまく処理できない
-        "https://www.googleapis.com/drive/v3/files?trashed=false",
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
-        .then((res) => res.json())
-        .then((res) => res.files)
-        .catch((e) => {
-          throw e;
-        });
-      setRecentFile(
-        files.map((file: { name: string; id: string }) => ({
-          title: file.name,
-          fileID: file.id,
-        }))
-      );
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsLoading(false);
-    }
+    const files = await fetch(
+      // ゴミ箱内がうまく処理できない
+      "https://www.googleapis.com/drive/v3/files?trashed=false",
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          Authorization: "Bearer " + token,
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((res) => res.files)
+      .catch((e) => {
+        throw e;
+      });
+    setRecentFile(
+      files.map((file: { name: string; id: string }) => ({
+        title: file.name,
+        fileID: file.id,
+      }))
+    );
+    setIsLoading(false);
   }
   useEffect(() => {
     (async () => {
