@@ -114,17 +114,17 @@ function CardMain({
   return (
     <div className="flex-1 w-full flex flex-col gap-4 justify-center  ">
       <div className="mx-auto bg-gray-100 rounded w-full grid gap-4 p-4">
-        <p className="text-heading-S p-4 bg-gray-200 rounded">
+        <p className="md:text-heading-S p-4 bg-gray-200 rounded">
           {currentQuestion?.ja}
         </p>
         <div className="flex items-center gap-4">
           {isShowAnswer ? (
-            <p className="text-heading-S p-4 bg-gray-200 rounded flex-1">
+            <p className="md:text-heading-S p-4 bg-gray-200 rounded flex-1">
               {currentQuestion?.en}
             </p>
           ) : (
             <button
-              className="text-heading-S w-full text-center bg-gray-200 rounded hover:bg-gray-300 p-4 flex-1"
+              className="md:text-heading-S w-full text-center bg-gray-200 rounded hover:bg-gray-300 p-4 flex-1"
               onClick={() => setIsShowAnswer(true)}
             >
               答えを見る

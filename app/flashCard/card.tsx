@@ -43,11 +43,13 @@ export default function Card({ fileId }: { fileId: string }) {
     return <div className="flex flex-col gap-4 h-full p-4">loading...</div>;
   return (
     <div className="flex flex-col h-screen">
-      <header className="flex items-center justify-between p-4 bg-primary-200">
-        <div className="">
+      <header className="flex items-center md:justify-between justify-center p-4 bg-primary-200">
+        <div className="hidden md:block">
           <h1>VocabPhrase</h1>
         </div>
-        <p className="absolute mx-auto left-0 right-0 block w-min">{title}</p>
+        <p className="md:absolute mx-auto left-0 right-0 block w-max">
+          {title.split(".").slice(0, -1).join(".")}
+        </p>
         <HeaderRight />
       </header>
       {mode === "home" && (
