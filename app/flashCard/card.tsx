@@ -5,11 +5,11 @@ import { fileType } from "@/@types/fileType";
 import { getFileInfo, getFileContent } from "@/googledrive";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import HeaderAppTitle from "../_components/headerAppTitle";
 import FlashCardHome from "./flashCardHome";
 import { flashCardSettings } from "@/@types/flashCardSettings";
 import FlashCard from "./flashCard";
 import CardResult from "./cardResult";
+import HeaderRight from "./HeaderRight";
 
 export default function Card({ fileId }: { fileId: string }) {
   const [fileContent, setFileContent] = useState<fileType>({ content: [] });
@@ -43,9 +43,12 @@ export default function Card({ fileId }: { fileId: string }) {
     return <div className="flex flex-col gap-4 h-full p-4">loading...</div>;
   return (
     <div className="flex flex-col h-screen">
-      <header className="flex p-4 bg-primary-200">
-        <HeaderAppTitle />
-        <p>{title}</p>
+      <header className="flex items-center justify-between p-4 bg-primary-200">
+        <div className="">
+          <h1>VocabPhrase</h1>
+        </div>
+        <p className="absolute mx-auto left-0 right-0 block w-min">{title}</p>
+        <HeaderRight />
       </header>
       {mode === "home" && (
         <FlashCardHome
