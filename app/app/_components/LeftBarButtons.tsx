@@ -3,6 +3,8 @@ import { FaPlus } from "react-icons/fa";
 import { useSession } from "next-auth/react";
 import { customSession } from "../../../@types/customSession";
 import { useRouter } from "next/navigation";
+import { listFiles } from "@/googledrive";
+import Header from "./header";
 
 export default function LeftBarButtons() {
   const { data: session }: { data: customSession | null } =
@@ -12,6 +14,30 @@ export default function LeftBarButtons() {
   async function createFile() {
     // TODO: 作成したファイルが左に追加されない問題をどうにかする
     try {
+      let parentFolder = await listFiles(token)
+        .then((res) => res.files)
+        .then((files) => {
+          return files.find(
+            (file: { name: string }) => file.name === "VocabPhrase"
+          );
+        });
+      if (!parentFolder) {
+        parentFolder = await fetch(
+          "https://www.googleapis.com/drive/v3/files",
+          {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + token,
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: "VocabPhrase",
+              mimeType: "application/vnd.google-apps.folder",
+            }),
+          }
+        ).then((res) => res.json());
+      }
       const response = await fetch(
         "https://www.googleapis.com/drive/v3/files",
         {
@@ -24,6 +50,7 @@ export default function LeftBarButtons() {
           body: JSON.stringify({
             name: "newFile.vocabphrase",
             mimeType: "application/vocabphrase",
+            parents: [parentFolder.id],
           }),
         }
       );

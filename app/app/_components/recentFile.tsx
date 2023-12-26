@@ -9,6 +9,7 @@ import { customSession } from "../../../@types/customSession";
 import { useRouter } from "next/navigation";
 import { IoReload } from "react-icons/io5";
 import LeftBarButtons from "./LeftBarButtons";
+import { listFiles } from "@/googledrive";
 
 export default function RecentFile({ hidden }: { hidden: boolean }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -18,21 +19,9 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
     { title: string; fileID: string }[]
   >([]);
   const token = session?.accessToken;
-  const router = useRouter();
   async function getRecentFile() {
     setIsLoading(true);
-    const files = await fetch(
-      // ゴミ箱内がうまく処理できない
-      "https://www.googleapis.com/drive/v3/files?trashed=false",
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          Authorization: "Bearer " + token,
-        },
-      }
-    )
-      .then((res) => res.json())
+    const files = await listFiles(token)
       .then((res) => res.files)
       .catch((e) => {
         throw e;
