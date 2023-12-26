@@ -62,3 +62,21 @@ export function updateFileInfo(
     signal: cancelSignal,
   }).then((res) => res.json());
 }
+export function listFiles(
+  token: string,
+  q = "",
+  pageSize = 100,
+  pageToken = "",
+  other = ""
+) {
+  return fetch(
+    `https://www.googleapis.com/drive/v3/files?pageSize=${pageSize}&q=${q}&pageToken=${pageToken}&${other}`,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        Authorization: "Bearer " + token,
+      },
+    }
+  ).then((res) => res.json());
+}

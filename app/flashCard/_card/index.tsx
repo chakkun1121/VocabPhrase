@@ -3,21 +3,39 @@ import { fileType } from "@/@types/fileType";
 import { flashCardSettings } from "@/@types/flashCardSettings";
 import { IoChevronBackSharp } from "react-icons/io5";
 import { useHotkeys } from "react-hotkeys-hook";
+import { useSwipeable } from "react-swipeable";
+import { CardMain } from "./main";
+import { cardResult } from "@/@types/cardResult";
+
 export default function FlashCard({
   fileContent,
   flashCardSettings,
   setMode,
-  setResult,
+  achievement,
+  setResults,
 }: {
   fileContent: fileType;
   flashCardSettings: flashCardSettings;
   setMode: (mode: "home" | "cards" | "result") => void;
-  setResult: Function;
+  achievement: { id: string; achievement: boolean }[];
+  setResults: React.Dispatch<React.SetStateAction<cardResult>>;
 }) {
   const [questionList, setQuestionList] = useState<string[]>([]); // idの配列
   const [questionIndex, setQuestionIndex] = useState<number>(0);
+  const [currentResult, setCurrentResult] = useState<cardResult["results"][0]>({
+    date: new Date().toISOString(),
+    cardsResult: [],
+  });
   useEffect(() => {
-    const idList = fileContent.content.map((c) => c.id);
+    let idList = fileContent.content.map((c) => c.id);
+    if (flashCardSettings.removeChecked) {
+      const checkedList = achievement
+        .filter((a) => a.achievement)
+        .map((a) => a.id);
+      idList = idList.filter((id) => !checkedList.includes(id));
+      console.log(checkedList);
+      console.debug(idList);
+    }
     if (flashCardSettings.isRandom) {
       const randomSectionList = idList.sort(() => Math.random() - 0.5);
       setQuestionList(
@@ -30,13 +48,15 @@ export default function FlashCard({
       setQuestionList(idList);
     }
   }, [
+    achievement,
     fileContent.content,
     flashCardSettings.isRandom,
     flashCardSettings.questionCount,
+    flashCardSettings.removeChecked,
   ]);
   function next() {
     if (questionIndex === questionList.length - 1) {
-      setMode("result");
+      finish();
     } else {
       setQuestionIndex(questionIndex + 1);
     }
@@ -48,17 +68,51 @@ export default function FlashCard({
       setQuestionIndex(questionIndex - 1);
     }
   }
+  function finish() {
+    setMode("result");
+    setResults((prev: cardResult) => ({
+      ...prev,
+      results: [currentResult,...prev.results],
+    }));
+  }
   useHotkeys("right", next);
   useHotkeys("left", back);
+  const handles = useSwipeable({
+    onSwipedLeft: () => next(),
+    onSwipedRight: () => back(),
+    // preventDefaultTouchmoveEvent: true,
+    trackMouse: true,
+  });
 
   const currentQuestion = fileContent.content.find(
     (c) => c.id === questionList[questionIndex]
   );
   return (
-    <div className="flex-1 flex flex-col p-4 w-full max-w-7xl mx-auto gap-4">
+    <div
+      className="flex-1 flex flex-col p-4 w-full max-w-7xl mx-auto gap-4"
+      {...handles}
+    >
       <CardMain
         currentQuestion={currentQuestion as fileType["content"][0]}
         key={currentQuestion?.id}
+        currentResult={currentResult.cardsResult.find(
+          (c) => c.id === currentQuestion?.id
+        )?.result}
+        setCurrentResult={(result:boolean) => {
+          setCurrentResult((prev) => ({
+            ...prev,
+            cardsResult: [
+              ...prev.cardsResult.filter((c) => c.id !== currentQuestion?.id),
+              { id: currentQuestion?.id ?? "", result },
+            ],
+          }));
+        }}
+        currentAchievement={
+          currentResult.cardsResult.find((c) => c.id === currentQuestion?.id)
+            ?.result ??
+          achievement.find((a) => a.id === currentQuestion?.id)?.achievement ??
+          false
+        }
       />
       <nav className="flex-none flex items-stretch gap-4">
         <button
@@ -88,35 +142,6 @@ export default function FlashCard({
           <IoChevronBackSharp className="transform rotate-180" />
         </button>
       </nav>
-    </div>
-  );
-}
-function CardMain({
-  currentQuestion,
-}: {
-  currentQuestion: fileType["content"][0];
-}) {
-  const [isShowAnswer, setIsShowAnswer] = useState<boolean>(false);
-  useHotkeys("space", () => setIsShowAnswer(true));
-  return (
-    <div className="flex-1 w-full flex flex-col gap-4 justify-center  ">
-      <div className="mx-auto bg-gray-100 rounded w-full grid gap-4 p-4">
-        <p className="text-heading-S p-4 bg-gray-200 rounded">
-          {currentQuestion?.ja}
-        </p>
-        {isShowAnswer ? (
-          <p className="text-heading-S p-4 bg-gray-200 rounded">
-            {currentQuestion?.en}
-          </p>
-        ) : (
-          <button
-            className="text-heading-S w-full text-center bg-gray-200 rounded hover:bg-gray-300 p-4"
-            onClick={() => setIsShowAnswer(true)}
-          >
-            答えを見る
-          </button>
-        )}
-      </div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import Card from "./card";
+import Card from "./main";
 
 export default function FlashCard({
   searchParams: { fileId },
