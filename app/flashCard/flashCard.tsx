@@ -5,6 +5,8 @@ import { IoChevronBackSharp } from "react-icons/io5";
 import { useHotkeys } from "react-hotkeys-hook";
 import { FaStop } from "react-icons/fa";
 import { AiOutlineSound } from "react-icons/ai";
+import { useSwipeable } from "react-swipeable";
+
 export default function FlashCard({
   fileContent,
   flashCardSettings,
@@ -52,12 +54,21 @@ export default function FlashCard({
   }
   useHotkeys("right", next);
   useHotkeys("left", back);
+  const handles = useSwipeable({
+    onSwipedLeft: () => next(),
+    onSwipedRight: () => back(),
+    // preventDefaultTouchmoveEvent: true,
+    trackMouse: true,
+  });
 
   const currentQuestion = fileContent.content.find(
     (c) => c.id === questionList[questionIndex]
   );
   return (
-    <div className="flex-1 flex flex-col p-4 w-full max-w-7xl mx-auto gap-4">
+    <div
+      className="flex-1 flex flex-col p-4 w-full max-w-7xl mx-auto gap-4"
+      {...handles}
+    >
       <CardMain
         currentQuestion={currentQuestion as fileType["content"][0]}
         key={currentQuestion?.id}
