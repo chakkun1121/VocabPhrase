@@ -66,10 +66,11 @@ export function listFiles(
   token: string,
   q = "",
   pageSize = 100,
-  pageToken = ""
+  pageToken = "",
+  other = ""
 ) {
   return fetch(
-    `https://www.googleapis.com/drive/v3/files?trashed=false&pageSize=${pageSize}&q=${q}&pageToken=${pageToken}`,
+    `https://www.googleapis.com/drive/v3/files?pageSize=${pageSize}&q=${q}&pageToken=${pageToken}&${other}`,
     {
       method: "GET",
       headers: {

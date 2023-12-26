@@ -3,25 +3,39 @@ import { fileType } from "@/@types/fileType";
 import { flashCardSettings } from "@/@types/flashCardSettings";
 import { IoChevronBackSharp } from "react-icons/io5";
 import { useHotkeys } from "react-hotkeys-hook";
-import { FaStop } from "react-icons/fa";
-import { AiOutlineSound } from "react-icons/ai";
 import { useSwipeable } from "react-swipeable";
+import { CardMain } from "./main";
+import { cardResult } from "@/@types/cardResult";
 
 export default function FlashCard({
   fileContent,
   flashCardSettings,
   setMode,
-  setResult,
+  achievement,
+  setResults,
 }: {
   fileContent: fileType;
   flashCardSettings: flashCardSettings;
   setMode: (mode: "home" | "cards" | "result") => void;
-  setResult: Function;
+  achievement: { id: string; achievement: boolean }[];
+  setResults: React.Dispatch<React.SetStateAction<cardResult>>;
 }) {
   const [questionList, setQuestionList] = useState<string[]>([]); // idの配列
   const [questionIndex, setQuestionIndex] = useState<number>(0);
+  const [currentResult, setCurrentResult] = useState<cardResult["results"][0]>({
+    date: new Date().toISOString(),
+    cardsResult: [],
+  });
   useEffect(() => {
-    const idList = fileContent.content.map((c) => c.id);
+    let idList = fileContent.content.map((c) => c.id);
+    if (flashCardSettings.removeChecked) {
+      const checkedList = achievement
+        .filter((a) => a.achievement)
+        .map((a) => a.id);
+      idList = idList.filter((id) => !checkedList.includes(id));
+      console.log(checkedList);
+      console.debug(idList);
+    }
     if (flashCardSettings.isRandom) {
       const randomSectionList = idList.sort(() => Math.random() - 0.5);
       setQuestionList(
@@ -34,13 +48,15 @@ export default function FlashCard({
       setQuestionList(idList);
     }
   }, [
+    achievement,
     fileContent.content,
     flashCardSettings.isRandom,
     flashCardSettings.questionCount,
+    flashCardSettings.removeChecked,
   ]);
   function next() {
     if (questionIndex === questionList.length - 1) {
-      setMode("result");
+      finish();
     } else {
       setQuestionIndex(questionIndex + 1);
     }
@@ -51,6 +67,13 @@ export default function FlashCard({
     } else {
       setQuestionIndex(questionIndex - 1);
     }
+  }
+  function finish() {
+    setMode("result");
+    setResults((prev: cardResult) => ({
+      ...prev,
+      results: [currentResult,...prev.results],
+    }));
   }
   useHotkeys("right", next);
   useHotkeys("left", back);
@@ -72,6 +95,24 @@ export default function FlashCard({
       <CardMain
         currentQuestion={currentQuestion as fileType["content"][0]}
         key={currentQuestion?.id}
+        currentResult={currentResult.cardsResult.find(
+          (c) => c.id === currentQuestion?.id
+        )?.result}
+        setCurrentResult={(result:boolean) => {
+          setCurrentResult((prev) => ({
+            ...prev,
+            cardsResult: [
+              ...prev.cardsResult.filter((c) => c.id !== currentQuestion?.id),
+              { id: currentQuestion?.id ?? "", result },
+            ],
+          }));
+        }}
+        currentAchievement={
+          currentResult.cardsResult.find((c) => c.id === currentQuestion?.id)
+            ?.result ??
+          achievement.find((a) => a.id === currentQuestion?.id)?.achievement ??
+          false
+        }
       />
       <nav className="flex-none flex items-stretch gap-4">
         <button
@@ -102,64 +143,5 @@ export default function FlashCard({
         </button>
       </nav>
     </div>
-  );
-}
-function CardMain({
-  currentQuestion,
-}: {
-  currentQuestion: fileType["content"][0];
-}) {
-  const [isShowAnswer, setIsShowAnswer] = useState<boolean>(false);
-  useHotkeys("space", () => setIsShowAnswer(true));
-  return (
-    <div className="flex-1 w-full flex flex-col gap-4 justify-center  ">
-      <div className="mx-auto bg-gray-100 rounded w-full grid gap-4 p-4">
-        <p className="md:text-heading-S p-4 bg-gray-200 rounded">
-          {currentQuestion?.ja}
-        </p>
-        <div className="flex items-center gap-4">
-          {isShowAnswer ? (
-            <p className="md:text-heading-S p-4 bg-gray-200 rounded flex-1">
-              {currentQuestion?.en}
-            </p>
-          ) : (
-            <button
-              className="md:text-heading-S w-full text-center bg-gray-200 rounded hover:bg-gray-300 p-4 flex-1"
-              onClick={() => setIsShowAnswer(true)}
-            >
-              答えを見る
-            </button>
-          )}
-          <SpeechButton text={currentQuestion?.en} />
-        </div>
-      </div>
-    </div>
-  );
-}
-function SpeechButton({ text, lang = "en" }: { text: string; lang?: string }) {
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  function speech() {
-    stop();
-    setIsSpeaking(true);
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = lang;
-    speechSynthesis.speak(utterance);
-    utterance.onend = () => setIsSpeaking(false);
-  }
-  function stop() {
-    setIsSpeaking(false);
-    speechSynthesis.cancel();
-  }
-  useHotkeys("s,r", () => {
-    isSpeaking ? stop() : speech();
-  });
-  return (
-    <button
-      onClick={isSpeaking ? stop : speech}
-      title={isSpeaking ? "停止" : "再生"}
-      className="rounded-full aspect-square  bg-gray-200 hover:bg-gray-300 p-4 w-16 h-16 grid place-items-center"
-    >
-      {isSpeaking ? <FaStop /> : <AiOutlineSound />}
-    </button>
   );
 }

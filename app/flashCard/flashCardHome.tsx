@@ -6,6 +6,7 @@ export default function FlashCardHome({
   setMode,
   flashCardSettings,
   setFlashCardSettings,
+  achievement,
 }: {
   fileContent: fileType;
   setMode: (mode: "home" | "cards" | "result") => void;
@@ -15,39 +16,41 @@ export default function FlashCardHome({
     isAnswerWithKeyboard: boolean;
     questionCount?: number;
   }) => void;
+  achievement: { id: string; achievement: boolean }[];
 }) {
   return (
     <div className="flex flex-col gap-4 p-4">
       <div className="my-4">
         <p>オプション</p>
-        <label className="block m-2">
-          <input
-            className="p-2 w-4 h-4"
-            type="checkbox"
-            defaultChecked={flashCardSettings.isRandom}
-            onChange={(e) => {
-              setFlashCardSettings({
-                ...flashCardSettings,
-                isRandom: e.target.checked,
-              });
-            }}
-          />
-          ランダムに出題する
-        </label>
-        <label className="block m-2">
-          <input
-            type="checkbox"
-            className="p-2 w-4 h-4"
-            defaultChecked={flashCardSettings.isAnswerWithKeyboard}
-            onChange={(e) => {
-              setFlashCardSettings({
-                ...flashCardSettings,
-                isAnswerWithKeyboard: e.target.checked,
-              });
-            }}
-          />
-          キーボードで解答する
-        </label>
+        {[
+          {
+            name: "isRandom",
+            title: "ランダムに出題する",
+          },
+          {
+            name: "isAnswerWithKeyboard",
+            title: "キーボードで解答する",
+          },
+          {
+            name: "removeChecked",
+            title: "チェック済みの問題を除外する",
+          },
+        ].map((c) => (
+          <label className="block m-2" key={c.name}>
+            <input
+              className="p-2 w-4 h-4"
+              type="checkbox"
+              defaultChecked={flashCardSettings.isRandom}
+              onChange={(e) => {
+                setFlashCardSettings({
+                  ...flashCardSettings,
+                  [c.name]: e.target.checked,
+                });
+              }}
+            />
+            {c.title}
+          </label>
+        ))}
         <label className="block m-2">
           出題数:
           <input
@@ -55,8 +58,18 @@ export default function FlashCardHome({
             disabled={!flashCardSettings.isRandom}
             type="number"
             value={flashCardSettings?.questionCount}
-            defaultValue={fileContent.content.length}
-            max={fileContent.content.length}
+            defaultValue={
+              fileContent.content.length -
+              (flashCardSettings?.removeChecked
+                ? achievement.filter((a) => a.achievement).length
+                : 0)
+            }
+            max={
+              fileContent.content.length -
+              (flashCardSettings?.removeChecked
+                ? achievement.filter((a) => a.achievement).length
+                : 0)
+            }
             min={1}
             onChange={(e) => {
               setFlashCardSettings({
@@ -65,14 +78,26 @@ export default function FlashCardHome({
               });
             }}
           />
-          問/全{fileContent.content.length}問
+          問/全
+          {fileContent.content.length -
+            (flashCardSettings?.removeChecked
+              ? achievement.filter((a) => a.achievement).length
+              : 0)}
+          問
           {!flashCardSettings.isRandom &&
             "※この機能はランダム出題時のみしか利用できません。ランダム出題機能をオフにした場合はすべての問題が順に出題されます。"}
         </label>
       </div>
       <button
-        className="p-4 text-2xl text-center text-white bg-primary-400 rounded-xl"
+        className="p-4 text-2xl text-center text-white bg-primary-400 disabled:bg-primary-300 rounded-xl"
         onClick={() => setMode("cards")}
+        disabled={
+          fileContent.content.length -
+            (flashCardSettings?.removeChecked
+              ? achievement.filter((a) => a.achievement).length
+              : 0) ===
+          0
+        }
       >
         Start
       </button>
