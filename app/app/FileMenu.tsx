@@ -33,11 +33,11 @@ export function FileMenu({ fileID }: { fileID: string }) {
       try {
         setTitle((await getFileInfo(token, fileID)).name);
         setFileContent(JSON.parse(await getFileContent(token, fileID)));
-        setLoading(false);
-      } catch (e) {
+      } catch (e: any) {
         // 空ファイルでは "SyntaxError: Unexpected end of JSON input" を吐くが問題なし
-        console.error(e);
+        if (e.message !== "Unexpected end of JSON input") console.error(e);
         setFileContent({ content: [] });
+      } finally {
         setLoading(false);
       }
     })();

@@ -33,9 +33,9 @@ export default function Card({ fileId }: { fileId: string }) {
         setTitle((await getFileInfo(token, fileId)).name);
         setFileContent(JSON.parse(await getFileContent(token, fileId)));
         setLoading(false);
-      } catch (e) {
+      } catch (e: any) {
         // 空ファイルでは "SyntaxError: Unexpected end of JSON input" を吐くが問題なし
-        console.error(e);
+        if (e.message !== "Unexpected end of JSON input") console.error(e);
       }
     })();
   }, [token, fileId]);
