@@ -1,14 +1,14 @@
 "use client";
 import { fileType } from "@/@types/fileType";
 import { uuidv7 as createUUID } from "uuidv7";
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function ImportForm({
   close,
   setFileContent,
 }: {
   close: () => void;
-  setFileContent: (fileContent: fileType) => void;
+  setFileContent: React.Dispatch<React.SetStateAction<fileType>>;
 }) {
   const [formContent, setFormContent] = useState("");
   function importFromBox() {
@@ -17,7 +17,7 @@ export default function ImportForm({
       const [en, ja] = line.split("\t");
       return { id: createUUID(), en, ja };
     }) as fileType["content"];
-    setFileContent({ content });
+    setFileContent((fileContent) => ({ ...fileContent, content }));
     setFormContent("");
     close();
   }

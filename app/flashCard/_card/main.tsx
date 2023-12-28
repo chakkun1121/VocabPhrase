@@ -51,7 +51,6 @@ export function CardMain({
           )}
           <CheckBox
             disabled={!isShowAnswer}
-            // defaultChecked={currentAchievement}
             checked={currentAchievement}
             onChange={(e) =>
               setCurrentResult((e.target as HTMLInputElement).checked)
