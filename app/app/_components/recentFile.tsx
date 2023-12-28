@@ -21,7 +21,10 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
   const token = session?.accessToken;
   async function getRecentFile() {
     setIsLoading(true);
-    const files = await listFiles(token)
+    const files = await listFiles(
+      token,
+      "mimeType='application/vocabphrase' and trashed=false"
+    )
       .then((res) => res.files)
       .catch((e) => {
         throw e;
