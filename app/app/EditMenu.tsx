@@ -28,7 +28,7 @@ export default function EditMenu({
       <div className="flex-none">
         <input
           type="text"
-          defaultValue={title}
+          value={title}
           className="w-full p-4 rounded bg-gray-100 border border-gray-800"
           placeholder="ファイル名を入力してください"
           onChange={(e) => setTitle(e.target.value)}
@@ -93,6 +93,7 @@ export default function EditMenu({
           <ImportForm
             close={() => setIsShowImportBox(false)}
             setFileContent={setFileContent}
+            setTitle={setTitle}
           />
         )}
         {!isShowImportBox && (
