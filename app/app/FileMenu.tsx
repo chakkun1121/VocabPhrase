@@ -22,7 +22,10 @@ export function FileMenu({ fileID }: { fileID: string }) {
   );
   const [titleController, setTitleController] = useState(new AbortController());
   const [title, setTitle] = useState(""); //拡張子付き
-  const [fileContent, setFileContent] = useState<fileType>({ content: [] });
+  const [fileContent, setFileContent] = useState<fileType>({
+    mode: null,
+    content: [],
+  });
   const [loading, setLoading] = useState(true);
   const { data: session }: { data: customSession | null } =
     useSession() as unknown as { data: customSession };
@@ -36,7 +39,7 @@ export function FileMenu({ fileID }: { fileID: string }) {
       } catch (e: any) {
         // 空ファイルでは "SyntaxError: Unexpected end of JSON input" を吐くが問題なし
         if (e.message !== "Unexpected end of JSON input") console.error(e);
-        setFileContent({ content: [] });
+        setFileContent({ mode: null, content: [] })
       } finally {
         setLoading(false);
       }
@@ -96,6 +99,7 @@ export function FileMenu({ fileID }: { fileID: string }) {
                 className="flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300"
                 onClick={() => {
                   setFileContent({
+                    ...fileContent,
                     content: [
                       ...fileContent.content,
                       { id: createUUID(), en: "", ja: "" },

@@ -18,10 +18,16 @@ export default function Error({
   return (
     <div>
       <h2>エラーが発生しました。</h2>
-      <Link href="">お問い合わせフォーム</Link>
-      <Link href="/logout?redirectTo=/login?redirectTo?app">
-        ログインし直す
-      </Link>
+      <div className="">
+        <p>
+          <Link href="">お問い合わせフォーム</Link>
+        </p>
+        <p>
+          <Link href="/logout?redirectTo=/login?redirectTo?app">
+            ログインし直す
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

@@ -20,7 +20,7 @@ export default function EditMenu({
   title: string;
   setTitle: (title: string) => void;
   fileContent: fileType;
-  setFileContent: (fileContent: fileType) => void;
+  setFileContent: React.Dispatch<React.SetStateAction<fileType>>;
 }) {
   const [isShowImportBox, setIsShowImportBox] = useState(false);
   return (
@@ -28,7 +28,7 @@ export default function EditMenu({
       <div className="flex-none">
         <input
           type="text"
-          defaultValue={title}
+          value={title}
           className="w-full p-4 rounded bg-gray-100 border border-gray-800"
           placeholder="ファイル名を入力してください"
           onChange={(e) => setTitle(e.target.value)}
@@ -63,6 +63,7 @@ export default function EditMenu({
                 defaultValue={field.ja}
                 onChange={(e) =>
                   setFileContent({
+                    ...fileContent,
                     content: fileContent.content.map((field, i) =>
                       i === index ? { ...field, ja: e.target.value } : field
                     ),
@@ -74,6 +75,7 @@ export default function EditMenu({
               <Button
                 onClick={() =>
                   setFileContent({
+                    ...fileContent,
                     content: fileContent.content.filter((_, i) => i !== index),
                   })
                 }
@@ -91,6 +93,7 @@ export default function EditMenu({
           <ImportForm
             close={() => setIsShowImportBox(false)}
             setFileContent={setFileContent}
+            setTitle={setTitle}
           />
         )}
         {!isShowImportBox && (
@@ -107,6 +110,7 @@ export default function EditMenu({
               className="flex flex-1 gap-4 p-4 bg-gray-200 hover:bg-gray-300 rounded-full items-center justify-center"
               onClick={() => {
                 setFileContent({
+                  ...fileContent,
                   content: [
                     ...fileContent.content,
                     { id: createUUID(), en: "", ja: "" },

@@ -20,7 +20,7 @@ export default function LeftBar() {
     <>
       <div
         className={`${
-          isShow ? "w-96" : "w-0"
+          isShow ? "w-screen md:w-96" : "w-0"
         } h-full bg-JungleGreen-100 duration-500 sticky bottom-0 `}
         style={{
           gridArea: "2 / 1 / 3 / 2",
@@ -33,7 +33,9 @@ export default function LeftBar() {
           setIsShow(!isShow);
         }}
         className={`absolute bottom-2 w-12 h-12 bg-JungleGreen-200 duration-500 ${
-          isShow ? "rounded-l-full left-[21rem]" : "rounded-r-full left-0"
+          isShow
+            ? "rounded-l-full left-[calc(100vw-3rem)] md:left-[21rem] "
+            : "rounded-r-full left-0"
         }`}
       >
         {isShow ? (

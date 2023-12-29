@@ -1,14 +1,17 @@
 "use client";
 import { fileType } from "@/@types/fileType";
 import { uuidv7 as createUUID } from "uuidv7";
-import { useState } from "react";
+import React, { useState } from "react";
+import { wayakuFile2file } from "./_library/wayaku";
 
 export default function ImportForm({
   close,
   setFileContent,
+  setTitle,
 }: {
   close: () => void;
-  setFileContent: (fileContent: fileType) => void;
+  setFileContent: React.Dispatch<React.SetStateAction<fileType>>;
+  setTitle: (title: string) => void;
 }) {
   const [formContent, setFormContent] = useState("");
   function importFromBox() {
@@ -17,8 +20,14 @@ export default function ImportForm({
       const [en, ja] = line.split("\t");
       return { id: createUUID(), en, ja };
     }) as fileType["content"];
-    setFileContent({ content });
+    setFileContent((fileContent) => ({ ...fileContent, content }));
     setFormContent("");
+    close();
+  }
+  async function uploadWayakuFile() {
+    const [title, content] = await wayakuFile2file();
+    setFileContent(content);
+    setTitle(title);
     close();
   }
   return (
@@ -36,6 +45,12 @@ export default function ImportForm({
           onClick={close}
         >
           キャンセル
+        </button>
+        <button
+          className="flex-none rounded-full bg-gray-300 hover:bg-gray-400 p-4"
+          onClick={uploadWayakuFile}
+        >
+          和訳ファイルからのインポート
         </button>
         <button
           className="flex-1 rounded-full bg-gray-300 hover:bg-gray-400 p-4"

@@ -18,7 +18,7 @@ import HeaderRight from "./HeaderRight";
 import { cardResult } from "@/@types/cardResult";
 
 export default function Card({ fileId }: { fileId: string }) {
-  const [fileContent, setFileContent] = useState<fileType>({ content: [] });
+  const [fileContent, setFileContent] = useState<fileType | undefined>();
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<"home" | "cards" | "result">("home");
@@ -99,8 +99,8 @@ export default function Card({ fileId }: { fileId: string }) {
     })();
   }, [fileId, loading, resultFileID, results, token]);
   // 設問ごとに一度でも正解したらtrueにする
-  const achievement: { id: string; achievement: boolean }[] =
-    fileContent.content.map((c) => ({
+  const achievement: { id: string; achievement: boolean }[] | undefined =
+    fileContent?.content.map((c) => ({
       id: c.id,
       achievement: results.results.some((r) =>
         r.cardsResult.some((cr) => cr.id === c.id)
@@ -120,30 +120,34 @@ export default function Card({ fileId }: { fileId: string }) {
         </p>
         <HeaderRight />
       </header>
-      {mode === "home" && (
-        <FlashCardHome
-          fileContent={fileContent}
-          setMode={setMode}
-          flashCardSettings={flashCardSettings}
-          setFlashCardSettings={setFlashCardSettings}
-          achievement={achievement}
-        />
-      )}
-      {mode === "cards" && (
-        <FlashCard
-          fileContent={fileContent}
-          flashCardSettings={flashCardSettings}
-          setMode={setMode}
-          achievement={achievement}
-          setResults={setResults}
-        />
-      )}
-      {mode === "result" && (
-        <CardResult
-          results={results}
-          fileContent={fileContent}
-          achievement={achievement}
-        />
+      {fileContent && achievement && (
+        <>
+          {mode === "home" && (
+            <FlashCardHome
+              fileContent={fileContent}
+              setMode={setMode}
+              flashCardSettings={flashCardSettings}
+              setFlashCardSettings={setFlashCardSettings}
+              achievement={achievement}
+            />
+          )}
+          {mode === "cards" && (
+            <FlashCard
+              fileContent={fileContent}
+              flashCardSettings={flashCardSettings}
+              setMode={setMode}
+              achievement={achievement}
+              setResults={setResults}
+            />
+          )}
+          {mode === "result" && (
+            <CardResult
+              results={results}
+              fileContent={fileContent}
+              achievement={achievement}
+            />
+          )}
+        </>
       )}
     </div>
   );

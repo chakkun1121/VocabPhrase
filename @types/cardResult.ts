@@ -5,9 +5,10 @@ export type cardResult = {
   };
   results: {
     date: string;
+    mode?: "en2ja" | "ja2en"; //初期値は"en2ja"
     cardsResult: {
       id: string;
       result: boolean; //正解かどうか
-    }[] ;
+    }[];
   }[];
 };
