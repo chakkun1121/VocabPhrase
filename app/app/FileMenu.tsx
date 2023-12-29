@@ -39,7 +39,7 @@ export function FileMenu({ fileID }: { fileID: string }) {
       } catch (e: any) {
         // 空ファイルでは "SyntaxError: Unexpected end of JSON input" を吐くが問題なし
         if (e.message !== "Unexpected end of JSON input") console.error(e);
-        setFileContent({ mode: null, content: [] });
+        setFileContent({ mode: null, content: [] })
       } finally {
         setLoading(false);
       }
