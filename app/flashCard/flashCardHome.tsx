@@ -11,11 +11,7 @@ export default function FlashCardHome({
   fileContent: fileType;
   setMode: (mode: "home" | "cards" | "result") => void;
   flashCardSettings: flashCardSettings;
-  setFlashCardSettings: (settings: {
-    isRandom: boolean;
-    isAnswerWithKeyboard: boolean;
-    questionCount?: number;
-  }) => void;
+  setFlashCardSettings: React.Dispatch<React.SetStateAction<flashCardSettings>>;
   achievement: { id: string; achievement: boolean }[];
 }) {
   return (
@@ -27,10 +23,10 @@ export default function FlashCardHome({
             name: "isRandom",
             title: "ランダムに出題する",
           },
-          {
-            name: "isAnswerWithKeyboard",
-            title: "キーボードで解答する",
-          },
+          // {
+          //   name: "isAnswerWithKeyboard",
+          //   title: "キーボードで解答する",
+          // },
           {
             name: "removeChecked",
             title: "チェック済みの問題を除外する",

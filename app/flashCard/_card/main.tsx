@@ -1,35 +1,22 @@
-import React, {
-  ButtonHTMLAttributes,
-  ClassAttributes,
-  JSX,
-  useState,
-} from "react";
+import React, { useState } from "react";
 import { fileType } from "@/@types/fileType";
 import { useHotkeys } from "react-hotkeys-hook";
 import { SpeechButton } from "./speechButton";
 
 export function CardMain({
   currentQuestion,
-  currentAchievement,
-  currentResult,
-  setCurrentResult,
+  isChecked,
+  setIsChecked,
 }: {
   currentQuestion: fileType["content"][0];
-  currentAchievement: boolean;
-  currentResult: boolean | undefined;
-  setCurrentResult: (result: boolean) => void;
+  isChecked: boolean;
+  setIsChecked: (isChecked: boolean) => void;
 }) {
   const [isShowAnswer, setIsShowAnswer] = useState<boolean>(false);
   useHotkeys("space", () => setIsShowAnswer(true));
-  useHotkeys(
-    "c",
-    () => {
-      setCurrentResult(!currentResult);
-    },
-    {
-      enabled: isShowAnswer,
-    }
-  );
+  useHotkeys("c", () => setIsChecked(!isChecked), {
+    enabled: isShowAnswer,
+  });
   return (
     <div className="flex-1 w-full flex flex-col gap-4 justify-center  ">
       <div className="mx-auto bg-gray-100 rounded w-full grid gap-4 p-4">
@@ -51,9 +38,9 @@ export function CardMain({
           )}
           <CheckBox
             disabled={!isShowAnswer}
-            checked={currentAchievement}
+            checked={isChecked}
             onChange={(e) =>
-              setCurrentResult((e.target as HTMLInputElement).checked)
+              setIsChecked((e.target as HTMLInputElement).checked)
             }
           />
           <SpeechButton text={currentQuestion?.en} />
