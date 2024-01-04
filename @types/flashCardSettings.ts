@@ -1,6 +1,6 @@
 export interface flashCardSettings {
   isRandom: boolean;
-  isAnswerWithKeyboard: boolean;
+  // isAnswerWithKeyboard: boolean;
   removeChecked?: boolean;
   questionCount?: number;
 }

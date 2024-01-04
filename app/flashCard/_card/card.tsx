@@ -21,20 +21,22 @@ export default function FlashCard({
   setResults: React.Dispatch<React.SetStateAction<cardResult>>;
 }) {
   const [questionList, setQuestionList] = useState<string[]>([]); // idの配列
-  const [questionIndex, setQuestionIndex] = useState<number>(0);
-  const [currentResult, setCurrentResult] = useState<cardResult["results"][0]>({
-    date: new Date().toISOString(),
-    cardsResult: [],
-  });
+  const [questionIndex, setQuestionIndex] = useState<number>(0); // 現在の問題のindex
+  const [currentResult, setCurrentResult] = useState<
+    cardResult["results"][0]["cardsResult"]
+  >([]); // とき終わった問題の結果を入れる
+  const [isRightCurrent, setIsRightCurrent] = useState<boolean>(false); // 現在の問題が正解かどうか
+  
   useEffect(() => {
+    // 初期設定
     let idList = fileContent.content.map((c) => c.id);
     if (flashCardSettings.removeChecked) {
       const checkedList = achievement
         .filter((a) => a.achievement)
         .map((a) => a.id);
       idList = idList.filter((id) => !checkedList.includes(id));
-      console.log(checkedList);
-      console.debug(idList);
+      
+      
     }
     if (flashCardSettings.isRandom) {
       const randomSectionList = idList.sort(() => Math.random() - 0.5);
@@ -47,14 +49,21 @@ export default function FlashCard({
     } else {
       setQuestionList(idList);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    achievement,
     fileContent.content,
     flashCardSettings.isRandom,
     flashCardSettings.questionCount,
     flashCardSettings.removeChecked,
   ]);
   function next() {
+    //  結果に今のIDの問題がなければ追加
+    if (!currentResult.find((c) => c.id === questionList[questionIndex])) {
+      setCurrentResult((prev) => [
+        ...prev,
+        { id: questionList[questionIndex], result: false },
+      ]);
+    }
     if (questionIndex === questionList.length - 1) {
       finish();
     } else {
@@ -63,7 +72,7 @@ export default function FlashCard({
   }
   function back() {
     if (questionIndex === 0) {
-      console.error("戻れません");
+      
     } else {
       setQuestionIndex(questionIndex - 1);
     }
@@ -72,7 +81,10 @@ export default function FlashCard({
     setMode("result");
     setResults((prev: cardResult) => ({
       ...prev,
-      results: [currentResult,...prev.results],
+      results: [
+        { date: new Date().toISOString(), cardsResult: currentResult },
+        ...prev.results,
+      ],
     }));
   }
   useHotkeys("right", next);
@@ -86,7 +98,8 @@ export default function FlashCard({
 
   const currentQuestion = fileContent.content.find(
     (c) => c.id === questionList[questionIndex]
-  );
+  ) as fileType["content"][0];
+
   return (
     <div
       className="flex-1 flex flex-col p-4 w-full max-w-7xl mx-auto gap-4"
@@ -95,24 +108,20 @@ export default function FlashCard({
       <CardMain
         currentQuestion={currentQuestion as fileType["content"][0]}
         key={currentQuestion?.id}
-        currentResult={currentResult.cardsResult.find(
-          (c) => c.id === currentQuestion?.id
-        )?.result}
-        setCurrentResult={(result:boolean) => {
-          setCurrentResult((prev) => ({
-            ...prev,
-            cardsResult: [
-              ...prev.cardsResult.filter((c) => c.id !== currentQuestion?.id),
-              { id: currentQuestion?.id ?? "", result },
-            ],
-          }));
-        }}
-        currentAchievement={
-          currentResult.cardsResult.find((c) => c.id === currentQuestion?.id)
-            ?.result ??
+        isChecked={
+          currentResult.find((c) => c.id === currentQuestion?.id)?.result ??
           achievement.find((a) => a.id === currentQuestion?.id)?.achievement ??
           false
         }
+        setIsChecked={(isChecked: boolean) => {
+          const newResult = currentResult.filter(
+            (c) => c.id !== currentQuestion?.id
+          );
+          setCurrentResult(() => [
+            ...newResult,
+            { id: currentQuestion?.id, result: isChecked },
+          ]);
+        }}
       />
       <nav className="flex-none flex items-stretch gap-4">
         <button

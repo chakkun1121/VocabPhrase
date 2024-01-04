@@ -9,10 +9,10 @@ import {
   uploadFile,
 } from "@/googledrive";
 import { useSession } from "next-auth/react";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import FlashCardHome from "./flashCardHome";
 import { flashCardSettings } from "@/@types/flashCardSettings";
-import FlashCard from "./_card";
+import FlashCard from "./_card/card";
 import CardResult from "./cardResult";
 import HeaderRight from "./HeaderRight";
 import { cardResult } from "@/@types/cardResult";
@@ -32,7 +32,6 @@ export default function Card({ fileId }: { fileId: string }) {
   const [flashCardSettings, setFlashCardSettings] = useState<flashCardSettings>(
     {
       isRandom: false,
-      isAnswerWithKeyboard: false,
     }
   );
   const token = session?.accessToken;
@@ -43,17 +42,6 @@ export default function Card({ fileId }: { fileId: string }) {
       try {
         setTitle((await getFileInfo(token, fileId)).name);
         setFileContent(JSON.parse(await getFileContent(token, fileId)));
-        console.debug(
-          //appDataFolderの中身は普通なら見れないのでわざと残しておく
-          "appDataFolder",
-          await listFiles(
-            token,
-            undefined,
-            undefined,
-            undefined,
-            "spaces=appDataFolder"
-          )
-        );
         const resultFile = await listFiles(
           token,
           "name='" + fileId + ".json'",
@@ -76,7 +64,9 @@ export default function Card({ fileId }: { fileId: string }) {
     (async () => {
       if (!token) return;
       if (loading) return;
-      if (!resultFileID) {
+      if (resultFileID) {
+        uploadFile(token, resultFileID, JSON.stringify(results));
+      } else {
         setResultFileID(
           await fetch("https://www.googleapis.com/drive/v3/files", {
             method: "POST",
@@ -93,20 +83,9 @@ export default function Card({ fileId }: { fileId: string }) {
             .then((r) => r.id)
         );
       }
-      if (resultFileID) {
-        uploadFile(token, resultFileID, JSON.stringify(results));
-      }
     })();
   }, [fileId, loading, resultFileID, results, token]);
-  // 設問ごとに一度でも正解したらtrueにする
-  const achievement: { id: string; achievement: boolean }[] | undefined =
-    fileContent?.content.map((c) => ({
-      id: c.id,
-      achievement: results.results.some((r) =>
-        r.cardsResult.some((cr) => cr.id === c.id)
-      ),
-    }));
-
+  const achievement = getAchievement(results, fileContent);
   if (loading)
     return <div className="flex flex-col gap-4 h-full p-4">loading...</div>;
   return (
@@ -141,14 +120,23 @@ export default function Card({ fileId }: { fileId: string }) {
             />
           )}
           {mode === "result" && (
-            <CardResult
-              results={results}
-              fileContent={fileContent}
-              achievement={achievement}
-            />
+            <CardResult results={results} fileContent={fileContent} />
           )}
         </>
       )}
     </div>
   );
+}
+export function getAchievement(
+  results: cardResult,
+  fileContent: fileType | undefined
+): { id: string; achievement: boolean }[] | undefined {
+  //
+  // 設問ごとに一度でも正解したらtrueにする
+  return fileContent?.content.map((c) => ({
+    id: c.id,
+    achievement: results.results.some((r) =>
+      r.cardsResult.some((r) => r.id === c.id && r.result)
+    ),
+  }));
 }

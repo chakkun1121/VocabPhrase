@@ -1,15 +1,17 @@
 import { cardResult } from "@/@types/cardResult";
 import { fileType } from "@/@types/fileType";
+import { getAchievement } from "./main";
 
 export default function CardResult({
   fileContent,
   results,
-  achievement,
 }: {
   fileContent: fileType;
   results: cardResult;
-  achievement: { id: string; achievement: boolean }[];
 }) {
+  const achievement = getAchievement(results, fileContent);
+  console.log('achievement: ', achievement);
+  console.log("results: ", results);
   return (
     <div className="flex-1 flex flex-col p-4 w-full max-w-7xl mx-auto gap-4">
       <div className="">
@@ -20,24 +22,24 @@ export default function CardResult({
               <th className="px-4 py-6"></th>
               <th className="px-4">英文</th>
               <th className="px-4">日本語訳</th>
-              <th className="px-4"></th>
+              {/* <th className="px-4"></th> */}
               <th className="px-4"></th>
             </tr>
           </thead>
           <tbody className="overflow-y-scroll">
-            {fileContent.content.map((content, i) => {
-              const result = results.results[0].cardsResult.find(
-                (c) => c.id === content.id
-              );
+            {results.results[0].cardsResult.map((result, i) => {
+              const currentQuestion = fileContent.content.find(
+                (c) => c.id === result.id
+              ) as fileType["content"][0];
               const checked =
-                achievement.find((a) => a.id === content.id)?.achievement ??
+                achievement?.find((a) => a.id === result.id)?.achievement ??
                 false;
               return (
-                <tr key={content.id} className="even:bg-gray-100">
+                <tr key={currentQuestion.id} className="even:bg-gray-100">
                   <td className="text-center py-5">{i + 1}</td>
-                  <td>{content.en}</td>
-                  <td>{content.ja}</td>
-                  <td className="text-center">{result ? "○" : "×"}</td>
+                  <td>{currentQuestion.en}</td>
+                  <td>{currentQuestion.ja}</td>
+                  {/* <td className="text-center">{result ? "○" : "×"}</td> */}
                   <td className="">
                     <input
                       type="checkbox"
