@@ -21,19 +21,20 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
   const token = session?.accessToken;
   async function getRecentFile() {
     setIsLoading(true);
-    const files = await listFiles(
-      token,
-      "mimeType='application/vocabphrase' and trashed=false"
-    )
+    const files = await listFiles(token, "trashed=false")
       .then((res) => res.files)
       .catch((e) => {
         throw e;
       });
     setRecentFile(
-      files.map((file: { name: string; id: string }) => ({
-        title: file.name,
-        fileID: file.id,
-      }))
+      files
+        .map((file: { name: string; id: string }) => ({
+          title: file.name,
+          fileID: file.id,
+        }))
+        .filter((file: { title: string }) =>
+          file.title.endsWith(".vocabphrase")
+        )
     );
     setIsLoading(false);
   }
