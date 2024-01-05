@@ -1,15 +1,13 @@
 "use client";
 import Link from "next/link";
 import { IoMdOpen } from "react-icons/io";
-import { FaGoogleDrive } from "react-icons/fa";
-import { GoUpload } from "react-icons/go";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { customSession } from "../../../@types/customSession";
-import { useRouter } from "next/navigation";
 import { IoReload } from "react-icons/io5";
 import LeftBarButtons from "./LeftBarButtons";
-import { listFiles } from "@/googledrive";
+import { deleteFile, listFiles } from "@/googledrive";
+import { FaRegTrashAlt } from "react-icons/fa";
 
 export default function RecentFile({ hidden }: { hidden: boolean }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -69,6 +67,15 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
                     >
                       {file.title.split(".").slice(0, -1).join(".")}
                     </Link>
+                    <button
+                      className="flex-none"
+                      onClick={() =>
+                        window.confirm("復元できません。よろしいでしょうか?") &&
+                        deleteFile(token, file.fileID)
+                      }
+                    >
+                      <FaRegTrashAlt />
+                    </button>
                     <Link
                       href={`./app?fileID=${file.fileID}`}
                       target="_blank"
