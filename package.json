@@ -2,6 +2,8 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@8.14.0",
+  "nodeVersion": "latest",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
