@@ -1,10 +1,15 @@
 import remarkGfm from "remark-gfm";
 import createMDX from "@next/mdx";
+import nextPWA from "next-pwa";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
 };
+
+const withPWA = nextPWA({
+  dest: "public",
+});
 
 const withMDX = createMDX({
   // Add markdown plugins here, as desired
@@ -15,4 +20,4 @@ const withMDX = createMDX({
 });
 
 // Merge MDX config with Next.js config
-export default withMDX(nextConfig);
+export default withMDX(withPWA(nextConfig));
