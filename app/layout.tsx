@@ -3,32 +3,37 @@ import "./globals.css";
 import RecoilProvider from "@/app/_components/recoil";
 import NextAuthProvider from "./providers/NextAuth";
 import { GoogleAnalytics } from "@next/third-parties/google";
-const title = "英文、英単語専用のweb単語帳アプリ VocabPhrase";
-const description = "英文、英単語専用のweb単語帳アプリ VocabPhrase です。";
-const url = "https://vocab-phrase.vercel.app";
+import {
+  APP_DESCRIPTION,
+  APP_SHORT_TITLE,
+  APP_TITLE,
+  APP_URL,
+  AUTHOR_NAME,
+  THEME_COLOR,
+} from "./meta";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(url),
+  metadataBase: new URL(APP_URL),
   title: {
-    default: "VocabPhrase | chakkun1121",
-    template: "%s | VocabPhrase | chakkun1121",
+    default: `${APP_SHORT_TITLE} | ${AUTHOR_NAME}`,
+    template: `%s | ${APP_SHORT_TITLE} | ${AUTHOR_NAME}`,
   },
-  description,
+  description: APP_DESCRIPTION,
   alternates: {
     canonical: "/",
   },
   authors: [
     {
-      name: "chakkun1121",
+      name: AUTHOR_NAME,
       url: "chakkun1121.github.io",
     },
   ],
   openGraph: {
     type: "website",
-    title,
-    description,
-    url,
-    siteName: "VocabPhrase",
+    title: APP_TITLE,
+    description: APP_DESCRIPTION,
+    url: APP_URL,
+    siteName: APP_SHORT_TITLE,
     images: [
       {
         url: "https://vocab-phrase.vercel.app/ogp.png",
@@ -49,7 +54,7 @@ export const metadata: Metadata = {
   },
 };
 export const viewport: Viewport = {
-  themeColor: "#afe2f5",
+  themeColor: THEME_COLOR,
 };
 export default function RootLayout({
   children,

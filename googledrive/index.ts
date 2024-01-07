@@ -80,3 +80,12 @@ export function listFiles(
     }
   ).then((res) => res.json());
 }
+export function deleteFile(token: string, fileId: string) {
+  return fetch(`https://www.googleapis.com/drive/v3/files/${fileId}`, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      Authorization: "Bearer " + token,
+    },
+  }).then((res) => res.json());
+}
