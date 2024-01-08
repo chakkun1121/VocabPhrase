@@ -1,17 +1,15 @@
 import { cardResult } from "@/@types/cardResult";
 import { fileType } from "@/@types/fileType";
-import { getAchievement } from "./main";
 
 export default function CardResult({
   fileContent,
   results,
+  currentProblemIdList,
 }: {
   fileContent: fileType;
   results: cardResult;
+  currentProblemIdList: string[];
 }) {
-  const achievement = getAchievement(results, fileContent);
-  console.log('achievement: ', achievement);
-  console.log("results: ", results);
   return (
     <div className="flex-1 flex flex-col p-4 w-full max-w-7xl mx-auto gap-4">
       <div className="">
@@ -23,17 +21,16 @@ export default function CardResult({
               <th className="px-4">英文</th>
               <th className="px-4">日本語訳</th>
               {/* <th className="px-4"></th> */}
-              <th className="px-4"></th>
+              <th className="px-4">英語→日本語</th>
+              <th className="px-4">日本語→英語</th>
             </tr>
           </thead>
           <tbody className="overflow-y-scroll">
-            {results.results[0].cardsResult.map((result, i) => {
+            {currentProblemIdList.map((id, i) => {
               const currentQuestion = fileContent.content.find(
-                (c) => c.id === result.id
+                (c) => c.id === id
               ) as fileType["content"][0];
-              const checked =
-                achievement?.find((a) => a.id === result.id)?.achievement ??
-                false;
+
               return (
                 <tr key={currentQuestion.id} className="even:bg-gray-100">
                   <td className="text-center py-5">{i + 1}</td>
@@ -43,7 +40,19 @@ export default function CardResult({
                   <td className="">
                     <input
                       type="checkbox"
-                      checked={checked}
+                      checked={
+                        results.check?.en2ja?.find((r) => r.id === id)?.checked
+                      }
+                      disabled
+                      className="w-4 h-4 bg-primary-500"
+                    />
+                  </td>
+                  <td className="">
+                    <input
+                      type="checkbox"
+                      checked={
+                        results.check?.ja2en?.find((r) => r.id === id)?.checked
+                      }
                       disabled
                       className="w-4 h-4 bg-primary-500"
                     />

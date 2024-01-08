@@ -3,4 +3,5 @@ export interface flashCardSettings {
   // isAnswerWithKeyboard: boolean;
   removeChecked?: boolean;
   questionCount?: number;
+  mode: "en2ja" | "ja2en";
 }

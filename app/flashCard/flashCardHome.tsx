@@ -1,3 +1,4 @@
+import { cardResult } from "@/@types/cardResult";
 import { fileType } from "@/@types/fileType";
 import { flashCardSettings } from "@/@types/flashCardSettings";
 
@@ -6,13 +7,13 @@ export default function FlashCardHome({
   setMode,
   flashCardSettings,
   setFlashCardSettings,
-  achievement,
+  checked,
 }: {
   fileContent: fileType;
   setMode: (mode: "home" | "cards" | "result") => void;
   flashCardSettings: flashCardSettings;
   setFlashCardSettings: React.Dispatch<React.SetStateAction<flashCardSettings>>;
-  achievement: { id: string; achievement: boolean }[];
+  checked: cardResult["check"];
 }) {
   return (
     <div className="flex flex-col gap-4 p-4">
@@ -56,15 +57,17 @@ export default function FlashCardHome({
             value={flashCardSettings?.questionCount}
             defaultValue={
               fileContent.content.length -
-              (flashCardSettings?.removeChecked
-                ? achievement.filter((a) => a.achievement).length
-                : 0)
+              ((flashCardSettings?.removeChecked
+                ? checked?.[flashCardSettings.mode]?.filter((a) => a.checked)
+                    .length
+                : 0) ?? 0)
             }
             max={
               fileContent.content.length -
-              (flashCardSettings?.removeChecked
-                ? achievement.filter((a) => a.achievement).length
-                : 0)
+              ((flashCardSettings?.removeChecked
+                ? checked?.[flashCardSettings.mode]?.filter((a) => a.checked)
+                    .length
+                : 0) ?? 0)
             }
             min={1}
             onChange={(e) => {
@@ -76,9 +79,10 @@ export default function FlashCardHome({
           />
           問/全
           {fileContent.content.length -
-            (flashCardSettings?.removeChecked
-              ? achievement.filter((a) => a.achievement).length
-              : 0)}
+            ((flashCardSettings?.removeChecked
+              ? checked?.[flashCardSettings.mode]?.filter((a) => a.checked)
+                  .length
+              : 0) ?? 0)}
           問
           {!flashCardSettings.isRandom &&
             "※この機能はランダム出題時のみしか利用できません。ランダム出題機能をオフにした場合はすべての問題が順に出題されます。"}
@@ -89,9 +93,10 @@ export default function FlashCardHome({
         onClick={() => setMode("cards")}
         disabled={
           fileContent.content.length -
-            (flashCardSettings?.removeChecked
-              ? achievement.filter((a) => a.achievement).length
-              : 0) ===
+            ((flashCardSettings?.removeChecked
+              ? checked?.[flashCardSettings.mode]?.filter((a) => a.checked)
+                  .length
+              : 0) ?? 0) ===
           0
         }
       >

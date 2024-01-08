@@ -25,6 +25,10 @@ export default function Card({ fileId }: { fileId: string }) {
   const [resultFileID, setResultFileID] = useState<string | undefined>(); // resultsのファイルID
   const [results, setResults] = useState<cardResult>({
     fileInfo: { id: fileId },
+    check: {
+      en2ja: [],
+      ja2en: [],
+    },
     results: [],
   });
   const { data: session }: { data: customSession | null } =
@@ -32,7 +36,11 @@ export default function Card({ fileId }: { fileId: string }) {
   const [flashCardSettings, setFlashCardSettings] = useState<flashCardSettings>(
     {
       isRandom: false,
+      mode: "en2ja",
     }
+  );
+  const [currentProblemIdList, setCurrentProblemIdList] = useState<string[]>(
+    []
   );
   const token = session?.accessToken;
   // 初期読み込み
@@ -85,7 +93,6 @@ export default function Card({ fileId }: { fileId: string }) {
       }
     })();
   }, [fileId, loading, resultFileID, results, token]);
-  const achievement = getAchievement(results, fileContent);
   if (loading)
     return <div className="flex flex-col gap-4 h-full p-4">loading...</div>;
   return (
@@ -99,7 +106,7 @@ export default function Card({ fileId }: { fileId: string }) {
         </p>
         <HeaderRight />
       </header>
-      {fileContent && achievement && (
+      {fileContent && (
         <>
           {mode === "home" && (
             <FlashCardHome
@@ -107,7 +114,7 @@ export default function Card({ fileId }: { fileId: string }) {
               setMode={setMode}
               flashCardSettings={flashCardSettings}
               setFlashCardSettings={setFlashCardSettings}
-              achievement={achievement}
+              checked={results.check}
             />
           )}
           {mode === "cards" && (
@@ -115,28 +122,20 @@ export default function Card({ fileId }: { fileId: string }) {
               fileContent={fileContent}
               flashCardSettings={flashCardSettings}
               setMode={setMode}
-              achievement={achievement}
+              cardResult={results}
               setResults={setResults}
+              setCurrentProblemIdList={setCurrentProblemIdList}
             />
           )}
           {mode === "result" && (
-            <CardResult results={results} fileContent={fileContent} />
+            <CardResult
+              results={results}
+              fileContent={fileContent}
+              currentProblemIdList={currentProblemIdList}
+            />
           )}
         </>
       )}
     </div>
   );
-}
-export function getAchievement(
-  results: cardResult,
-  fileContent: fileType | undefined
-): { id: string; achievement: boolean }[] | undefined {
-  //
-  // 設問ごとに一度でも正解したらtrueにする
-  return fileContent?.content.map((c) => ({
-    id: c.id,
-    achievement: results.results.some((r) =>
-      r.cardsResult.some((r) => r.id === c.id && r.result)
-    ),
-  }));
 }
