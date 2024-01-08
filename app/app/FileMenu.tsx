@@ -39,7 +39,7 @@ export function FileMenu({ fileID }: { fileID: string }) {
       } catch (e: any) {
         // 空ファイルでは "SyntaxError: Unexpected end of JSON input" を吐くが問題なし
         if (e.message !== "Unexpected end of JSON input") console.error(e);
-        setFileContent({ mode: null, content: [] })
+        setFileContent({ mode: null, content: [] });
       } finally {
         setLoading(false);
       }
@@ -83,11 +83,17 @@ export function FileMenu({ fileID }: { fileID: string }) {
     saveFileInfo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileID, fileContent, token]);
-  useHotkeys("ctrl+s", (e) => {
-    e.preventDefault();
-    saveFileContent();
-    saveFileInfo();
-  });
+  useHotkeys(
+    "ctrl+s",
+    () => {
+      saveFileContent();
+      saveFileInfo();
+    },
+    {
+      enableOnFormTags: ["INPUT", "TEXTAREA", "SELECT"],
+      preventDefault: true,
+    }
+  );
   if (loading) return <div className="text-center p-4">loading...</div>;
   return (
     <div className="">
