@@ -121,6 +121,7 @@ export default function FlashCard({
               { id: currentQuestion?.id, checked: isChecked },
             ]);
           }}
+          mode={flashCardSettings.mode}
         />
       )}
       <nav className="flex-none flex items-stretch gap-4">

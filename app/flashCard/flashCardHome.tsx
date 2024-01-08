@@ -49,6 +49,22 @@ export default function FlashCardHome({
           </label>
         ))}
         <label className="block m-2">
+          出題モード:
+          <select
+            className="p-2 rounded border"
+            value={flashCardSettings?.mode}
+            onChange={(e) => {
+              setFlashCardSettings({
+                ...flashCardSettings,
+                mode: e.target.value as flashCardSettings["mode"],
+              });
+            }}
+          >
+            <option value="en2ja">英語→日本語</option>
+            <option value="ja2en">日本語→英語</option>
+          </select>
+        </label>
+        <label className="block m-2">
           出題数:
           <input
             className="p-2 disabled:bg-gray-300   dark:disabled:border-none dark:bg-gray-800 rounded border w-20"

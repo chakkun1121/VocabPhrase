@@ -7,10 +7,12 @@ export function CardMain({
   currentQuestion,
   isChecked,
   setIsChecked,
+  mode,
 }: {
   currentQuestion: fileType["content"][0];
   isChecked: boolean;
   setIsChecked: (isChecked: boolean) => void;
+  mode: "en2ja" | "ja2en";
 }) {
   const [isShowAnswer, setIsShowAnswer] = useState<boolean>(false);
   useHotkeys("space", () => setIsShowAnswer(true));
@@ -20,13 +22,16 @@ export function CardMain({
   return (
     <div className="flex-1 w-full flex flex-col gap-4 justify-center  ">
       <div className="mx-auto bg-gray-100 rounded w-full grid gap-4 p-4">
-        <p className="md:text-heading-S p-4 bg-gray-200 rounded">
-          {currentQuestion?.ja}
-        </p>
+        <div className="flex items-center gap-4">
+          <p className="md:text-heading-S p-4 bg-gray-200 rounded flex-1">
+            {mode == "en2ja" ? currentQuestion?.ja : currentQuestion?.en}
+          </p>
+          {mode == "ja2en" && <SpeechButton text={currentQuestion?.en} />}
+        </div>
         <div className="flex items-center gap-4">
           {isShowAnswer ? (
             <p className="md:text-heading-S p-4 bg-gray-200 rounded flex-1">
-              {currentQuestion?.en}
+              {mode == "en2ja" ? currentQuestion?.en : currentQuestion?.ja}
             </p>
           ) : (
             <button
@@ -43,7 +48,7 @@ export function CardMain({
               setIsChecked((e.target as HTMLInputElement).checked)
             }
           />
-          <SpeechButton text={currentQuestion?.en} />
+          {mode == "en2ja" && <SpeechButton text={currentQuestion?.en} />}
         </div>
       </div>
     </div>
