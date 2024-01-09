@@ -63,8 +63,19 @@ export default function CardResult({
           </tbody>
         </table>
       </div>
-      <nav className="flex-none">
-        <button onClick={() => window.close()}>閉じる</button>
+      <nav className="flex-none flex gap-4">
+        <button
+          onClick={() => window.location.reload()}
+          className="p-2 rounded bg-gray-100 hover:bg-gray-200"
+        >
+          もう一度
+        </button>
+        <button
+          onClick={() => window.close()}
+          className="p-2 rounded bg-gray-100 hover:bg-gray-200"
+        >
+          閉じる
+        </button>
       </nav>
     </div>
   );

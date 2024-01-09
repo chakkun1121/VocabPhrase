@@ -14,7 +14,7 @@ export default function FlashCardHome({
   flashCardSettings: flashCardSettings;
   setFlashCardSettings: React.Dispatch<React.SetStateAction<flashCardSettings>>;
   checked: cardResult["check"];
-}) {
+  }) {
   return (
     <div className="flex flex-col gap-4 p-4">
       <div className="my-4">
@@ -67,7 +67,7 @@ export default function FlashCardHome({
         <label className="block m-2">
           出題数:
           <input
-            className="p-2 disabled:bg-gray-300   dark:disabled:border-none dark:bg-gray-800 rounded border w-20"
+            className="p-2 disabled:bg-gray-300 dark:disabled:border-none dark:bg-gray-800 rounded border w-20"
             disabled={!flashCardSettings.isRandom}
             type="number"
             value={flashCardSettings?.questionCount}
