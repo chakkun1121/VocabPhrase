@@ -5,3 +5,6 @@ export const APP_DESCRIPTION =
 export const APP_URL = "https://vocab-phrase.vercel.app";
 export const AUTHOR_NAME = "chakkun1121";
 export const THEME_COLOR = "#afe2f5";
+export const CONTACT_FORM_URL =
+  "https://docs.google.com/forms/d/e/1FAIpQLSdBgRX3mdMuv1Ol8yzedOL9i3I2-ifiwfANnJA9UZtfPTFhUQ/viewform?usp=pp_url&entry.1564229909={{content}}&entry.669424587={{error}}";
+export const CONTACT_FORM_ERROR = "%E3%83%90%E3%82%B0%E5%A0%B1%E5%91%8A";

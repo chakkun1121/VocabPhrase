@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
+import { CONTACT_FORM_ERROR, CONTACT_FORM_URL } from "./meta";
 
 export default function Error({
   error,
@@ -20,10 +21,20 @@ export default function Error({
       <h2>エラーが発生しました。</h2>
       <div className="">
         <p>
-          <Link href="">お問い合わせフォーム</Link>
+          <Link
+            href={
+              CONTACT_FORM_URL?.replace(
+                "{{content}}",
+                CONTACT_FORM_ERROR
+              ).replace("{{error}}", error.message) || ""
+            }
+            target="_blank"
+          >
+            お問い合わせフォーム
+          </Link>
         </p>
         <p>
-          <Link href="/logout?redirectTo=/login?redirectTo?app">
+          <Link href="/logout?redirectTo=/login?redirectTo=app">
             ログインし直す
           </Link>
         </p>

@@ -15,6 +15,8 @@ import {
 } from "@/googledrive";
 import { FaPlus } from "react-icons/fa";
 import { useHotkeys } from "react-hotkeys-hook";
+import { IoSaveOutline } from "react-icons/io5";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export function FileMenu({ fileID }: { fileID: string }) {
   const [contentController, setContentController] = useState(
@@ -27,6 +29,7 @@ export function FileMenu({ fileID }: { fileID: string }) {
     content: [],
   });
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false); // 保存中はtrue
   const { data: session }: { data: customSession | null } =
     useSession() as unknown as { data: customSession };
   const token = session?.accessToken;
@@ -39,7 +42,7 @@ export function FileMenu({ fileID }: { fileID: string }) {
       } catch (e: any) {
         // 空ファイルでは "SyntaxError: Unexpected end of JSON input" を吐くが問題なし
         if (e.message !== "Unexpected end of JSON input") console.error(e);
-        setFileContent({ mode: null, content: [] })
+        setFileContent({ mode: null, content: [] });
       } finally {
         setLoading(false);
       }
@@ -48,6 +51,7 @@ export function FileMenu({ fileID }: { fileID: string }) {
   async function saveFileContent() {
     if (!token) return;
     if (title === "") return;
+    setSaving(true);
     titleController.abort("ファイル名を正しく保存するためにキャンセルしました");
     const newController = new AbortController();
     setTitleController(newController);
@@ -59,10 +63,12 @@ export function FileMenu({ fileID }: { fileID: string }) {
       },
       newController.signal
     );
+    setSaving(false);
   }
   async function saveFileInfo() {
     if (!token) return;
     if (fileContent?.content?.length === 0) return;
+    setSaving(true);
     contentController.abort(
       "ファイル内容を正しく保存するためにキャンセルしました"
     );
@@ -74,6 +80,7 @@ export function FileMenu({ fileID }: { fileID: string }) {
       JSON.stringify(fileContent),
       newController.signal
     );
+    setSaving(false);
   }
   useEffect(() => {
     saveFileContent();
@@ -83,11 +90,17 @@ export function FileMenu({ fileID }: { fileID: string }) {
     saveFileInfo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileID, fileContent, token]);
-  useHotkeys("ctrl+s", (e) => {
-    e.preventDefault();
-    saveFileContent();
-    saveFileInfo();
-  });
+  useHotkeys(
+    "ctrl+s",
+    () => {
+      saveFileContent();
+      saveFileInfo();
+    },
+    {
+      enableOnFormTags: ["INPUT", "TEXTAREA", "SELECT"],
+      preventDefault: true,
+    }
+  );
   if (loading) return <div className="text-center p-4">loading...</div>;
   return (
     <div className="">
@@ -113,8 +126,23 @@ export function FileMenu({ fileID }: { fileID: string }) {
             </div>
           </div>
           <div className="flex gap-4">
+            <button
+              className="flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 disabled:text-gray-800 font-semibold"
+              disabled={saving}
+              onClick={() => {
+                sendGAEvent({
+                  event: "clickSaveButton",
+                  category: "file",
+                });
+                saveFileContent();
+                saveFileInfo();
+              }}
+            >
+              <IoSaveOutline />
+              保存{saving && "中"}
+            </button>
             <a
-              className={`flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 text-black hover:text-black visited:text-black ${
+              className={`flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 text-black hover:text-black visited:text-black text-button ${
                 fileContent.content.length === 0 &&
                 "pointer-events-none text-gray-600"
               }`}
