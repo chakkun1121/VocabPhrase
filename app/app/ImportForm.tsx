@@ -53,8 +53,9 @@ export default function ImportForm({
           和訳ファイルからのインポート
         </button>
         <button
-          className="flex-1 rounded-full bg-gray-300 hover:bg-gray-400 p-4"
+          className="flex-1 rounded-full bg-gray-300 hover:bg-gray-400 p-4 disabled:bg-gray-400"
           onClick={importFromBox}
+          disabled={!formContent}
         >
           インポート
         </button>
