@@ -1,9 +1,8 @@
 "use client"; // Error components must be Client Components
 
 import Link from "next/link";
-import { env } from "process";
 import { useEffect } from "react";
-import { CONTACT_FORM_ERROR, CONTACT_FORM_URL } from "../meta";
+import { CONTACT_FORM_ERROR, CONTACT_FORM_URL } from "./meta";
 
 export default function Error({
   error,
@@ -35,7 +34,7 @@ export default function Error({
           </Link>
         </p>
         <p>
-          <Link href="/logout?redirectTo=/login?redirectTo?app">
+          <Link href="/logout?redirectTo=/login?redirectTo=app">
             ログインし直す
           </Link>
         </p>

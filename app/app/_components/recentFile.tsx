@@ -16,25 +16,31 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
   const [recentFile, setRecentFile] = useState<
     { title: string; fileID: string }[]
   >([]);
+  const [error, setError] = useState<any>(undefined);
   const token = session?.accessToken;
   async function getRecentFile() {
-    setIsLoading(true);
-    const files = await listFiles(token, "trashed=false")
-      .then((res) => res.files)
-      .catch((e) => {
-        throw e;
-      });
-    setRecentFile(
-      files
-        .map((file: { name: string; id: string }) => ({
-          title: file.name,
-          fileID: file.id,
-        }))
-        .filter((file: { title: string }) =>
-          file.title.endsWith(".vocabphrase")
-        )
-    );
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const files = await listFiles(token, "trashed=false")
+        .then((res) => res.files)
+        .catch((e) => {
+          throw e;
+        });
+      setRecentFile(
+        files
+          .map((file: { name: string; id: string }) => ({
+            title: file.name,
+            fileID: file.id,
+          }))
+          .filter((file: { title: string }) =>
+            file.title.endsWith(".vocabphrase")
+          )
+      );
+      setIsLoading(false);
+    } catch (e) {
+      setError(e);
+      setIsLoading(false);
+    }
   }
   useEffect(() => {
     (async () => {
@@ -53,11 +59,20 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
         </button>
       </div>
       <div className="flex-1">
+        {error && (
+          <p className="text-center">
+            エラーが発生しました。
+            <Link href="/logout?redirectTo=/login?redirectTo=/app">
+              再度ログイン
+            </Link>
+            してください。
+          </p>
+        )}
         {isLoading ? (
           <p className="text-center">loading...</p>
         ) : (
           <ul className="p-4 flex flex-col gap-4 overflow-y-scroll h-full">
-            {recentFile ? (
+            {recentFile?.length ? (
               recentFile.map((file) => (
                 <li key={file.fileID} className="list-none">
                   <div className="flex items-center gap-2">
