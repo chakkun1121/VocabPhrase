@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { customSession } from "../../../@types/customSession";
 import { useRouter } from "next/navigation";
 import { listFiles } from "@/googledrive";
-import Header from "./header";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export default function LeftBarButtons() {
   const { data: session }: { data: customSession | null } =
@@ -12,6 +12,10 @@ export default function LeftBarButtons() {
   const token = session?.accessToken;
   const router = useRouter();
   async function createFile() {
+    sendGAEvent({
+      event: "createFile",
+      category: "file",
+    });
     // TODO: 作成したファイルが左に追加されない問題をどうにかする
     try {
       let parentFolder = await listFiles(token)

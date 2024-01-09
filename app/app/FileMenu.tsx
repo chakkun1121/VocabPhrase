@@ -16,6 +16,7 @@ import {
 import { FaPlus } from "react-icons/fa";
 import { useHotkeys } from "react-hotkeys-hook";
 import { IoSaveOutline } from "react-icons/io5";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export function FileMenu({ fileID }: { fileID: string }) {
   const [contentController, setContentController] = useState(
@@ -129,6 +130,10 @@ export function FileMenu({ fileID }: { fileID: string }) {
               className="flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 disabled:text-gray-800 font-semibold"
               disabled={saving}
               onClick={() => {
+                sendGAEvent({
+                  event: "clickSaveButton",
+                  category: "file",
+                });
                 saveFileContent();
                 saveFileInfo();
               }}
