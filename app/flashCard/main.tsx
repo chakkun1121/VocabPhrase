@@ -48,8 +48,10 @@ export default function Card({ fileId }: { fileId: string }) {
     (async () => {
       if (!token) return;
       try {
-        setTitle((await getFileInfo(token, fileId)).name);
-        setFileContent(JSON.parse(await getFileContent(token, fileId)));
+        await Promise.all([
+          setTitle((await getFileInfo(token, fileId)).name),
+          setFileContent(JSON.parse(await getFileContent(token, fileId))),
+        ]);
         const resultFile = await listFiles(
           token,
           "name='" + fileId + ".json'",
@@ -70,8 +72,7 @@ export default function Card({ fileId }: { fileId: string }) {
   }, [token, fileId]);
   useEffect(() => {
     (async () => {
-      if (!token) return;
-      if (loading) return;
+      if (mode !== "result") return;
       if (resultFileID) {
         uploadFile(token, resultFileID, JSON.stringify(results));
       } else {
@@ -92,9 +93,7 @@ export default function Card({ fileId }: { fileId: string }) {
         );
       }
     })();
-  }, [fileId, loading, resultFileID, results, token]);
-  if (loading)
-    return <div className="flex flex-col gap-4 h-full p-4">loading...</div>;
+  }, [fileId, mode, resultFileID, results, token]);
   return (
     <div className="flex flex-col h-screen">
       <header className="flex items-center md:justify-between justify-center p-4 bg-primary-200">
@@ -106,35 +105,41 @@ export default function Card({ fileId }: { fileId: string }) {
         </p>
         <HeaderRight />
       </header>
-      {fileContent && (
-        <>
-          {mode === "home" && (
-            <FlashCardHome
-              fileContent={fileContent}
-              setMode={setMode}
-              flashCardSettings={flashCardSettings}
-              setFlashCardSettings={setFlashCardSettings}
-              checked={results.check}
-            />
-          )}
-          {mode === "cards" && (
-            <FlashCard
-              fileContent={fileContent}
-              flashCardSettings={flashCardSettings}
-              setMode={setMode}
-              cardResult={results}
-              setResults={setResults}
-              setCurrentProblemIdList={setCurrentProblemIdList}
-            />
-          )}
-          {mode === "result" && (
-            <CardResult
-              results={results}
-              fileContent={fileContent}
-              currentProblemIdList={currentProblemIdList}
-            />
-          )}
-        </>
+      {loading ? (
+        <div className="flex flex-col gap-4 h-full p-4 select-none">
+          loading...
+        </div>
+      ) : (
+        fileContent && (
+          <>
+            {mode === "home" && (
+              <FlashCardHome
+                fileContent={fileContent}
+                setMode={setMode}
+                flashCardSettings={flashCardSettings}
+                setFlashCardSettings={setFlashCardSettings}
+                checked={results.check}
+              />
+            )}
+            {mode === "cards" && (
+              <FlashCard
+                fileContent={fileContent}
+                flashCardSettings={flashCardSettings}
+                setMode={setMode}
+                cardResult={results}
+                setResults={setResults}
+                setCurrentProblemIdList={setCurrentProblemIdList}
+              />
+            )}
+            {mode === "result" && (
+              <CardResult
+                results={results}
+                fileContent={fileContent}
+                currentProblemIdList={currentProblemIdList}
+              />
+            )}
+          </>
+        )
       )}
     </div>
   );

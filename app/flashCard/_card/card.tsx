@@ -61,13 +61,6 @@ export default function FlashCard({
     flashCardSettings.removeChecked,
   ]);
   function next() {
-    // //  結果に今のIDの問題がなければ追加
-    // if (!currentResult.find((c) => c.id === questionList[questionIndex])) {
-    //   setCurrentResult((prev) => [
-    //     ...prev,
-    //     { id: questionList[questionIndex], result: false },
-    //   ]);
-    // }
     if (questionIndex === questionList.length - 1) {
       finish();
     } else {
