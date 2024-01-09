@@ -1,6 +1,8 @@
 import Header from "@/app/_components/header";
 import Link from "next/link";
+import { env } from "process";
 import { ReactNode } from "react";
+import { CONTACT_FORM_URL } from "../meta";
 
 export default function HomeLayout({ children }: { children: ReactNode }) {
   return (
@@ -24,7 +26,13 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
           </Link>
           <Link
             className="text-white hover:text-white visited:text-white"
-            href=""
+            href={
+              CONTACT_FORM_URL?.replace("{{content}}", "").replace(
+                "{{error}}",
+                ""
+              ) || ""
+            }
+            target="_blank"
           >
             お問い合わせ
           </Link>
