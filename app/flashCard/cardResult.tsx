@@ -21,12 +21,12 @@ export default function CardResult({
               <th className="px-4 py-6">英文</th>
               <th className="px-4 py-6">日本語訳</th>
               {/* <th className="px-4"></th> */}
-              <th className="px-4 py-6">
+              <th className="px-4 py-6 w-20">
                 英語→
                 <br />
                 日本語
               </th>
-              <th className="px-4 py-6">
+              <th className="px-4 py-6 w-20">
                 日本語
                 <br />
                 →英語
