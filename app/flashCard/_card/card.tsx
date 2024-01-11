@@ -54,7 +54,6 @@ export default function FlashCard({
       setQuestionList(questionList);
     }
     setCurrentProblemIdList(questionList);
-    console.log("questionList: ", questionList);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     fileContent.content,
