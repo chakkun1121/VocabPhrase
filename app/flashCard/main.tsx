@@ -16,6 +16,7 @@ import FlashCard from "./_card/card";
 import CardResult from "./cardResult";
 import HeaderRight from "./HeaderRight";
 import { cardResult } from "@/@types/cardResult";
+import { useDocumentTitle } from "@uidotdev/usehooks";
 
 export default function Card({ fileId }: { fileId: string }) {
   const [fileContent, setFileContent] = useState<fileType | undefined>();
@@ -94,6 +95,12 @@ export default function Card({ fileId }: { fileId: string }) {
       }
     })();
   }, [fileId, mode, resultFileID, results, token]);
+  useDocumentTitle(
+    `${title
+      .split(".")
+      .slice(0, -1)
+      .join(".")} | フラッシュカード | VocabPhrase | chakkun1121`
+  );
   return (
     <div className="flex flex-col h-screen">
       <header className="flex items-center md:justify-between justify-center p-4 bg-primary-200">

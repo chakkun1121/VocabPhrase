@@ -35,6 +35,7 @@ export default function FlashCard({
   useEffect(() => {
     // 初期設定
     let idList = fileContent.content.map((c) => c.id);
+    let questionList: string[] = [];
     if (flashCardSettings.removeChecked) {
       const checkedList = cardResult.check?.[flashCardSettings.mode]?.map(
         (v) => v.id
@@ -43,16 +44,16 @@ export default function FlashCard({
     }
     if (flashCardSettings.isRandom) {
       const randomSectionList = idList.sort(() => Math.random() - 0.5);
-      setQuestionList(
-        randomSectionList.slice(
-          0,
-          flashCardSettings.questionCount || idList.length
-        )
+      questionList = randomSectionList.slice(
+        0,
+        flashCardSettings.questionCount || idList.length
       );
+      setQuestionList(questionList);
     } else {
-      setQuestionList(idList);
+      questionList=idList
+      setQuestionList(questionList);
     }
-    setCurrentProblemIdList(idList);
+    setCurrentProblemIdList(questionList);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     fileContent.content,

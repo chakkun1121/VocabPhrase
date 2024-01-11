@@ -27,12 +27,7 @@ export function getFileContent(token: string, fileId: string) {
       throw e;
     });
 }
-export function uploadFile(
-  token: string,
-  fileId: string,
-  fileContent: string,
-  cancelSignal?: AbortSignal
-) {
+export function uploadFile(token: string, fileId: string, fileContent: string) {
   return fetch(
     `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
     {
@@ -42,15 +37,13 @@ export function uploadFile(
         Authorization: "Bearer " + token,
       },
       body: fileContent,
-      signal: cancelSignal,
     }
   ).then((res) => res.json());
 }
 export function updateFileInfo(
   token: string,
   fileId: string,
-  newFileInfo: object,
-  cancelSignal?: AbortSignal
+  newFileInfo: object
 ) {
   return fetch(`https://www.googleapis.com/drive/v3/files/${fileId}`, {
     method: "PATCH",
@@ -59,7 +52,6 @@ export function updateFileInfo(
       Authorization: "Bearer " + token,
     },
     body: JSON.stringify(newFileInfo),
-    signal: cancelSignal,
   }).then((res) => res.json());
 }
 export function listFiles(

@@ -18,11 +18,19 @@ export default function CardResult({
           <thead className="bg-gray-200">
             <tr>
               <th className="px-4 py-6"></th>
-              <th className="px-4">英文</th>
-              <th className="px-4">日本語訳</th>
+              <th className="px-4 py-6">英文</th>
+              <th className="px-4 py-6">日本語訳</th>
               {/* <th className="px-4"></th> */}
-              <th className="px-4">英語→日本語</th>
-              <th className="px-4">日本語→英語</th>
+              <th className="px-4 py-6 w-20">
+                英語→
+                <br />
+                日本語
+              </th>
+              <th className="px-4 py-6 w-20">
+                日本語
+                <br />
+                →英語
+              </th>
             </tr>
           </thead>
           <tbody className="overflow-y-scroll">
@@ -34,10 +42,10 @@ export default function CardResult({
               return (
                 <tr key={currentQuestion.id} className="even:bg-gray-100">
                   <td className="text-center py-5">{i + 1}</td>
-                  <td>{currentQuestion.en}</td>
-                  <td>{currentQuestion.ja}</td>
+                  <td className="py-5">{currentQuestion.en}</td>
+                  <td className="py-5">{currentQuestion.ja}</td>
                   {/* <td className="text-center">{result ? "○" : "×"}</td> */}
-                  <td className="">
+                  <td className="py-5 text-center">
                     <input
                       type="checkbox"
                       checked={
@@ -47,7 +55,7 @@ export default function CardResult({
                       className="w-4 h-4 bg-primary-500"
                     />
                   </td>
-                  <td className="">
+                  <td className="text-center py-5">
                     <input
                       type="checkbox"
                       checked={
