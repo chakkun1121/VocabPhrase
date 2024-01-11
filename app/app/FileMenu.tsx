@@ -17,6 +17,7 @@ import { FaPlus } from "react-icons/fa";
 import { useHotkeys } from "react-hotkeys-hook";
 import { IoSaveOutline } from "react-icons/io5";
 import { sendGAEvent } from "@next/third-parties/google";
+import { useDocumentTitle } from "@uidotdev/usehooks";
 
 export function FileMenu({ fileID }: { fileID: string }) {
   const [title, setTitle] = useState(""); //拡張子付き
@@ -106,6 +107,14 @@ export function FileMenu({ fileID }: { fileID: string }) {
       enableOnFormTags: ["INPUT", "TEXTAREA", "SELECT"],
       preventDefault: true,
     }
+  );
+  useDocumentTitle(
+    title
+      ? `${title
+          .split(".")
+          .slice(0, -1)
+          .join(".")} | 編集ページ | vocabphrase | chakkun1121`
+      : "アプリ | vocabphrase | chakkun1121 "
   );
   if (loading) return <div className="text-center p-4">loading...</div>;
   return (
