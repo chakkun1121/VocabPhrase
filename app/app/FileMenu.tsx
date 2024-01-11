@@ -19,10 +19,6 @@ import { IoSaveOutline } from "react-icons/io5";
 import { sendGAEvent } from "@next/third-parties/google";
 
 export function FileMenu({ fileID }: { fileID: string }) {
-  const [contentController, setContentController] = useState(
-    new AbortController()
-  );
-  const [titleController, setTitleController] = useState(new AbortController());
   const [title, setTitle] = useState(""); //拡張子付き
   const [fileContent, setFileContent] = useState<fileType>({
     mode: null,
@@ -30,6 +26,10 @@ export function FileMenu({ fileID }: { fileID: string }) {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false); // 保存中はtrue
+  const [titleSaving, setTitleSaving] = useState(false); // タイトル保存中はtrue
+  const [fileContentSaving, setFileContentSaving] = useState(false); // ファイルコンテンツ保存中はtrue
+  const [shouldSaveTitle, setShouldSaveTitle] = useState(false); // タイトルを保存する必要があるときはtrue
+  const [shouldSaveFileContent, setShouldSaveFileContent] = useState(false); // ファイルコンテンツを保存する必要があるときはtrue
   const { data: session }: { data: customSession | null } =
     useSession() as unknown as { data: customSession };
   const token = session?.accessToken;
@@ -48,48 +48,54 @@ export function FileMenu({ fileID }: { fileID: string }) {
       }
     })();
   }, [token, fileID]);
-  async function saveFileContent() {
-    if (!token) return;
-    if (title === "") return;
-    setSaving(true);
-    titleController.abort("ファイル名を正しく保存するためにキャンセルしました");
-    const newController = new AbortController();
-    setTitleController(newController);
-    const newFileInfo = await updateFileInfo(
-      token,
-      fileID,
-      {
-        name: title,
-      },
-      newController.signal
-    );
-    setSaving(false);
-  }
+  /**
+   * タイトルを更新します
+   * @returns
+   */
   async function saveFileInfo() {
     if (!token) return;
-    if (fileContent?.content?.length === 0) return;
+    if (title === "") return;
+    if (titleSaving) {
+      setShouldSaveTitle(true);
+      return;
+    }
     setSaving(true);
-    contentController.abort(
-      "ファイル内容を正しく保存するためにキャンセルしました"
-    );
-    const newController = new AbortController();
-    setContentController(newController);
-    const newFileContent = await uploadFile(
-      token,
-      fileID,
-      JSON.stringify(fileContent),
-      newController.signal
-    );
+    setTitleSaving(true);
+    await updateFileInfo(token, fileID, {
+      name: title,
+    });
+    if (shouldSaveTitle) saveFileContent();
     setSaving(false);
+    setTitleSaving(false);
+    setShouldSaveTitle(false);
+  }
+  /**
+   * ファイル本体を更新します
+   * @returns
+   */
+  async function saveFileContent() {
+    if (!token) return;
+    if (fileContent?.content?.length === 0) return;
+    if (fileContentSaving) {
+      setShouldSaveFileContent(true);
+      return;
+    }
+    setSaving(true);
+    setFileContentSaving(true);
+    await uploadFile(token, fileID, JSON.stringify(fileContent));
+    if (shouldSaveFileContent) saveFileContent();
+    setSaving(false);
+    setFileContentSaving(false);
+    setShouldSaveFileContent(false);
   }
   useEffect(() => {
     saveFileContent();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fileID, title, token]);
+  }, [fileID, fileContent, token]);
   useEffect(() => {
     saveFileInfo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fileID, fileContent, token]);
+  }, [fileID, title, token]);
   useHotkeys(
     "ctrl+s",
     () => {
