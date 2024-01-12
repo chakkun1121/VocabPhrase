@@ -3,7 +3,7 @@ import Link from "next/link";
 import { IoMdOpen } from "react-icons/io";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { customSession } from "../../../@types/customSession";
+import { customSession } from "../../../../@types/customSession";
 import { IoReload } from "react-icons/io5";
 import LeftBarButtons from "./LeftBarButtons";
 import { deleteFile, listFiles } from "@/googledrive";

@@ -1,7 +1,7 @@
 "use client";
 import { FaPlus } from "react-icons/fa";
 import { useSession } from "next-auth/react";
-import { customSession } from "../../../@types/customSession";
+import { customSession } from "../../../../@types/customSession";
 import { useRouter } from "next/navigation";
 import { listFiles } from "@/googledrive";
 import { sendGAEvent } from "@next/third-parties/google";
