@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { listFiles } from "@/googledrive";
 import { sendGAEvent } from "@next/third-parties/google";
 import { useState } from "react";
+import Link from "next/link";
+import { MdOutlineQuestionMark } from "react-icons/md";
 
 export default function LeftBarButtons() {
   const { data: session }: { data: customSession | null } =
@@ -71,6 +73,13 @@ export default function LeftBarButtons() {
   }
   return (
     <div className="flex-none p-4 flex flex-col gap-4">
+      <Link
+        href="/app"
+        className="w-full rounded-full bg-gray-100 hover:bg-gray-200  py-4  flex items-center justify-center gap-2 text-black visited:text-black hover:text-black text-button"
+      >
+        <MdOutlineQuestionMark />
+        使い方
+      </Link>
       <button
         className="w-full rounded-full bg-Pizazz-400 hover:bg-Pizazz-300 disabled:bg-Pizazz-500 py-4 text-white flex items-center justify-center gap-2"
         title="ファイルを新規作成する"
