@@ -5,10 +5,12 @@ import { customSession } from "../../../@types/customSession";
 import { useRouter } from "next/navigation";
 import { listFiles } from "@/googledrive";
 import { sendGAEvent } from "@next/third-parties/google";
+import { useState } from "react";
 
 export default function LeftBarButtons() {
   const { data: session }: { data: customSession | null } =
     useSession() as unknown as { data: customSession };
+  const [isCreating, setIsCreating] = useState(false);
   const token = session?.accessToken;
   const router = useRouter();
   async function createFile() {
@@ -16,6 +18,7 @@ export default function LeftBarButtons() {
       event: "createFile",
       category: "file",
     });
+    setIsCreating(true);
     // TODO: 作成したファイルが左に追加されない問題をどうにかする
     try {
       let parentFolder = await listFiles(token)
@@ -62,32 +65,28 @@ export default function LeftBarButtons() {
       router.push(`/app?fileID=${file?.id}`);
     } catch (e) {
       console.error(e);
+    } finally {
+      setIsCreating(false);
     }
   }
   return (
     <div className="flex-none p-4 flex flex-col gap-4">
       <button
-        className="w-full rounded-full bg-Pizazz-400 hover:bg-Pizazz-300 py-4 text-white flex items-center justify-center gap-2"
+        className="w-full rounded-full bg-Pizazz-400 hover:bg-Pizazz-300 disabled:bg-Pizazz-500 py-4 text-white flex items-center justify-center gap-2"
         title="ファイルを新規作成する"
         onClick={createFile}
+        disabled={isCreating}
       >
         <FaPlus />
         新規作成
       </button>
       {/* <button
-                className="w-full rounded-full bg-Pizazz-400 hover:bg-Pizazz-300 py-4 text-white flex items-center justify-center gap-2"
-                title="google driveからファイルを開く"
-              >
-                <FaGoogleDrive />
-                ファイルを開く
-              </button> */}
-      {/* <button
-                className="w-full rounded-full bg-gray-300 hover:bg-gray-400 py-4 flex items-center justify-center gap-2"
-                title="ローカルファイルをアップロードする"
-              >
-                <GoUpload />
-                アップロード
-              </button> */}
+        className="w-full rounded-full bg-Pizazz-400 hover:bg-Pizazz-300 py-4 text-white flex items-center justify-center gap-2"
+        title="google driveからファイルを開く"
+      >
+        <FaGoogleDrive />
+        ファイルを開く
+      </button> */}
     </div>
   );
 }
