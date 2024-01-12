@@ -2,6 +2,7 @@ import Header from "./_components/header";
 import { ReactNode } from "react";
 import LeftBar from "./_components/leftBar";
 import { Metadata } from "next";
+import Print from "./print";
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (

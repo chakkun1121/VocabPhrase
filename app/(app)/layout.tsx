@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
@@ -7,3 +8,6 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   if (!session) redirect("/login?redirectTo=/app");
   return children as JSX.Element;
 }
+export const metadata: Metadata = {
+  robots: "noindex",
+};

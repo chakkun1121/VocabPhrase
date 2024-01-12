@@ -1,13 +1,20 @@
 import { FileMenu } from "./FileMenu";
 import HowToUse from "./howToUse";
+import Print from "./print";
 
 export default function App({
   searchParams: { fileID },
 }: {
   searchParams: { fileID?: string };
 }) {
-  if (!fileID) return <Home />;
-  return <FileMenu fileID={fileID} key={fileID} />;
+  return fileID ? (
+    <>
+      <FileMenu fileID={fileID} key={fileID} />
+      <Print fileId={fileID} />
+    </>
+  ) : (
+    <Home />
+  );
 }
 function Home() {
   return <HowToUse />;

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { uuidv7 as createUUID } from "uuidv7";
 import EditMenu from "./EditMenu";
 import { PiCardsThin } from "react-icons/pi";
+import { IoPrintOutline } from "react-icons/io5";
 import {
   getFileContent,
   getFileInfo,
@@ -156,6 +157,22 @@ export function FileMenu({ fileID }: { fileID: string }) {
               <IoSaveOutline />
               保存{saving && "中"}
             </button>
+            <a
+              className={`flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 text-black hover:text-black visited:text-black text-button ${
+                fileContent.content.length === 0 &&
+                "pointer-events-none text-gray-600"
+              }`}
+              href={"/print?fileId=" + fileID}
+              target="_blank"
+              title={
+                fileContent.content.length === 0
+                  ? "コンテンツがない状態ではフラッシュカードを利用できません。"
+                  : undefined
+              }
+            >
+              <IoPrintOutline />
+              印刷する
+            </a>
             <a
               className={`flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 text-black hover:text-black visited:text-black text-button ${
                 fileContent.content.length === 0 &&
