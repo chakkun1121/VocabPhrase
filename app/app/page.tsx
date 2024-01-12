@@ -1,4 +1,5 @@
 import { FileMenu } from "./FileMenu";
+import HowToUse from "./howToUse";
 
 export default function App({
   searchParams: { fileID },
@@ -9,5 +10,5 @@ export default function App({
   return <FileMenu fileID={fileID} key={fileID} />;
 }
 function Home() {
-  return <>vocabphrase</>;
+  return <HowToUse />;
 }
