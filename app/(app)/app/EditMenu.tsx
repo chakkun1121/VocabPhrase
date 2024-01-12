@@ -25,14 +25,32 @@ export default function EditMenu({
   const [isShowImportBox, setIsShowImportBox] = useState(false);
   return (
     <div className="flex flex-col h-full p-4 gap-4">
-      <div className="flex-none">
+      <div className="flex-none flex gap-4 bg-gray-200 p-2 rounded">
         <input
           type="text"
           value={title}
-          className="w-full p-4 rounded bg-gray-100 border border-gray-800"
+          className="flex-1 p-4 rounded bg-white"
           placeholder="ファイル名を入力してください"
           onChange={(e) => setTitle(e.target.value)}
         />
+        <select
+          className="flex-none bg-white p-4 rounded"
+          value={fileContent.mode ?? "none"}
+          onChange={(e) =>
+            setFileContent({
+              ...fileContent,
+              mode:
+                e.target.value === "none"
+                  ? null
+                  : (e.target.value as fileType["mode"]),
+            })
+          }
+        >
+          <option value="none">モードを選択</option>
+          <option value="words">単語</option>
+          <option value="phrases">フレーズ</option>
+          <option value="sentences">文章</option>
+        </select>
       </div>
       <div className="flex-1 overflow-x-scroll flex flex-col gap-4 bg-gray-100 rounded p-2">
         {fileContent.content.map((field, index) => (
