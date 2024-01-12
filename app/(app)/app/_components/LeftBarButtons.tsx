@@ -1,5 +1,5 @@
 "use client";
-import { FaPlus } from "react-icons/fa";
+import { FaGoogleDrive, FaPlus } from "react-icons/fa";
 import { useSession } from "next-auth/react";
 import { customSession } from "../../../../@types/customSession";
 import { useRouter } from "next/navigation";
@@ -8,6 +8,8 @@ import { sendGAEvent } from "@next/third-parties/google";
 import { useState } from "react";
 import Link from "next/link";
 import { MdOutlineQuestionMark } from "react-icons/md";
+import useDrivePicker from "react-google-drive-picker";
+import { env } from "process";
 
 export default function LeftBarButtons() {
   const { data: session }: { data: customSession | null } =
@@ -15,6 +17,8 @@ export default function LeftBarButtons() {
   const [isCreating, setIsCreating] = useState(false);
   const token = session?.accessToken;
   const router = useRouter();
+  const [openPicker, authResponse] = useDrivePicker();
+
   async function createFile() {
     sendGAEvent({
       event: "createFile",
@@ -71,6 +75,27 @@ export default function LeftBarButtons() {
       setIsCreating(false);
     }
   }
+  function handleOpenPicker() {
+    openPicker({
+      clientId: env.GOOGLE_CLIENT_ID || "",
+      developerKey: env.GOOGLE_DEVELOPER_KEY || "",
+      token,
+      viewId: "DOCS",
+      showUploadView: true,
+      supportDrives: true,
+      multiselect: true,
+      // customViews: customViewsArray, // custom view
+      callbackFunction: (data) => {
+        if (data.action === "cancel") {
+          console.warn("User clicked cancel/close button");
+          return;
+        }
+        if (data?.docs?.[0]?.name?.endsWith(".vocabphrase")) {
+          router.push(`/app?fileID=${data.docs[0].id}`);
+        }
+      },
+    });
+  }
   return (
     <div className="flex-none p-4 flex flex-col gap-4">
       <Link
@@ -89,13 +114,14 @@ export default function LeftBarButtons() {
         <FaPlus />
         新規作成
       </button>
-      {/* <button
+      <button
         className="w-full rounded-full bg-Pizazz-400 hover:bg-Pizazz-300 py-4 text-white flex items-center justify-center gap-2"
         title="google driveからファイルを開く"
+        onClick={handleOpenPicker}
       >
         <FaGoogleDrive />
         ファイルを開く
-      </button> */}
+      </button>
     </div>
   );
 }
