@@ -49,7 +49,7 @@ export default function PrintPage({ fileId }: { fileId: string }) {
         <h1 className="text-center">
           {title.split(".").slice(0, -1).join(".")}
         </h1>
-        <table>
+        <table className="print:w-full">
           <thead>
             <tr>
               <th className="p-2"></th>
