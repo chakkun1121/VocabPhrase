@@ -11,7 +11,7 @@ import { MdOutlineQuestionMark } from "react-icons/md";
 import useDrivePicker from "react-google-drive-picker";
 import { env } from "process";
 
-export default function LeftBarButtons() {
+export default function LeftBarButtons({ reload }: { reload: () => void }) {
   const { data: session }: { data: customSession | null } =
     useSession() as unknown as { data: customSession };
   const [isCreating, setIsCreating] = useState(false);
@@ -25,7 +25,6 @@ export default function LeftBarButtons() {
       category: "file",
     });
     setIsCreating(true);
-    // TODO: 作成したファイルが左に追加されない問題をどうにかする
     try {
       let parentFolder = await listFiles(token)
         .then((res) => res.files)
@@ -67,6 +66,7 @@ export default function LeftBarButtons() {
           }),
         }
       );
+      reload();
       const file = await response.json();
       router.push(`/app?fileID=${file?.id}`);
     } catch (e) {

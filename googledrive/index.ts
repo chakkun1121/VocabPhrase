@@ -79,5 +79,5 @@ export function deleteFile(token: string, fileId: string) {
       Accept: "application/json",
       Authorization: "Bearer " + token,
     },
-  }).then((res) => res.json());
+  });
 }

@@ -8,6 +8,7 @@ import { IoReload } from "react-icons/io5";
 import LeftBarButtons from "./LeftBarButtons";
 import { deleteFile, listFiles } from "@/googledrive";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 export default function RecentFile({ hidden }: { hidden: boolean }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -18,6 +19,7 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
   >([]);
   const [error, setError] = useState<any>(undefined);
   const token = session?.accessToken;
+  const router = useRouter();
   async function getRecentFile() {
     try {
       setIsLoading(true);
@@ -86,7 +88,11 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
                       className="flex-none"
                       onClick={() =>
                         window.confirm("復元できません。よろしいでしょうか?") &&
-                        deleteFile(token, file.fileID)
+                        (async () => {
+                          router.push("/app");
+                          await deleteFile(token, file.fileID);
+                          getRecentFile();
+                        })()
                       }
                     >
                       <FaRegTrashAlt />
@@ -108,7 +114,7 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
           </ul>
         )}
       </div>
-      <LeftBarButtons />
+      <LeftBarButtons reload={getRecentFile} />
     </div>
   );
 }
