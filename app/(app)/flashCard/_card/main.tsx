@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { fileType } from "@/@types/fileType";
-import { useHotkeys } from "react-hotkeys-hook";
 import { SpeechButton } from "./speechButton";
 import Answer from "./answer";
 
@@ -9,11 +8,13 @@ export function CardMain({
   isChecked,
   setIsChecked,
   mode,
+  isAnswerWithKeyboard,
 }: {
   currentQuestion: fileType["content"][0];
   isChecked: boolean;
   setIsChecked: (isChecked: boolean) => void;
   mode: "en2ja" | "ja2en";
+  isAnswerWithKeyboard: boolean;
 }) {
   return (
     <div className="flex-1 w-full flex flex-col gap-4 justify-center  ">
@@ -29,6 +30,7 @@ export function CardMain({
           currentQuestion={currentQuestion}
           isChecked={isChecked}
           setIsChecked={setIsChecked}
+          isAnswerWithKeyboard={isAnswerWithKeyboard}
         />
       </div>
     </div>
