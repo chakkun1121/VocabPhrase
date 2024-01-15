@@ -14,7 +14,7 @@ export default function FlashCardHome({
   flashCardSettings: flashCardSettings;
   setFlashCardSettings: React.Dispatch<React.SetStateAction<flashCardSettings>>;
   checked: cardResult["check"];
-  }) {
+}) {
   return (
     <div className="flex flex-col gap-4 p-4">
       <div className="my-4">
@@ -24,10 +24,10 @@ export default function FlashCardHome({
             name: "isRandom",
             title: "ランダムに出題する",
           },
-          // {
-          //   name: "isAnswerWithKeyboard",
-          //   title: "キーボードで解答する",
-          // },
+          {
+            name: "isAnswerWithKeyboard",
+            title: "キーボードで解答する",
+          },
           {
             name: "removeChecked",
             title: "チェック済みの問題を除外する",
