@@ -30,6 +30,10 @@ export function FileMenu({ fileID }: { fileID: string }) {
   const [saving, setSaving] = useState(false); // 保存中はtrue
   const [titleSaving, setTitleSaving] = useState(false); // タイトル保存中はtrue
   const [fileContentSaving, setFileContentSaving] = useState(false); // ファイルコンテンツ保存中はtrue
+  const [serverFileContent, setServerFileContent] = useState<
+    fileType | undefined
+  >(undefined);
+  const [serverTitle, setServerTitle] = useState(undefined); //拡張子付き
   const [shouldSaveTitle, setShouldSaveTitle] = useState(false); // タイトルを保存する必要があるときはtrue
   const [shouldSaveFileContent, setShouldSaveFileContent] = useState(false); // ファイルコンテンツを保存する必要があるときはtrue
   const { data: session }: { data: customSession | null } =
@@ -39,8 +43,12 @@ export function FileMenu({ fileID }: { fileID: string }) {
     (async () => {
       if (!token) return;
       try {
-        setTitle((await getFileInfo(token, fileID)).name);
-        setFileContent(JSON.parse(await getFileContent(token, fileID)));
+        const title = (await getFileInfo(token, fileID)).name;
+        const fileContent = JSON.parse(await getFileContent(token, fileID));
+        setTitle(title);
+        setServerTitle(title);
+        setFileContent(fileContent);
+        setServerFileContent(fileContent);
       } catch (e: any) {
         // 空ファイルでは "SyntaxError: Unexpected end of JSON input" を吐くが問題なし
         if (e.message !== "Unexpected end of JSON input") console.error(e);
@@ -91,10 +99,12 @@ export function FileMenu({ fileID }: { fileID: string }) {
     setShouldSaveFileContent(false);
   }
   useEffect(() => {
+    if (serverFileContent === fileContent) return;
     saveFileContent();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileID, fileContent, token]);
   useEffect(() => {
+    if (serverTitle === title) return;
     saveFileInfo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileID, title, token]);
