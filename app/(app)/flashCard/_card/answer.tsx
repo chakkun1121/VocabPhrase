@@ -35,31 +35,46 @@ export default function Answer({
   });
   return (
     <div className="flex items-center gap-4">
-      {isShowAnswer ? (
+      {isAnswerWithKeyboard ? (
+        <div className="w-full grid gap-2">
+          <div className="flex-1 flex items-center gap-4 w-full">
+            <input
+              type="text"
+              className="md:text-heading-S p-4 bg-gray-200 rounded flex-1"
+              autoFocus
+              value={inputAnswer}
+              onChange={(e) => setInputAnswer(e.target.value)}
+              spellCheck={false}
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              disabled={isShowAnswer}
+            />
+            {isShowAnswer ? (
+              <p className="md:text-heading-S text-center bg-gray-200 rounded  p-4 flex-none">
+                {inputAnswer == currentQuestion.en ? "◯" : "✕"}
+              </p>
+            ) : (
+              <button
+                className="md:text-heading-S text-center bg-gray-200 rounded hover:bg-gray-300 p-4 flex-none"
+                onClick={answer}
+              >
+                解答する
+              </button>
+            )}
+          </div>
+          <div>
+            {isShowAnswer && (
+              <p className="md:text-heading-S p-4 bg-gray-200 rounded flex-1">
+                {mode == "en2ja" ? currentQuestion?.en : currentQuestion?.ja}
+              </p>
+            )}
+          </div>
+        </div>
+      ) : isShowAnswer ? (
         <p className="md:text-heading-S p-4 bg-gray-200 rounded flex-1">
           {mode == "en2ja" ? currentQuestion?.en : currentQuestion?.ja}
         </p>
-      ) : isAnswerWithKeyboard ? (
-        <div className="flex-1 flex items-center gap-4 w-full">
-          <input
-            type="text"
-            className="md:text-heading-S p-4 bg-gray-200 rounded flex-1"
-            autoFocus
-            value={inputAnswer}
-            onChange={(e) => setInputAnswer(e.target.value)}
-            spellCheck={false}
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            disabled={isShowAnswer}
-          />
-          <button
-            className="md:text-heading-S text-center bg-gray-200 rounded hover:bg-gray-300 p-4 flex-none"
-            onClick={answer}
-          >
-            解答する
-          </button>
-        </div>
       ) : (
         <button
           className="md:text-heading-S w-full text-center bg-gray-200 rounded hover:bg-gray-300 p-4 flex-1"
