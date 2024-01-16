@@ -24,10 +24,6 @@ export default function FlashCard({
 }) {
   const [questionList, setQuestionList] = useState<string[]>([]); // idの配列
   const [questionIndex, setQuestionIndex] = useState<number>(0); // 現在の問題のindex
-  // const [currentResult, setCurrentResult] = useState<
-  //   cardResult["results"][0]["cardsResult"]
-  // >([]); // とき終わった問題の結果を入れる
-  const [isRightCurrent, setIsRightCurrent] = useState<boolean>(false); // 現在の問題が正解かどうか
   const [checked, setIsChecked] = useState<cardResult["check"]["en2ja"]>(
     cardResult.check?.[flashCardSettings.mode]
   );
@@ -50,7 +46,7 @@ export default function FlashCard({
       );
       setQuestionList(questionList);
     } else {
-      questionList=idList
+      questionList = idList;
       setQuestionList(questionList);
     }
     setCurrentProblemIdList(questionList);
@@ -116,6 +112,7 @@ export default function FlashCard({
             ]);
           }}
           mode={flashCardSettings.mode}
+          isAnswerWithKeyboard={flashCardSettings.isAnswerWithKeyboard}
         />
       )}
       <nav className="flex-none flex items-stretch gap-4">

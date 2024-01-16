@@ -14,25 +14,27 @@ export default function FlashCardHome({
   flashCardSettings: flashCardSettings;
   setFlashCardSettings: React.Dispatch<React.SetStateAction<flashCardSettings>>;
   checked: cardResult["check"];
-  }) {
+}) {
   return (
     <div className="flex flex-col gap-4 p-4">
       <div className="my-4">
         <p>オプション</p>
-        {[
-          {
-            name: "isRandom",
-            title: "ランダムに出題する",
-          },
-          // {
-          //   name: "isAnswerWithKeyboard",
-          //   title: "キーボードで解答する",
-          // },
-          {
-            name: "removeChecked",
-            title: "チェック済みの問題を除外する",
-          },
-        ].map((c) => (
+        {(
+          [
+            {
+              name: "isRandom",
+              title: "ランダムに出題する",
+            },
+            flashCardSettings.mode == "en2ja" && {
+              name: "isAnswerWithKeyboard",
+              title: "キーボードで解答する",
+            },
+            {
+              name: "removeChecked",
+              title: "チェック済みの問題を除外する",
+            },
+          ] as { name: string; title: string }[]
+        ).map((c) => (
           <label className="block m-2" key={c.name}>
             <input
               className="p-2 w-4 h-4"
@@ -56,7 +58,7 @@ export default function FlashCardHome({
             onChange={(e) => {
               setFlashCardSettings({
                 ...flashCardSettings,
-                mode: e.target.value as flashCardSettings["mode"],
+                mode: e.target.value as unknown as "en2ja", // ゴリ押し解決
               });
             }}
           >

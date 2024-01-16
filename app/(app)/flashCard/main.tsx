@@ -38,6 +38,7 @@ export default function Card({ fileId }: { fileId: string }) {
     {
       isRandom: false,
       mode: "en2ja",
+      isAnswerWithKeyboard: false,
     }
   );
   const [currentProblemIdList, setCurrentProblemIdList] = useState<string[]>(
