@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { fileType } from "@/@types/fileType";
 import { SpeechButton } from "./speechButton";
 import Answer from "./answer";
