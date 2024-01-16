@@ -3,7 +3,7 @@
 import { customSession } from "@/@types/customSession";
 import { fileType } from "@/@types/fileType";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { uuidv7 as createUUID } from "uuidv7";
 import EditMenu from "./EditMenu";
 import { PiCardsThin } from "react-icons/pi";
@@ -22,10 +22,7 @@ import { useDocumentTitle } from "@uidotdev/usehooks";
 
 export function FileMenu({ fileID }: { fileID: string }) {
   const [title, setTitle] = useState(""); //拡張子付き
-  const [fileContent, setFileContent] = useState<fileType>({
-    mode: null,
-    content: [],
-  });
+  const [fileContent, setFileContent] = useState<fileType | undefined>();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false); // 保存中はtrue
   const [titleSaving, setTitleSaving] = useState(false); // タイトル保存中はtrue
@@ -44,15 +41,22 @@ export function FileMenu({ fileID }: { fileID: string }) {
       if (!token) return;
       try {
         const title = (await getFileInfo(token, fileID)).name;
-        const fileContent = JSON.parse(await getFileContent(token, fileID));
+        if (!title) throw new Error("file is not found");
+        const fileContent =
+          JSON.parse(await getFileContent(token, fileID)) ||
+          ({ mode: null, content: [] } as fileType);
+        console.log("fileFound");
         setTitle(title);
         setServerTitle(title);
         setFileContent(fileContent);
         setServerFileContent(fileContent);
       } catch (e: any) {
         // 空ファイルでは "SyntaxError: Unexpected end of JSON input" を吐くが問題なし
-        if (e.message !== "Unexpected end of JSON input") console.error(e);
-        setFileContent({ mode: null, content: [] });
+        if (e.message == "Unexpected end of JSON input") {
+          setFileContent({ mode: null, content: [] } as fileType);
+          return;
+        }
+        console.error(e);
       } finally {
         setLoading(false);
       }
@@ -128,6 +132,10 @@ export function FileMenu({ fileID }: { fileID: string }) {
       : "アプリ | vocabphrase | chakkun1121 "
   );
   if (loading) return <div className="text-center p-4">loading...</div>;
+  if (!loading && !fileContent)
+    return (
+      <div className="text-center p-4">ファイルが見つかりませんでした。</div>
+    );
   return (
     <div className="">
       <nav className="sticky">
@@ -140,10 +148,10 @@ export function FileMenu({ fileID }: { fileID: string }) {
                   setFileContent({
                     ...fileContent,
                     content: [
-                      ...fileContent.content,
+                      ...(fileContent?.content as fileType["content"]),
                       { id: createUUID(), en: "", ja: "" },
-                    ],
-                  });
+                    ].filter((e) => e),
+                  } as fileType);
                 }}
               >
                 <FaPlus />
@@ -169,13 +177,13 @@ export function FileMenu({ fileID }: { fileID: string }) {
             </button>
             <a
               className={`flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 text-black hover:text-black visited:text-black text-button ${
-                fileContent.content.length === 0 &&
+                fileContent?.content?.length === 0 &&
                 "pointer-events-none text-gray-600"
               }`}
               href={"/print?fileId=" + fileID}
               target="_blank"
               title={
-                fileContent.content.length === 0
+                fileContent?.content?.length === 0
                   ? "コンテンツがない状態ではフラッシュカードを利用できません。"
                   : undefined
               }
@@ -185,13 +193,13 @@ export function FileMenu({ fileID }: { fileID: string }) {
             </a>
             <a
               className={`flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 text-black hover:text-black visited:text-black text-button ${
-                fileContent.content.length === 0 &&
+                fileContent?.content?.length === 0 &&
                 "pointer-events-none text-gray-600"
               }`}
               href={"/flashCard?fileId=" + fileID}
               target="_blank"
               title={
-                fileContent.content.length === 0
+                fileContent?.content?.length === 0
                   ? "コンテンツがない状態ではフラッシュカードを利用できません。"
                   : undefined
               }
@@ -208,8 +216,10 @@ export function FileMenu({ fileID }: { fileID: string }) {
         setTitle={(newTitle) => {
           setTitle(newTitle + ".vocabphrase");
         }}
-        fileContent={fileContent}
-        setFileContent={setFileContent}
+        fileContent={fileContent as fileType}
+        setFileContent={
+          setFileContent as React.Dispatch<React.SetStateAction<fileType>>
+        }
       />
     </div>
   );
