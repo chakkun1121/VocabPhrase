@@ -60,7 +60,7 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
           <IoReload />
         </button>
       </div>
-      <div className="flex-1">
+      <div className="flex-1 overflow-y-scroll">
         {error && (
           <p className="text-center">
             エラーが発生しました。

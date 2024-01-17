@@ -21,7 +21,7 @@ export default function LeftBar() {
       <div
         className={`${
           isShow ? "w-screen md:w-96" : "w-0"
-        } h-full bg-JungleGreen-100 duration-500 sticky bottom-0 `}
+        } bg-JungleGreen-100 duration-500`}
         style={{
           gridArea: "2 / 1 / 3 / 2",
         }}
