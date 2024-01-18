@@ -1,4 +1,14 @@
-export async function uploadFile(): Promise<{
+export async function uploadFile(
+  acceptType: {
+    description: string;
+    accept: Record<string, string[]>;
+  }[] = [
+    {
+      description: "和訳ファイル",
+      accept: { "application/wayaku": [".wayaku"] },
+    },
+  ]
+): Promise<{
   content: string;
   fileName: string;
   fileHandle?: FileSystemFileHandle;
@@ -8,12 +18,8 @@ export async function uploadFile(): Promise<{
       throw new Error("showOpenFilePicker is not defined");
     const FileSystemFileHandles: FileSystemFileHandle[] =
       await window.showOpenFilePicker({
-        types: [
-          {
-            description: "和訳ファイル",
-            accept: { "application/wayaku": ".wayaku" },
-          },
-        ],
+        types: acceptType,
+        excludeAcceptAllOption: false,
       });
     const FileSystemFileHandle: FileSystemFileHandle = FileSystemFileHandles[0];
     return FileSystemFileHandle;
@@ -28,7 +34,7 @@ export async function uploadFile(): Promise<{
     }
     const fileInput = document.createElement("input");
     fileInput.type = "file";
-    fileInput.accept = "application/wayaku";
+    fileInput.accept = Object.keys(acceptType[0].accept)[0];
     fileInput.click();
     const file = await new Promise<File>((resolve) => {
       fileInput.addEventListener("change", () => {
