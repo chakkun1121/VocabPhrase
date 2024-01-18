@@ -9,7 +9,6 @@ export default function Home() {
         <div className="flex-1 flex">
           <Link
             href="/"
-            aria-label="ホームへ"
             className="text-black hover:text-black visited:text-black no-underline"
           >
             <h1>VocabPhrase</h1>
@@ -32,6 +31,7 @@ export default function Home() {
               width={800}
               height={452}
               className="max-w-full"
+              // priority={true} //画像サイズがでかすぎて遅延読み込みのほうが早かった
             />
           </div>
         </section>
@@ -54,7 +54,7 @@ export default function Home() {
                 </div>
                 <Image
                   className="flex-none max-w-full"
-                  src="/img/createfile.gif"
+                  src="/img/createfile-animation.webp"
                   alt="単語帳を作る"
                   width={600}
                   height={336}
@@ -72,8 +72,8 @@ export default function Home() {
                   </p>
                 </div>
                 <Image
-                  className="flex-none"
-                  src="/img/flashcard.gif"
+                  className="flex-none max-w-full"
+                  src="/img/flashcard-animation.webp"
                   alt="フラッシュカード"
                   width={600}
                   height={336}
@@ -87,8 +87,8 @@ export default function Home() {
                   </p>
                 </div>
                 <Image
-                  className="flex-none"
-                  src="/img/speaking.gif"
+                  className="flex-none max-w-full"
+                  src="/img/speaking-animation.webp"
                   alt="スピーキング練習ページ"
                   width={600}
                   height={336}
