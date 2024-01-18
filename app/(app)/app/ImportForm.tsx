@@ -46,12 +46,28 @@ export default function ImportForm({
         >
           キャンセル
         </button>
-        <button
-          className="flex-none rounded-full bg-gray-300 hover:bg-gray-400 p-4"
-          onClick={uploadWayakuFile}
-        >
-          和訳ファイルからのインポート
-        </button>
+        <div className="flex-none  [&>ul]:hover:inline-block">
+          <p className="block rounded-full bg-gray-300 hover:bg-gray-400 p-4">
+            その他ファイルからのインポート
+          </p>
+          <ul className="absolute bg-gray-300 m-0 rounded-b hidden ">
+            {[
+              {
+                name: "和訳ファイル(.wayaku)",
+                onClick: uploadWayakuFile,
+              },
+            ].map(({ name, onClick }, i) => (
+              <li className="list-none text-center relative " key={i}>
+                <button
+                  onClick={onClick}
+                  className="rounded hover:bg-gray-400 p-4"
+                >
+                  {name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
         <button
           className="flex-1 rounded-full bg-gray-300 hover:bg-gray-400 p-4 disabled:bg-gray-400"
           onClick={importFromBox}
