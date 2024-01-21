@@ -14,7 +14,7 @@ export default function Home() {
             <h1>VocabPhrase</h1>
           </Link>
         </div>
-        <div className="flex-none items-center flex">
+        <div className="flex-none items-center hidden md:flex">
           <Link href="/app" className="">
             単語帳を使う
           </Link>
@@ -35,68 +35,62 @@ export default function Home() {
             />
           </div>
         </section>
-        <div className="p-4 mx-auto max-w-7xl w-full grid gap-8">
-          <section>
+        <div className="p-4 mx-auto max-w-7xl w-full">
+          <section className="my-4">
             <h2>VocabPhraseとは?</h2>
             <p>
               VocabPhraseとは英文、英単語専用のwebで使える単語帳アプリです。
             </p>
           </section>
-          <section>
+          <section className="my-4">
             <h2>機能紹介</h2>
-            <div className="grid gap-4">
-              <div className="flex flex-wrap w-full">
-                <div className="flex-1 w-full">
-                  <h3>単語帳を作る</h3>
-                  <p>
-                    このアプリを使用して自分で単語帳を作成できます。作成した単語帳はあなたのGoogleDriveに保存されます。
-                  </p>
+            <div className="">
+              {[
+                {
+                  title: "単語帳を作る",
+                  description:
+                    "このアプリを使用して自分で単語帳を作成できます。作成した単語帳はあなたのGoogleDriveに保存されます。",
+                  image: "/img/createfile-animation.webp",
+                  imageAlt: "単語帳を作る",
+                  width: 600,
+                  height: 336,
+                },
+                {
+                  title: "フラッシュカードで暗記する",
+                  description:
+                    "作成した単語帳はフラッシュカードで暗記できます。日本語から英語と英語から日本語のモードがあります。また、できた問題をチェックすることができるので効率的に学べます。",
+                  image: "/img/flashcard-animation.webp",
+                  imageAlt: "フラッシュカード",
+                  width: 600,
+                  height: 336,
+                },
+                {
+                  title: "スピーキング練習(開発中)",
+                  description:
+                    "このアプリでは単語帳機能だけではなく、作成した単語帳のスピーキング練習ができます。",
+                  image: "/img/speaking-animation.webp",
+                  imageAlt: "スピーキング練習ページ",
+                  width: 600,
+                  height: 336,
+                },
+              ].map((item, index) => (
+                <div className="flex flex-wrap w-full my-2" key={index}>
+                  <div className="flex-1">
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+                  </div>
+                  <Image
+                    className="flex-none !max-w-full md:block"
+                    src={item.image}
+                    alt={item.imageAlt}
+                    width={item.width}
+                    height={item.height}
+                  />
                 </div>
-                <Image
-                  className="flex-none max-w-full"
-                  src="/img/createfile-animation.webp"
-                  alt="単語帳を作る"
-                  width={600}
-                  height={336}
-                />
-              </div>
-              <div className="flex flex-wrap w-full">
-                <div className="flex-1">
-                  <h3 className="flex-1">フラッシュカードで暗記する</h3>
-                  <p>
-                    作成した単語帳はフラッシュカードで暗記できます。
-                    <br />
-                    日本語から英語と英語から日本語のモードがあります。
-                    <br />
-                    また、できた問題をチェックすることができるので効率的に学べます。
-                  </p>
-                </div>
-                <Image
-                  className="flex-none max-w-full"
-                  src="/img/flashcard-animation.webp"
-                  alt="フラッシュカード"
-                  width={600}
-                  height={336}
-                />
-              </div>
-              <div className="flex flex-wrap w-full">
-                <div className="flex-1">
-                  <h3 className="flex-1">スピーキング練習(開発中)</h3>
-                  <p>
-                    このアプリでは単語帳機能だけではなく、作成した単語帳のスピーキング練習ができます。
-                  </p>
-                </div>
-                <Image
-                  className="flex-none max-w-full"
-                  src="/img/speaking-animation.webp"
-                  alt="スピーキング練習ページ"
-                  width={600}
-                  height={336}
-                />
-              </div>
+              ))}
             </div>
           </section>
-          <section className="text-center sticky bottom-4">
+          <section className="text-center sticky bottom-4 my-4">
             <Link
               href="/app"
               className="text-black bg-Pizazz-200 hover:bg-Pizazz-300 p-4 rounded visited:text-black hover:text-black"
