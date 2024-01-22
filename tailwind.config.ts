@@ -77,6 +77,15 @@ module.exports = {
       },
     },
     extend: {
+      height: {
+        screen: ["100vh", "100dvh"],
+      },
+      minHeight: {
+        screen: ["100vh", "100dvh"],
+      },
+      maxHeight: {
+        screen: ["100vh", "100dvh"],
+      },
       gridTemplateColumns: {
         auto: "repeat(auto-fit, minmax(0, 1fr))",
       },
