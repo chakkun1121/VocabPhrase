@@ -13,7 +13,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       }}
     >
       <Header />
-      <div className="flex">
+      <div className="flex mt-20">
         <LeftBar />
         <div className="flex-1">{children}</div>
       </div>

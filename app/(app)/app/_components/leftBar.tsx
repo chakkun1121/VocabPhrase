@@ -29,7 +29,7 @@ export default function LeftBar() {
         onClick={() => {
           setIsShow(!isShow);
         }}
-        className={`bottom-2 absolute w-12 h-12 bg-JungleGreen-200 duration-500 ${
+        className={`bottom-2 fixed w-12 h-12 bg-JungleGreen-200 duration-500 ${
           isShow
             ? "rounded-l-full left-[calc(100vw-3rem)] md:left-[21rem] "
             : "rounded-r-full left-0"
