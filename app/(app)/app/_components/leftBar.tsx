@@ -20,8 +20,8 @@ export default function LeftBar() {
     <>
       <div
         className={`${
-          isShow ? "w-screen md:w-96" : "w-0"
-        } bg-JungleGreen-100 duration-500 sticky top-20 h-[calc(100vh-5rem)]`}
+          isShow ? "w-[min(24rem,calc(100vw-3rem))]" : "w-0"
+        } bg-JungleGreen-100 duration-500 fixed top-20 h-[calc(100vh-5rem)] `}
       >
         <RecentFile hidden={!isShowContent} />
       </div>
@@ -31,7 +31,7 @@ export default function LeftBar() {
         }}
         className={`bottom-2 fixed w-12 h-12 bg-JungleGreen-200 duration-500 ${
           isShow
-            ? "rounded-l-full left-[calc(100vw-3rem)] md:left-[21rem] "
+            ? "rounded-l-full left-[min(21rem,calc(100vw-3rem))]"
             : "rounded-r-full left-0"
         }`}
       >
@@ -41,6 +41,11 @@ export default function LeftBar() {
           <FaAngleRight className="m-auto" />
         )}
       </button>
+      <div
+        className={`${
+          isShow ? "md:w-[min(24rem,calc(100vw-3rem))] w-0" : "w-0"
+        } duration-500`}
+      />
     </>
   );
 }
