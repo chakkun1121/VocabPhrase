@@ -1,4 +1,4 @@
-import { FileMenu } from "./FileMenu";
+import FileMenu from "./_components/edit/main";
 import HowToUse from "./howToUse";
 import Print from "./print";
 
