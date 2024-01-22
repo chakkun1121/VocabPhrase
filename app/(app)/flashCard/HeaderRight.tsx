@@ -10,7 +10,7 @@ export default function HeaderRight() {
     setIsMaximized((prev) => !prev);
   });
   return (
-    <nav className="gap-4 hidden md:flex">
+    <nav className="gap-4 flex">
       {(
         [
           {

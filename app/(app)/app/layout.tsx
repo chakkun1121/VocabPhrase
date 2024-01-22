@@ -2,28 +2,15 @@ import Header from "./_components/header";
 import { ReactNode } from "react";
 import LeftBar from "./_components/leftBar";
 import { Metadata } from "next";
-import Print from "./print";
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (
-    <div
-      className="grid h-screen"
-      style={{
-        gridTemplateColumns: "auto 1fr",
-        gridTemplateRows: "auto 1fr",
-      }}
-    >
+    <div className="h-screen">
       <Header />
-      <LeftBar />
-      <div
-        className="overflow-y-scroll"
-        style={{
-          gridArea: "2 / 2 / 3 / 3",
-        }}
-      >
-        {children}
+      <div className="flex mt-20">
+        <LeftBar />
+        <div className="flex-1 md:w-auto">{children}</div>
       </div>
-      <div className="flex-none">{/* right bar */}</div>
     </div>
   );
 }

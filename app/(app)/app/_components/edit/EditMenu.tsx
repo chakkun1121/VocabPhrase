@@ -3,13 +3,8 @@ import { fileType } from "@/@types/fileType";
 import { uuidv7 as createUUID } from "uuidv7";
 import { MdDeleteOutline } from "react-icons/md";
 import { FaPlus } from "react-icons/fa";
-import {
-  ButtonHTMLAttributes,
-  DetailedHTMLProps,
-  useEffect,
-  useState,
-} from "react";
-import ImportForm from "./ImportForm";
+import { ButtonHTMLAttributes, DetailedHTMLProps, useState } from "react";
+import ImportForm from "../../ImportForm";
 
 export default function EditMenu({
   title,
@@ -52,7 +47,7 @@ export default function EditMenu({
           <option value="sentences">文章</option>
         </select>
       </div>
-      <div className="flex-1 overflow-x-scroll flex flex-col gap-4 bg-gray-100 rounded p-2">
+      <div className="flex-1 flex flex-col gap-4 bg-gray-100 rounded p-2">
         {fileContent.content.map((field, index) => (
           <div
             key={field.id}
