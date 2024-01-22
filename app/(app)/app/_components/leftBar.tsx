@@ -21,7 +21,7 @@ export default function LeftBar() {
       <div
         className={`${
           isShow ? "w-[min(24rem,calc(100vw-3rem))]" : "w-0"
-        } bg-JungleGreen-100 duration-500 fixed top-20 h-[calc(100vh-5rem)] `}
+        } bg-JungleGreen-100 duration-500 fixed top-20 h-[calc(100vh-5rem)] z-10`}
       >
         <RecentFile hidden={!isShowContent} />
       </div>
@@ -29,7 +29,7 @@ export default function LeftBar() {
         onClick={() => {
           setIsShow(!isShow);
         }}
-        className={`bottom-2 fixed w-12 h-12 bg-JungleGreen-200 duration-500 ${
+        className={`bottom-2 fixed w-12 h-12 bg-JungleGreen-200 duration-500 z-20 ${
           isShow
             ? "rounded-l-full left-[min(21rem,calc(100vw-3rem))]"
             : "rounded-r-full left-0"
