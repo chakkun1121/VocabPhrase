@@ -155,7 +155,7 @@ export function FileMenu({ fileID }: { fileID: string }) {
                 }}
               >
                 <FaPlus />
-                <span>追加</span>
+                <span className="hidden md:inline-block">追加</span>
               </button>
             </div>
           </div>
@@ -173,7 +173,9 @@ export function FileMenu({ fileID }: { fileID: string }) {
               }}
             >
               <IoSaveOutline />
-              保存{saving && "中"}
+              <span className="hidden md:inline-block">
+                保存{saving && "中"}
+              </span>
             </button>
             <a
               className={`flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 text-black hover:text-black visited:text-black text-button ${
@@ -189,7 +191,7 @@ export function FileMenu({ fileID }: { fileID: string }) {
               }
             >
               <IoPrintOutline />
-              印刷する
+              <span className="hidden md:inline-block">印刷する</span>
             </a>
             <a
               className={`flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 text-black hover:text-black visited:text-black text-button ${
@@ -205,7 +207,7 @@ export function FileMenu({ fileID }: { fileID: string }) {
               }
             >
               <PiCardsThin />
-              フラッシュカード
+              <span className="hidden md:inline-block">フラッシュカード</span>
             </a>
           </div>
         </div>
