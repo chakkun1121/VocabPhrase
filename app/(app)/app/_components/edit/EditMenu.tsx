@@ -19,7 +19,7 @@ export default function EditMenu({
 }) {
   const [isShowImportBox, setIsShowImportBox] = useState(false);
   return (
-    <div className="flex flex-col h-full p-4 gap-4">
+    <div className="flex flex-col p-4 gap-4">
       <div className="flex-none flex gap-4 bg-gray-200 p-2 rounded">
         <input
           type="text"
