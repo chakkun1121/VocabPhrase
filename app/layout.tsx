@@ -11,6 +11,7 @@ import {
   AUTHOR_NAME,
   THEME_COLOR,
 } from "./meta";
+import HelpKeyShortCut from "./_components/helpKeyShortCut";
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
@@ -68,6 +69,7 @@ export default function RootLayout({
       )}
       <NextAuthProvider>
         <RecoilProvider>
+          <HelpKeyShortCut />
           <body className="min-h-screen">{children}</body>
         </RecoilProvider>
       </NextAuthProvider>

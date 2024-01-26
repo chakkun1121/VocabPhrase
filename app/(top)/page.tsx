@@ -89,6 +89,12 @@ export default function Home() {
                 </div>
               ))}
             </div>
+            <h2>
+              詳しい機能などは
+              <Link href="/help" className="text-heading-M" target="_blank">
+                こちら
+              </Link>
+            </h2>
           </section>
           <section className="text-center sticky bottom-4 my-4">
             <Link
