@@ -25,7 +25,7 @@ export default function FlashCardHome({
               name: "isRandom",
               title: "ランダムに出題する",
             },
-            flashCardSettings.mode == "en2ja" && {
+            flashCardSettings.mode == "ja-en" && {
               name: "isAnswerWithKeyboard",
               title: "キーボードで解答する",
             },
@@ -34,22 +34,24 @@ export default function FlashCardHome({
               title: "チェック済みの問題を除外する",
             },
           ] as { name: string; title: string }[]
-        ).map((c) => (
-          <label className="block m-2" key={c.name}>
-            <input
-              className="p-2 w-4 h-4"
-              type="checkbox"
-              defaultChecked={flashCardSettings.isRandom}
-              onChange={(e) => {
-                setFlashCardSettings({
-                  ...flashCardSettings,
-                  [c.name]: e.target.checked,
-                });
-              }}
-            />
-            {c.title}
-          </label>
-        ))}
+        )
+          .filter((a) => a)
+          .map((c) => (
+            <label className="block m-2" key={c.name}>
+              <input
+                className="p-2 w-4 h-4"
+                type="checkbox"
+                defaultChecked={flashCardSettings.isRandom}
+                onChange={(e) => {
+                  setFlashCardSettings({
+                    ...flashCardSettings,
+                    [c.name]: e.target.checked,
+                  });
+                }}
+              />
+              {c.title}
+            </label>
+          ))}
         <label className="block m-2">
           出題モード:
           <select
@@ -58,12 +60,12 @@ export default function FlashCardHome({
             onChange={(e) => {
               setFlashCardSettings({
                 ...flashCardSettings,
-                mode: e.target.value as unknown as "en2ja", // ゴリ押し解決
+                mode: e.target.value as unknown as "ja-en",
               });
             }}
           >
-            <option value="en2ja">英語→日本語</option>
-            <option value="ja2en">日本語→英語</option>
+            <option value="ja-en">日本語→英語</option> {/*←初期設定*/}
+            <option value="en-ja">英語→日本語</option>
           </select>
         </label>
         <label className="block m-2">
@@ -76,15 +78,13 @@ export default function FlashCardHome({
             defaultValue={
               fileContent.content.length -
               ((flashCardSettings?.removeChecked
-                ? checked?.[flashCardSettings.mode]?.filter((a) => a.checked)
-                    .length
+                ? checked?.[flashCardSettings.mode]?.length
                 : 0) ?? 0)
             }
             max={
               fileContent.content.length -
               ((flashCardSettings?.removeChecked
-                ? checked?.[flashCardSettings.mode]?.filter((a) => a.checked)
-                    .length
+                ? checked?.[flashCardSettings.mode]?.length
                 : 0) ?? 0)
             }
             min={1}
@@ -98,8 +98,7 @@ export default function FlashCardHome({
           問/全
           {fileContent.content.length -
             ((flashCardSettings?.removeChecked
-              ? checked?.[flashCardSettings.mode]?.filter((a) => a.checked)
-                  .length
+              ? checked?.[flashCardSettings.mode]?.length
               : 0) ?? 0)}
           問
           {!flashCardSettings.isRandom &&
@@ -112,8 +111,7 @@ export default function FlashCardHome({
         disabled={
           fileContent.content.length -
             ((flashCardSettings?.removeChecked
-              ? checked?.[flashCardSettings.mode]?.filter((a) => a.checked)
-                  .length
+              ? checked?.[flashCardSettings.mode]?.length
               : 0) ?? 0) ===
           0
         }

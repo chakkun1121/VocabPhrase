@@ -4,12 +4,13 @@ export type flashCardSettings =
       isAnswerWithKeyboard: false;
       removeChecked?: boolean;
       questionCount?: number;
-      mode: "en2ja" | "ja2en";
+      mode: flashCardMode;
     }
   | {
       isRandom: boolean;
       isAnswerWithKeyboard: true;
       removeChecked: boolean;
       questionCount?: number;
-      mode: "en2ja";
+      mode: "ja-en";
     };
+export type flashCardMode = "ja-en" | "en-ja";
