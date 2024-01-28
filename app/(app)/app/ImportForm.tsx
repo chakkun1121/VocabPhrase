@@ -5,6 +5,7 @@ import React, { MouseEventHandler, useState } from "react";
 import { wayakuFile2file } from "./_library/wayaku";
 import { uploadFile } from "./_library/uploadFile";
 import { csvToFileContent } from "./_library/csvToFileContent";
+import { flashCardMode } from "@/@types/flashCardSettings";
 
 export default function ImportForm({
   close,
@@ -32,7 +33,7 @@ export default function ImportForm({
     setTitle(title);
     close();
   }
-  async function importFromCsv(mode?: "en-ja" | "ja-en") {
+  async function importFromCsv(mode?: flashCardMode) {
     /**
      * ファイル形式(ヘッダー行は基本的になしだが、含まれている場合はユーザーによって除去してもらう)
      * 1. |表|裏|

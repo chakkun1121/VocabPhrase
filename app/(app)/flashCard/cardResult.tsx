@@ -49,7 +49,7 @@ export default function CardResult({
                     <input
                       type="checkbox"
                       checked={
-                        results.check?.en2ja?.find((r) => r.id === id)?.checked
+                        !!results.check?.["ja-en"]?.find((r) => r === id)
                       }
                       disabled
                       className="w-4 h-4 bg-primary-500"
@@ -59,7 +59,7 @@ export default function CardResult({
                     <input
                       type="checkbox"
                       checked={
-                        results.check?.ja2en?.find((r) => r.id === id)?.checked
+                        !!results.check?.["en-ja"]?.find((r) => r === id)
                       }
                       disabled
                       className="w-4 h-4 bg-primary-500"

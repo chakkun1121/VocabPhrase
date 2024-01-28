@@ -27,8 +27,8 @@ export default function Card({ fileId }: { fileId: string }) {
   const [results, setResults] = useState<cardResult>({
     fileInfo: { id: fileId },
     check: {
-      en2ja: [],
-      ja2en: [],
+      ["en-ja"]: [],
+      ["ja-en"]: [],
     },
     results: [],
   });
@@ -37,7 +37,7 @@ export default function Card({ fileId }: { fileId: string }) {
   const [flashCardSettings, setFlashCardSettings] = useState<flashCardSettings>(
     {
       isRandom: false,
-      mode: "en2ja",
+      mode: "ja-en",
       isAnswerWithKeyboard: false,
     }
   );

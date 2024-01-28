@@ -2,6 +2,7 @@ import { fileType } from "@/@types/fileType";
 import { useState } from "react";
 import { SpeechButton } from "./speechButton";
 import { useHotkeys } from "react-hotkeys-hook";
+import { flashCardMode } from "@/@types/flashCardSettings";
 
 export default function Answer({
   mode,
@@ -10,7 +11,7 @@ export default function Answer({
   setIsChecked,
   isAnswerWithKeyboard,
 }: {
-  mode: "en2ja" | "ja2en";
+  mode: flashCardMode;
   currentQuestion: fileType["content"][0];
   isChecked: boolean;
   setIsChecked: (isChecked: boolean) => void;
@@ -66,14 +67,14 @@ export default function Answer({
           <div>
             {isShowAnswer && (
               <p className="md:text-heading-S p-4 bg-gray-200 rounded flex-1">
-                {mode == "en2ja" ? currentQuestion?.en : currentQuestion?.ja}
+                {mode == "ja-en" ? currentQuestion?.en : currentQuestion?.ja}
               </p>
             )}
           </div>
         </div>
       ) : isShowAnswer ? (
         <p className="md:text-heading-S p-4 bg-gray-200 rounded flex-1">
-          {mode == "en2ja" ? currentQuestion?.en : currentQuestion?.ja}
+          {mode == "ja-en" ? currentQuestion?.en : currentQuestion?.ja}
         </p>
       ) : (
         <button
@@ -88,7 +89,7 @@ export default function Answer({
         checked={isChecked}
         onChange={(e) => setIsChecked((e.target as HTMLInputElement).checked)}
       />
-      {mode == "en2ja" && <SpeechButton text={currentQuestion?.en} />}
+      {mode == "ja-en" && <SpeechButton text={currentQuestion?.en} />}
     </div>
   );
 }

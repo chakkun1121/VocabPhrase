@@ -24,8 +24,8 @@ export default function FlashCard({
 }) {
   const [questionList, setQuestionList] = useState<string[]>([]); // idの配列
   const [questionIndex, setQuestionIndex] = useState<number>(0); // 現在の問題のindex
-  const [checked, setIsChecked] = useState<cardResult["check"]["en2ja"]>(
-    cardResult.check?.[flashCardSettings.mode]
+  const [checked, setIsChecked] = useState<string[]>(
+    cardResult.check?.[flashCardSettings.mode] ?? []
   );
 
   useEffect(() => {
@@ -33,10 +33,7 @@ export default function FlashCard({
     let idList = fileContent.content.map((c) => c.id);
     let questionList: string[] = [];
     if (flashCardSettings.removeChecked) {
-      const checkedList = cardResult.check?.[flashCardSettings.mode]?.map(
-        (v) => v.id
-      );
-      idList = idList.filter((id) => !checkedList?.includes(id));
+      idList = idList.filter((id) => !checked?.includes(id));
     }
     if (flashCardSettings.isRandom) {
       const randomSectionList = idList.sort(() => Math.random() - 0.5);
@@ -102,13 +99,11 @@ export default function FlashCard({
         <CardMain
           currentQuestion={currentQuestion as fileType["content"][0]}
           key={currentQuestion?.id}
-          isChecked={
-            checked?.find((v) => v.id == currentQuestion.id)?.checked ?? false
-          }
+          isChecked={!!checked?.find((v) => v == currentQuestion.id) ?? false}
           setIsChecked={(isChecked: boolean) => {
             setIsChecked((prev) => [
-              ...(prev?.filter((v) => v.id !== currentQuestion.id) ?? []),
-              { id: currentQuestion?.id, checked: isChecked },
+              ...prev.filter((v) => v !== currentQuestion.id),
+              ...(isChecked ? [currentQuestion.id] : []),
             ]);
           }}
           mode={flashCardSettings.mode}
