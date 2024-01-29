@@ -12,7 +12,10 @@ type menuInfoOptions = {
   };
   onclick?: (text: string) => void;
   options?: menuInfoOptions[];
-  when?: "onSelected";
+  when?: {
+    onSelected?: boolean;
+    path?: string[];
+  };
 };
 export default function RightClick() {
   const [isShow, setIsShow] = useState(false);
@@ -29,7 +32,7 @@ export default function RightClick() {
         onclick: (text: string) => {
           navigator.clipboard.writeText(text);
         },
-        when: "onSelected",
+        when: { onSelected: true },
       },
       {
         name: {
@@ -41,7 +44,7 @@ export default function RightClick() {
           utterance.lang = "en-US";
           speechSynthesis.speak(utterance);
         },
-        when: "onSelected",
+        when: { onSelected: true },
       },
       {
         name: {
@@ -59,7 +62,7 @@ export default function RightClick() {
             },
           },
         ],
-        when: "onSelected",
+        when: { onSelected: true },
       },
       {
         name: {
@@ -91,41 +94,50 @@ export default function RightClick() {
   });
   const onSelected = !!window.getSelection()?.toString();
   const currentMenu = (menu[pathName] || menu.default).filter((e) => {
-    if (e.when === "onSelected") {
-      return onSelected;
-    }
+    if (e.when?.onSelected && !onSelected) return false;
+    if (e.when?.path && !e.when.path.includes(pathName)) return false;
     return true;
   });
   return (
     <>
       {isShow && (
         <>
-          <button
-            className="w-screen h-screen bg-white opacity-0	"
-            onClick={() => setIsShow(false)}
-          ></button>
           <div
-            className="absolute top-0 left-0 w-64 bg-gray-100 rounded shadow-lg z-50"
+            className="absolute top-0 left-0 w-64 bg-gray-100 rounded shadow-lg z-50 select-none"
             style={{
               top: y,
               left: x,
             }}
           >
             {currentMenu.map((e) => (
-              <button
-                className="w-full h-12 px-4 text-left hover:bg-gray-200"
-                onClick={() => {
-                  e.onclick?.(window.getSelection()?.toString() || "");
-                  setIsShow(false);
-                }}
-                key={e.name["en"]}
-              >
-                {e.name["ja"]}
-              </button>
+              <MenuButton menuInfo={e} key={e.name.en} x={x} />
             ))}
           </div>
         </>
       )}
     </>
+  );
+}
+function MenuButton({ menuInfo, x }: { menuInfo: menuInfoOptions; x: number }) {
+  return menuInfo.options ? (
+    <>
+      <p className="w-full h-12 px-4 text-left hover:bg-gray-200 text-button flex items-center group after:content-['>'] justify-between after:text-gray-500">
+        {menuInfo.name["ja"]}
+        <div className="absolute w-64 bg-gray-100 rounded shadow-lg z-50 hidden group-hover:block left-64">
+          {menuInfo.options.map((e) => (
+            <MenuButton menuInfo={e} key={e.name.en} x={x + 256} />
+          ))}
+        </div>
+      </p>
+    </>
+  ) : (
+    <button
+      className="w-full h-12 px-4 text-left hover:bg-gray-200"
+      onClick={() => {
+        menuInfo.onclick?.(window.getSelection()?.toString() || "");
+      }}
+    >
+      {menuInfo.name["ja"]}
+    </button>
   );
 }
