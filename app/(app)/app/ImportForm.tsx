@@ -1,7 +1,7 @@
 "use client";
 import { fileType } from "@/@types/fileType";
 import { uuidv7 as createUUID } from "uuidv7";
-import React, { MouseEventHandler, useState } from "react";
+import React, { useState } from "react";
 import { wayakuFile2file } from "./_library/wayaku";
 import { uploadFile } from "./_library/uploadFile";
 import { csvToFileContent } from "./_library/csvToFileContent";
@@ -18,11 +18,16 @@ export default function ImportForm({
 }) {
   const [formContent, setFormContent] = useState("");
   function importFromBox() {
-    const content = formContent.split("\n").map((line) => {
-      if (line === "") return;
-      const [en, ja] = line.split("\t");
-      return { id: createUUID(), en, ja };
-    }) as fileType["content"];
+    const temp = formContent.split(/[\n\t]/).filter((e) => e);
+    const content: fileType["content"] = [];
+    for (let i = 0; i < temp.length; i += 2) {
+      content.push({
+        id: createUUID(),
+        en: temp[i],
+        ja: temp[i + 1],
+      });
+    }
+
     setFileContent((fileContent) => ({ ...fileContent, content }));
     setFormContent("");
     close();
