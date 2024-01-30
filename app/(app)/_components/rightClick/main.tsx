@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 type menuInfo = {
   [key: string]: menuInfoOptions[];
@@ -22,66 +22,85 @@ export default function RightClick() {
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
   const pathName = usePathname();
-  const menu: menuInfo = {
-    default: [
-      {
-        name: {
-          ja: "コピー",
-          en: "Copy",
-        },
-        onclick: (text: string) => {
-          navigator.clipboard.writeText(text);
-        },
-        when: { onSelected: true },
+  const searchParams = useSearchParams();
+  const menu: menuInfoOptions[] = [
+    {
+      name: {
+        ja: "コピー",
+        en: "Copy",
       },
-      {
-        name: {
-          ja: "読み上げ",
-          en: "speech",
-        },
-        onclick: (text: string) => {
-          const utterance = new SpeechSynthesisUtterance(text);
-          utterance.lang = "en-US";
-          speechSynthesis.speak(utterance);
-        },
-        when: { onSelected: true },
+      onclick: (text: string) => {
+        navigator.clipboard.writeText(text);
       },
-      {
-        name: {
-          ja: "で検索",
-          en: "Search with",
-        },
-        options: [
-          {
-            name: {
-              ja: "Google",
-              en: "Google",
-            },
-            onclick: (text: string) => {
-              window.open(`https://www.google.com/search?q=${text}`, "_blank");
-            },
+      when: { onSelected: true },
+    },
+    {
+      name: {
+        ja: "読み上げ",
+        en: "speech",
+      },
+      onclick: (text: string) => {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "en-US";
+        speechSynthesis.speak(utterance);
+      },
+      when: { onSelected: true },
+    },
+    {
+      name: {
+        ja: "で検索",
+        en: "Search with",
+      },
+      options: [
+        {
+          name: {
+            ja: "Google",
+            en: "Google",
           },
-        ],
-        when: { onSelected: true },
-      },
-      {
-        name: {
-          ja: "印刷",
-          en: "print",
+          onclick: (text: string) => {
+            window.open(`https://www.google.com/search?q=${text}`, "_blank");
+          },
         },
-        onclick: () => {},
-      },
-      {
-        name: {
-          ja: "ヘルプ",
-          en: "Help",
+        {
+          name: {
+            ja: "+追加",
+            en: "+add",
+          },
+          onclick: () => {
+            window.open("/settings#dictionaries", "_blank");
+          },
         },
-        onclick: () => {
-          window.open("/help", "_blank");
-        },
+      ],
+      when: { onSelected: true },
+    },
+    {
+      name: {
+        ja: "印刷",
+        en: "print",
       },
-    ],
-  };
+      onclick: () => {
+        window.open(`/print?fileId=${searchParams.get("fileId")}`, "_blank");
+      },
+    },
+    {
+      name: {
+        ja: "ヘルプ",
+        en: "Help",
+      },
+      onclick: () => {
+        window.open("/help", "_blank");
+      },
+    },
+    {
+      name: {
+        ja: "設定",
+        en: "settings",
+      },
+      onclick: () => {
+        window.open("/settings", "_blank");
+      },
+    },
+  ];
 
   useEffect(() => {
     window.addEventListener("contextmenu", (e) => {
@@ -93,7 +112,7 @@ export default function RightClick() {
     window.addEventListener("click", () => setIsShow(false));
   });
   const onSelected = !!window.getSelection()?.toString();
-  const currentMenu = (menu[pathName] || menu.default).filter((e) => {
+  const currentMenu = menu.filter((e) => {
     if (e.when?.onSelected && !onSelected) return false;
     if (e.when?.path && !e.when.path.includes(pathName)) return false;
     return true;
