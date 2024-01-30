@@ -63,13 +63,25 @@ export default function RightClick() {
         },
         {
           name: {
-            ja: "+追加",
-            en: "+add",
+            ja: "Google翻訳",
+            en: "Google Translate",
           },
-          onclick: () => {
-            window.open("/settings#dictionaries", "_blank");
+          onclick: (text: string) => {
+            window.open(
+              `https://translate.google.com/?sl=auto&tl=auto&text=${text}&op=translate`,
+              "_blank"
+            );
           },
         },
+        // {
+        //   name: {
+        //     ja: "+追加",
+        //     en: "+add",
+        //   },
+        //   onclick: () => {
+        //     window.open("/settings#dictionaries", "_blank");
+        //   },
+        // },
       ],
       when: { onSelected: true },
     },
@@ -91,15 +103,15 @@ export default function RightClick() {
         window.open("/help", "_blank");
       },
     },
-    {
-      name: {
-        ja: "設定",
-        en: "settings",
-      },
-      onclick: () => {
-        window.open("/settings", "_blank");
-      },
-    },
+    // {
+    //   name: {
+    //     ja: "設定",
+    //     en: "settings",
+    //   },
+    //   onclick: () => {
+    //     window.open("/settings", "_blank");
+    //   },
+    // },
   ];
 
   useEffect(() => {
