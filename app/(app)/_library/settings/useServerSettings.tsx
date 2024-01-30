@@ -1,24 +1,19 @@
 "use client";
-
-import { customSession } from "@/@types/customSession";
-import { localSettings, serverSettingsType } from "@/@types/settings";
+import { serverSettingsType } from "@/@types/settings";
 import { listFiles, getFileContent, uploadFile } from "@/googledrive";
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { atom, useRecoilState } from "recoil";
-import { recoilPersist } from "recoil-persist";
 
-export default function Settings() {
-  const [serverSettings, setServerSettings] = useState<serverSettingsType>({});
-  const [localSettings, setLocalSettings] = useRecoilState(localSettingsState);
+export function useServerSettings(token: string) {
   const [settingsFileID, setSettingsFileID] = useState<string>();
-  const { data: session }: { data: customSession | null } =
-    useSession() as unknown as { data: customSession };
-  const token = session?.accessToken;
-
+  const [serverSettings, setServerSettings] = useState<
+    serverSettingsType | undefined
+  >();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   useEffect(() => {
     (async () => {
       if (!token) return;
+      setIsLoading(true);
       const settingsFile = await listFiles(
         token,
         "name='settings.json'",
@@ -32,11 +27,13 @@ export default function Settings() {
           JSON.parse(await getFileContent(token, settingsFile.id)) || {}
         );
       }
+      setIsLoading(false);
     })();
   }, [token]);
   useEffect(() => {
     (async () => {
       if (!token) return;
+      setIsSaving(true);
       if (settingsFileID) {
         uploadFile(token, settingsFileID, JSON.stringify(serverSettings));
       } else {
@@ -56,18 +53,8 @@ export default function Settings() {
             .then((r) => r.id)
         );
       }
+      setIsSaving(false);
     })();
   }, [serverSettings, settingsFileID, token]);
-  return <></>;
+  return { serverSettings, setServerSettings, isLoading, isSaving };
 }
-
-// recoil
-const { persistAtom } = recoilPersist({
-  key: "settings",
-  storage: typeof window === "undefined" ? undefined : localStorage,
-});
-export const localSettingsState = atom<localSettings>({
-  key: "settings",
-  default: {},
-  effects_UNSTABLE: [persistAtom],
-});
