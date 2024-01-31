@@ -111,7 +111,7 @@ export default function Card({ fileId }: { fileId: string }) {
         <p className="md:absolute mx-auto left-0 right-0 block w-max">
           {title.split(".").slice(0, -1).join(".")}
         </p>
-        <HeaderRight />
+        <HeaderRight mode={mode} setMode={setMode} />
       </header>
       {loading ? (
         <div className="flex flex-col gap-4 h-full p-4 select-none">
