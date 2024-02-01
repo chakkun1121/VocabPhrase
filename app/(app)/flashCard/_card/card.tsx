@@ -91,10 +91,7 @@ export default function FlashCard({
   );
 
   return (
-    <div
-      className="flex-1 flex flex-col p-4 w-full max-w-7xl mx-auto gap-4"
-      {...handles}
-    >
+    <div className="h-full p-4 w-full max-w-7xl mx-auto " {...handles}>
       {currentQuestion && (
         <CardMain
           currentQuestion={currentQuestion as fileType["content"][0]}
@@ -110,16 +107,16 @@ export default function FlashCard({
           isAnswerWithKeyboard={flashCardSettings.isAnswerWithKeyboard}
         />
       )}
-      <nav className="flex-none flex items-stretch gap-4">
+      <nav className="flex w-full max-w-7xl bottom-2 fixed p-4 right-0 left-0 mx-auto">
         <button
           onClick={back}
-          className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 aspect-square"
+          className="p-2 rounded-l-full bg-gray-100 hover:bg-gray-200 w-12 h-12 flex-none grid items-center justify-center"
           title="戻る"
         >
           <IoChevronBackSharp />
         </button>
         <div
-          className="flex-1 border p-2 rounded flex items-center justify-center"
+          className="flex-1 border h-12 flex items-center justify-center"
           style={{
             background: `linear-gradient(to right, #dbb946 ${
               ((questionIndex + 1) / questionList.length) * 100
@@ -132,7 +129,7 @@ export default function FlashCard({
         </div>
         <button
           onClick={next}
-          className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 aspect-square"
+          className="p-2 rounded-r-full bg-gray-100 hover:bg-gray-200 w-12 h-12 grid items-center justify-center flex-none"
           title="次へ"
         >
           <IoChevronBackSharp className="transform rotate-180" />

@@ -103,8 +103,8 @@ export default function Card({ fileId }: { fileId: string }) {
       .join(".")} | フラッシュカード | VocabPhrase | chakkun1121`
   );
   return (
-    <div className="flex flex-col h-screen">
-      <header className="flex items-center md:justify-between justify-center p-4 bg-primary-200">
+    <>
+      <header className="flex px-4 flex-none bg-primary-200 h-20 fixed top-0 z-10 left-0 right-0 justify-between items-center">
         <div className="hidden md:block">
           <h1>VocabPhrase</h1>
         </div>
@@ -113,42 +113,42 @@ export default function Card({ fileId }: { fileId: string }) {
         </p>
         <HeaderRight mode={mode} setMode={setMode} />
       </header>
-      {loading ? (
-        <div className="flex flex-col gap-4 h-full p-4 select-none">
-          loading...
-        </div>
-      ) : (
-        fileContent && (
-          <>
-            {mode === "home" && (
-              <FlashCardHome
-                fileContent={fileContent}
-                setMode={setMode}
-                flashCardSettings={flashCardSettings}
-                setFlashCardSettings={setFlashCardSettings}
-                checked={results.check}
-              />
-            )}
-            {mode === "cards" && (
-              <FlashCard
-                fileContent={fileContent}
-                flashCardSettings={flashCardSettings}
-                setMode={setMode}
-                cardResult={results}
-                setResults={setResults}
-                setCurrentProblemIdList={setCurrentProblemIdList}
-              />
-            )}
-            {mode === "result" && (
-              <CardResult
-                results={results}
-                fileContent={fileContent}
-                currentProblemIdList={currentProblemIdList}
-              />
-            )}
-          </>
-        )
-      )}
-    </div>
+      <main className="mt-20 h-full">
+        {loading ? (
+          <div className="h-full p-4 select-none">loading...</div>
+        ) : (
+          fileContent && (
+            <>
+              {mode === "home" && (
+                <FlashCardHome
+                  fileContent={fileContent}
+                  setMode={setMode}
+                  flashCardSettings={flashCardSettings}
+                  setFlashCardSettings={setFlashCardSettings}
+                  checked={results.check}
+                />
+              )}
+              {mode === "cards" && (
+                <FlashCard
+                  fileContent={fileContent}
+                  flashCardSettings={flashCardSettings}
+                  setMode={setMode}
+                  cardResult={results}
+                  setResults={setResults}
+                  setCurrentProblemIdList={setCurrentProblemIdList}
+                />
+              )}
+              {mode === "result" && (
+                <CardResult
+                  results={results}
+                  fileContent={fileContent}
+                  currentProblemIdList={currentProblemIdList}
+                />
+              )}
+            </>
+          )
+        )}
+      </main>
+    </>
   );
 }

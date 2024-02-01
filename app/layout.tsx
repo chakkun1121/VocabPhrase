@@ -70,7 +70,7 @@ export default function RootLayout({
       <NextAuthProvider>
         <RecoilProvider>
           <HelpKeyShortCut />
-          <body className="min-h-screen">{children}</body>
+          <body>{children}</body>
         </RecoilProvider>
       </NextAuthProvider>
     </html>
