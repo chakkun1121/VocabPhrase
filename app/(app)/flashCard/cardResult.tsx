@@ -12,6 +12,43 @@ export default function CardResult({
 }) {
   return (
     <div className="grid p-4 w-full max-w-7xl mx-auto gap-4">
+      <div>
+        <div>
+          <h2>チェック率</h2>
+          <p>
+            英語→日本語:
+            {Math.round(
+              ((results.check["en-ja"]?.length || 0) /
+                fileContent.content.length) *
+                100
+            )}
+            %
+          </p>
+          <p>
+            日本語→英語:
+            {Math.round(
+              ((results.check["ja-en"]?.length || 0) /
+                fileContent.content.length) *
+                100
+            )}
+            %
+          </p>
+        </div>
+      </div>
+      <nav className="flex-none flex gap-4">
+        <button
+          onClick={() => window.location.reload()}
+          className="p-2 rounded bg-gray-100 hover:bg-gray-200"
+        >
+          もう一度
+        </button>
+        <button
+          onClick={() => window.close()}
+          className="p-2 rounded bg-gray-100 hover:bg-gray-200"
+        >
+          閉じる
+        </button>
+      </nav>
       <table className="w-full rounded">
         <caption className="text-heading-S">結果</caption>
         <thead className="bg-gray-200">
@@ -65,20 +102,6 @@ export default function CardResult({
           })}
         </tbody>
       </table>
-      <nav className="flex-none flex gap-4">
-        <button
-          onClick={() => window.location.reload()}
-          className="p-2 rounded bg-gray-100 hover:bg-gray-200"
-        >
-          もう一度
-        </button>
-        <button
-          onClick={() => window.close()}
-          className="p-2 rounded bg-gray-100 hover:bg-gray-200"
-        >
-          閉じる
-        </button>
-      </nav>
     </div>
   );
 }
