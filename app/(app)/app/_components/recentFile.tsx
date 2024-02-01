@@ -69,10 +69,10 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
             </Link>
             してください。
           </p>
-        ):isLoading ? (
+        ) : isLoading ? (
           <p className="text-center">loading...</p>
         ) : recentFile?.length ? (
-          <ul className="p-4 flex flex-col gap-4 overflow-y-scroll">
+          <ul className="p-4 flex flex-col gap-4 ">
             {recentFile.map((file) => (
               <li key={file.fileID} className="list-none">
                 <div className="flex items-center gap-2">
