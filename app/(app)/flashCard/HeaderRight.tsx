@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { CgMaximizeAlt } from "react-icons/cg";
-import { MdLogout, MdOutlineZoomInMap } from "react-icons/md";
+import { MdOutlineZoomInMap } from "react-icons/md";
 
 export default function HeaderRight({
   mode,
@@ -17,15 +17,6 @@ export default function HeaderRight({
 
   return (
     <nav className="gap-4 flex">
-      {mode == "cards" && (
-        <button
-          className="gap-2 p-2 bg-primary-300 hover:bg-primary-400 rounded-full w-12 h-12 grid place-items-center"
-          onClick={() => setMode("result")}
-          title="終了"
-        >
-          <MdLogout />
-        </button>
-      )}
       <button
         className="gap-2 p-2 bg-primary-300 hover:bg-primary-400 rounded-full w-12 h-12 grid place-items-center"
         onClick={() => {

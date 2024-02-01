@@ -91,50 +91,60 @@ export default function FlashCard({
   );
 
   return (
-    <div className="h-full p-4 w-full max-w-7xl mx-auto " {...handles}>
-      {currentQuestion && (
-        <CardMain
-          currentQuestion={currentQuestion as fileType["content"][0]}
-          key={currentQuestion?.id}
-          isChecked={!!checked?.find((v) => v == currentQuestion.id) ?? false}
-          setIsChecked={(isChecked: boolean) => {
-            setIsChecked((prev) => [
-              ...prev.filter((v) => v !== currentQuestion.id),
-              ...(isChecked ? [currentQuestion.id] : []),
-            ]);
-          }}
-          mode={flashCardSettings.mode}
-          isAnswerWithKeyboard={flashCardSettings.isAnswerWithKeyboard}
-        />
-      )}
-      <nav className="flex w-full max-w-7xl bottom-2 fixed p-4 right-0 left-0 mx-auto">
-        <button
-          onClick={back}
-          className="p-2 rounded-l-full bg-gray-100 hover:bg-gray-200 w-12 h-12 flex-none grid items-center justify-center"
-          title="戻る"
-        >
-          <IoChevronBackSharp />
-        </button>
-        <div
-          className="flex-1 border h-12 flex items-center justify-center"
-          style={{
-            background: `linear-gradient(to right, #dbb946 ${
-              ((questionIndex + 1) / questionList.length) * 100
-            }%, #f4f8f9 ${((questionIndex + 1) / questionList.length) * 100}%)`,
-          }}
-        >
-          <p className="text-center select-none">
-            {questionIndex + 1}/{questionList.length}
-          </p>
-        </div>
-        <button
-          onClick={next}
-          className="p-2 rounded-r-full bg-gray-100 hover:bg-gray-200 w-12 h-12 grid items-center justify-center flex-none"
-          title="次へ"
-        >
-          <IoChevronBackSharp className="transform rotate-180" />
-        </button>
-      </nav>
-    </div>
+    <>
+      <button
+        onClick={() => window.confirm("中断しますか？") && finish()}
+        className="bg-gray-100 hover:bg-red-200 fixed top-24 right-2 p-2 rounded"
+      >
+        中断する
+      </button>
+      <div className="h-full p-4 w-full max-w-7xl mx-auto " {...handles}>
+        {currentQuestion && (
+          <CardMain
+            currentQuestion={currentQuestion as fileType["content"][0]}
+            key={currentQuestion?.id}
+            isChecked={!!checked?.find((v) => v == currentQuestion.id) ?? false}
+            setIsChecked={(isChecked: boolean) => {
+              setIsChecked((prev) => [
+                ...prev.filter((v) => v !== currentQuestion.id),
+                ...(isChecked ? [currentQuestion.id] : []),
+              ]);
+            }}
+            mode={flashCardSettings.mode}
+            isAnswerWithKeyboard={flashCardSettings.isAnswerWithKeyboard}
+          />
+        )}
+        <nav className="flex w-full max-w-7xl bottom-2 fixed p-4 right-0 left-0 mx-auto">
+          <button
+            onClick={back}
+            className="p-2 rounded-l-full bg-gray-100 hover:bg-gray-200 w-12 h-12 flex-none grid items-center justify-center"
+            title="戻る"
+          >
+            <IoChevronBackSharp />
+          </button>
+          <div
+            className="flex-1 border h-12 flex items-center justify-center"
+            style={{
+              background: `linear-gradient(to right, #dbb946 ${
+                ((questionIndex + 1) / questionList.length) * 100
+              }%, #f4f8f9 ${
+                ((questionIndex + 1) / questionList.length) * 100
+              }%)`,
+            }}
+          >
+            <p className="text-center select-none">
+              {questionIndex + 1}/{questionList.length}
+            </p>
+          </div>
+          <button
+            onClick={next}
+            className="p-2 rounded-r-full bg-gray-100 hover:bg-gray-200 w-12 h-12 grid items-center justify-center flex-none"
+            title="次へ"
+          >
+            <IoChevronBackSharp className="transform rotate-180" />
+          </button>
+        </nav>
+      </div>
+    </>
   );
 }
