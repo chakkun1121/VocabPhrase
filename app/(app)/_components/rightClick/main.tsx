@@ -63,6 +63,18 @@ export default function RightClick() {
         },
         {
           name: {
+            ja: "Google(English)",
+            en: "Google(English)",
+          },
+          onclick: (text: string) => {
+            window.open(
+              `https://www.google.com/search?q=${text}&hl=en&gws_rd=cr`,
+              "_blank"
+            );
+          },
+        },
+        {
+          name: {
             ja: "Google翻訳",
             en: "Google Translate",
           },
