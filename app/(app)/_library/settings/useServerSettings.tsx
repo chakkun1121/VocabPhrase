@@ -24,7 +24,7 @@ export function useServerSettings(token: string) {
       if (settingsFile) {
         setSettingsFileID(settingsFile.id);
         setServerSettings(
-          JSON.parse(await getFileContent(token, settingsFile.id)) || {}
+          JSON.parse((await getFileContent(token, settingsFile.id)) || "{}")
         );
       }
       setIsLoading(false);
