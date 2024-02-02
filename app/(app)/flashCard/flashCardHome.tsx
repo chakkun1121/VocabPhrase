@@ -1,5 +1,7 @@
 import { flashCardSettings } from "@/@types/flashCardSettings";
 import { useState } from "react";
+import { atom, useRecoilState } from "recoil";
+import { recoilPersist } from "recoil-persist";
 
 export default function FlashCardHome({
   setMode,
@@ -8,14 +10,20 @@ export default function FlashCardHome({
   setMode: (mode: "cards") => void;
   setFlashCardSettings: React.Dispatch<React.SetStateAction<flashCardSettings>>;
 }) {
-  const [isRandom, setIsRandom] = useState(false);
-  const [infiniteProblem, setInfiniteProblem] = useState(true);
+  const [previousSettings, setPreviousSettings] = useRecoilState(
+    previousSettingsState
+  );
+  const [isRandom, setIsRandom] = useState(previousSettings.isRandom);
+  const [infiniteProblem, setInfiniteProblem] = useState(
+    isRandom ? previousSettings.questionCount === Infinity : true
+  );
+  console.log(previousSettings);
   return (
     <form
       className="flex flex-col gap-4 p-4"
       onSubmit={(e) => {
         e.preventDefault();
-        setFlashCardSettings({
+        const settings = {
           isRandom: e.currentTarget.isRandom.checked,
           isAnswerWithKeyboard: e.currentTarget.isAnswerWithKeyboard.checked,
           removeChecked: e.currentTarget.removeChecked.checked,
@@ -23,7 +31,9 @@ export default function FlashCardHome({
           questionCount: infiniteProblem
             ? Infinity
             : e.currentTarget.problemNumberInput.value,
-        });
+        };
+        setPreviousSettings(settings);
+        setFlashCardSettings(settings);
         setMode("cards");
       }}
     >
@@ -33,19 +43,19 @@ export default function FlashCardHome({
           {
             name: "isRandom",
             title: "ランダムに出題する",
-            default: false,
+            default: previousSettings.isRandom,
             onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
               setIsRandom(e.target.checked),
           },
           {
             name: "isAnswerWithKeyboard",
             title: "キーボードで解答する",
-            default: false,
+            default: previousSettings.isAnswerWithKeyboard,
           },
           {
             name: "removeChecked",
             title: "チェック済みの問題を除外する",
-            default: true,
+            default: previousSettings.removeChecked,
           },
         ].map((c) => (
           <label key={c.name}>
@@ -63,7 +73,7 @@ export default function FlashCardHome({
           出題モード:
           <select
             className="p-2 rounded border"
-            defaultValue="ja-en"
+            defaultValue={previousSettings.mode}
             name="mode"
           >
             <option value="ja-en">日本語→英語</option> {/*←初期設定*/}
@@ -81,7 +91,7 @@ export default function FlashCardHome({
               type="radio"
               name="problemNumber"
               value="Infinity"
-              defaultChecked
+              checked={infiniteProblem}
               className="hidden"
               onChange={() => setInfiniteProblem(true)}
             />
@@ -97,14 +107,23 @@ export default function FlashCardHome({
               name="problemNumber"
               className="hidden"
               disabled={!isRandom}
+              checked={!infiniteProblem}
               onChange={() => setInfiniteProblem(false)}
             />
-            {infiniteProblem ? (
-              <span className="w-16 inline-block">10</span>
+            {!isRandom || infiniteProblem ? (
+              <span className="w-16 inline-block">
+                {previousSettings.questionCount === Infinity
+                  ? "10"
+                  : previousSettings.questionCount}
+              </span>
             ) : (
               <input
                 type="number"
-                defaultValue={10}
+                defaultValue={
+                  previousSettings.questionCount === Infinity
+                    ? "10"
+                    : previousSettings.questionCount
+                }
                 placeholder="10"
                 className="w-16 bg-primary-200"
                 name="problemNumberInput"
@@ -126,3 +145,18 @@ export default function FlashCardHome({
     </form>
   );
 }
+const { persistAtom } = recoilPersist({
+  key: "previousFlashcardSettings",
+  storage: typeof window === "undefined" ? undefined : localStorage,
+});
+const previousSettingsState = atom<flashCardSettings>({
+  key: "previousSettings",
+  default: {
+    isRandom: false,
+    isAnswerWithKeyboard: false,
+    removeChecked: true,
+    mode: "ja-en",
+    questionCount: Infinity,
+  },
+  effects_UNSTABLE: [persistAtom],
+});
