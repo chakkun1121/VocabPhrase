@@ -3,6 +3,7 @@ import { useState } from "react";
 import { SpeechButton } from "./speechButton";
 import { useHotkeys } from "react-hotkeys-hook";
 import { flashCardMode } from "@/@types/flashCardSettings";
+import { DisabledCheckBox } from "@/app/_components/disabledCheckBox";
 
 export default function Answer({
   mode,
@@ -84,27 +85,17 @@ export default function Answer({
           答えを見る
         </button>
       )}
-      <CheckBox
-        disabled={!isShowAnswer}
-        checked={isChecked}
-        onChange={(e) => setIsChecked((e.target as HTMLInputElement).checked)}
-      />
+      {isShowAnswer ? (
+        <input
+          type="checkbox"
+          className="w-12 h-12 border-none accent-primary-500 text-white"
+          checked={isChecked}
+          onChange={(e) => setIsChecked((e.target as HTMLInputElement).checked)}
+        />
+      ) : (
+        <DisabledCheckBox className="w-12 h-12 m-auto" checked={isChecked} />
+      )}
       {mode == "ja-en" && <SpeechButton text={currentQuestion?.en} />}
     </div>
-  );
-}
-function CheckBox(
-  props: React.DetailedHTMLProps<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    HTMLInputElement
-  >
-) {
-  const { className, ...rest } = props;
-  return (
-    <input
-      type="checkbox"
-      className={`${className} aspect-square bg-gray-200 hover:bg-gray-300 w-12 h-12 rounded-full border-none`}
-      {...rest}
-    />
   );
 }
