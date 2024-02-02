@@ -1,5 +1,6 @@
 import { cardResult } from "@/@types/cardResult";
 import { fileType } from "@/@types/fileType";
+import { DisabledCheckBox } from "../../_components/disabledCheckBox";
 
 export default function CardResult({
   fileContent,
@@ -76,25 +77,24 @@ export default function CardResult({
             ) as fileType["content"][0];
 
             return (
-              <tr key={currentQuestion.id} className="even:bg-gray-100">
-                <td className="text-center py-5">{i + 1}</td>
-                <td className="py-5">{currentQuestion.en}</td>
-                <td className="py-5">{currentQuestion.ja}</td>
+              <tr
+                key={currentQuestion.id}
+                className="even:bg-gray-100 [&>td]:py-5"
+              >
+                <td className="text-center">{i + 1}</td>
+                <td>{currentQuestion.en}</td>
+                <td>{currentQuestion.ja}</td>
                 {/* <td className="text-center">{result ? "○" : "×"}</td> */}
-                <td className="py-5 text-center">
-                  <input
-                    type="checkbox"
+                <td className="text-center">
+                  <DisabledCheckBox
+                    className="w-6 h-6 m-auto"
                     checked={!!results.check?.["ja-en"]?.find((r) => r === id)}
-                    disabled
-                    className="w-4 h-4 bg-primary-500"
                   />
                 </td>
-                <td className="text-center py-5">
-                  <input
-                    type="checkbox"
+                <td className="text-center">
+                  <DisabledCheckBox
+                    className="w-6 h-6 m-auto"
                     checked={!!results.check?.["en-ja"]?.find((r) => r === id)}
-                    disabled
-                    className="w-4 h-4 bg-primary-500"
                   />
                 </td>
               </tr>
