@@ -10,7 +10,6 @@ import {
 } from "@/googledrive";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import FlashCardHome from "./flashCardHome";
 import { flashCardSettings } from "@/@types/flashCardSettings";
 import FlashCard from "./_card/card";
 import CardResult from "./cardResult";
@@ -18,6 +17,7 @@ import HeaderRight from "./HeaderRight";
 import { cardResult } from "@/@types/cardResult";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { useLeavePageConfirmation } from "../_library/useLeavePageConfirmation";
+import FlashCardHome from "./flashCardHome";
 
 export default function Card({ fileId }: { fileId: string }) {
   const [fileContent, setFileContent] = useState<fileType | undefined>();
@@ -130,11 +130,8 @@ export default function Card({ fileId }: { fileId: string }) {
             <>
               {mode === "home" && (
                 <FlashCardHome
-                  fileContent={fileContent}
                   setMode={setMode}
-                  flashCardSettings={flashCardSettings}
                   setFlashCardSettings={setFlashCardSettings}
-                  checked={results.check}
                 />
               )}
               {mode === "cards" && (
