@@ -123,7 +123,7 @@ export default function FlashCard({
             <IoChevronBackSharp />
           </button>
           <div
-            className="flex-1 border h-12 flex items-center justify-center"
+            className="flex-1 h-12 flex items-center justify-center"
             style={{
               background: `linear-gradient(to right, #dbb946 ${
                 ((questionIndex + 1) / questionList.length) * 100
