@@ -53,7 +53,7 @@ export default function Answer({
               disabled={isShowAnswer}
             />
             {isShowAnswer ? (
-              <p className="md:text-heading-S text-center bg-gray-200 rounded  p-4 flex-none">
+              <p className="md:text-heading-S text-center bg-gray-200 rounded p-4 flex-none !select-text">
                 {inputAnswer == currentQuestion.en ? "◯" : "✕"}
               </p>
             ) : (
@@ -67,14 +67,14 @@ export default function Answer({
           </div>
           <div>
             {isShowAnswer && (
-              <p className="md:text-heading-S p-4 bg-gray-200 rounded flex-1">
+              <p className="md:text-heading-S p-4 bg-gray-200 rounded flex-1 !select-text">
                 {mode == "ja-en" ? currentQuestion?.en : currentQuestion?.ja}
               </p>
             )}
           </div>
         </div>
       ) : isShowAnswer ? (
-        <p className="md:text-heading-S p-4 bg-gray-200 rounded flex-1">
+        <p className="md:text-heading-S p-4 bg-gray-200 rounded flex-1 !select-text">
           {mode == "ja-en" ? currentQuestion?.en : currentQuestion?.ja}
         </p>
       ) : (

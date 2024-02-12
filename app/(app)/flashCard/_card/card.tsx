@@ -132,7 +132,7 @@ export default function FlashCard({
               }%)`,
             }}
           >
-            <p className="text-center select-none">
+            <p className="text-center">
               {questionIndex + 1}/{questionList.length}
             </p>
           </div>

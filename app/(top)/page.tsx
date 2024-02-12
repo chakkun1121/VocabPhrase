@@ -20,7 +20,7 @@ export default function Home() {
           </Link>
         </div>
       </header>
-      <main className=" bg-gradient-to-br from-primary-200 to-JungleGreen-200">
+      <main className=" bg-gradient-to-br from-primary-200 to-JungleGreen-200 !select-text">
         <section className="h-screen text-center p-10 grid content-center">
           <div className="flex flex-col items-center gap-8">
             <h2 className="text-4xl">英文、英単語専用のweb単語帳アプリ</h2>
