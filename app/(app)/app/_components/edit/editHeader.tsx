@@ -1,5 +1,9 @@
+import { customSession } from "@/@types/customSession";
 import { fileType } from "@/@types/fileType";
+import { deleteFile } from "@/googledrive";
 import { sendGAEvent } from "@next/third-parties/google";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { HiOutlineDotsVertical } from "react-icons/hi";
@@ -23,6 +27,10 @@ export default function EditHeader({
   saveFileInfo: () => void;
 }) {
   const [isOpened, setIsOpened] = useState(false);
+  const router = useRouter();
+  const { data: session }: { data: customSession | null } =
+    useSession() as unknown as { data: customSession };
+  const token = session?.accessToken;
   return (
     <nav className="flex justify-between items-center bg-gray-100 p-4">
       <div className="flex gap-4">
@@ -104,7 +112,17 @@ export default function EditHeader({
               <button className="hover:bg-gray-300 rounded p-2">
                 フラッシュカードの履歴を削除
               </button>
-              <button className="hover:bg-gray-300 rounded p-2">
+              <button
+                className="hover:bg-gray-300 rounded p-2"
+                onClick={() => {
+                  setIsOpened(false);
+                  window.confirm("復元できません。よろしいでしょうか?") &&
+                    (async () => {
+                      router.push("/app");
+                      await deleteFile(token, fileID);
+                    })();
+                }}
+              >
                 ファイルを削除
               </button>
             </div>
