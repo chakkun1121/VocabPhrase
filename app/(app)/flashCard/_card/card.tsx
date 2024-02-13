@@ -85,11 +85,9 @@ export default function FlashCard({
     // preventDefaultTouchmoveEvent: true,
     trackMouse: true,
   });
-
   const currentQuestion = fileContent.content.find(
     (c) => c.id === questionList[questionIndex]
   );
-
   return (
     <>
       <button
@@ -123,7 +121,7 @@ export default function FlashCard({
             <IoChevronBackSharp />
           </button>
           <div
-            className="flex-1 h-12 flex items-center justify-center"
+            className="flex-1 border h-12 flex items-center justify-center"
             style={{
               background: `linear-gradient(to right, #dbb946 ${
                 ((questionIndex + 1) / questionList.length) * 100
@@ -132,7 +130,7 @@ export default function FlashCard({
               }%)`,
             }}
           >
-            <p className="text-center">
+            <p className="text-center select-none">
               {questionIndex + 1}/{questionList.length}
             </p>
           </div>
