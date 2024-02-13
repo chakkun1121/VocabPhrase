@@ -7,8 +7,8 @@ import { customSession } from "../../../../@types/customSession";
 import { IoReload } from "react-icons/io5";
 import LeftBarButtons from "./LeftBarButtons";
 import { deleteFile, listFiles } from "@/googledrive";
-import { FaRegTrashAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { HiOutlineDotsVertical } from "react-icons/hi";
 
 export default function RecentFile({ hidden }: { hidden: boolean }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -19,7 +19,6 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
   >([]);
   const [error, setError] = useState<any>(undefined);
   const token = session?.accessToken;
-  const router = useRouter();
   async function getRecentFile() {
     try {
       setIsLoading(true);
@@ -74,37 +73,12 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
         ) : recentFile?.length ? (
           <ul className="p-4 flex flex-col gap-4 ">
             {recentFile.map((file) => (
-              <li key={file.fileID} className="list-none">
-                <div className="flex items-center gap-2">
-                  <Link
-                    href={`./app?fileID=${file.fileID}`}
-                    className="text-black hover:text-black visited:text-black flex-1 truncate"
-                  >
-                    {file.title.split(".").slice(0, -1).join(".")}
-                  </Link>
-                  <button
-                    className="flex-none"
-                    onClick={() =>
-                      window.confirm("復元できません。よろしいでしょうか?") &&
-                      (async () => {
-                        router.push("/app");
-                        await deleteFile(token, file.fileID);
-                        getRecentFile();
-                      })()
-                    }
-                  >
-                    <FaRegTrashAlt />
-                  </button>
-                  <Link
-                    href={`./app?fileID=${file.fileID}`}
-                    target="_blank"
-                    aria-label="新しいタブで開く"
-                    className="text-black hover:text-black visited:text-black flex-none"
-                  >
-                    <IoMdOpen />
-                  </Link>
-                </div>
-              </li>
+              <File
+                file={file}
+                token={token}
+                key={file.fileID}
+                getRecentFile={getRecentFile}
+              />
             ))}
           </ul>
         ) : (
@@ -113,5 +87,72 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
       </div>
       <LeftBarButtons reload={getRecentFile} />
     </div>
+  );
+}
+function File({
+  file,
+  token,
+  getRecentFile,
+}: {
+  file: { title: string; fileID: string };
+  token: string;
+  getRecentFile: () => void;
+}) {
+  const router = useRouter();
+  const [isOpened, setIsOpened] = useState(false);
+  // useEffect(() => {
+  //   function close() {
+  //     if (isOpened) setIsOpened(false);
+  //   }
+  //   window.addEventListener("click", close);
+  //   return () => {
+  //     window.removeEventListener("click", close);
+  //   };
+  // }, [isOpened]);
+  return (
+    <li key={file.fileID} className="list-none">
+      <div className="flex items-center gap-2">
+        <Link
+          href={`./app?fileID=${file.fileID}`}
+          className="text-black hover:text-black visited:text-black flex-1 truncate"
+        >
+          {file.title.split(".").slice(0, -1).join(".")}
+        </Link>
+        <Link
+          href={`./app?fileID=${file.fileID}`}
+          target="_blank"
+          aria-label="新しいタブで開く"
+          className="text-black hover:text-black visited:text-black flex-none"
+        >
+          <IoMdOpen />
+        </Link>
+        <button className="flex-none" onClick={() => setIsOpened(true)}>
+          <HiOutlineDotsVertical />
+        </button>
+        {isOpened && (
+          <div className="fixed left-[calc(min(24rem,calc(theme(width.screen)-3rem))-theme(width.3))] bg-gray-100 rounded p-2 z-50">
+            <button
+              onClick={() => {
+                setIsOpened(false);
+                window.confirm("復元できません。よろしいでしょうか?") &&
+                  (async () => {
+                    router.push("/app");
+                    await deleteFile(token, file.fileID);
+                    getRecentFile();
+                  })();
+              }}
+            >
+              削除
+            </button>
+          </div>
+        )}
+      </div>
+      {isOpened && (
+        <button
+          onClick={() => setIsOpened(false)}
+          className="w-screen h-screen absolute bg-opacity-0 inset-0 z-40 cursor-default"
+        />
+      )}
+    </li>
   );
 }

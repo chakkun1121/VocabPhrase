@@ -1,6 +1,12 @@
+import { customSession } from "@/@types/customSession";
 import { fileType } from "@/@types/fileType";
+import { deleteFile, listFiles } from "@/googledrive";
 import { sendGAEvent } from "@next/third-parties/google";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
+import { HiOutlineDotsVertical } from "react-icons/hi";
 import { IoSaveOutline, IoPrintOutline } from "react-icons/io5";
 import { PiCardsThin } from "react-icons/pi";
 import { uuidv7 as createUUID } from "uuidv7";
@@ -20,6 +26,11 @@ export default function EditHeader({
   saveFileContent: () => void;
   saveFileInfo: () => void;
 }) {
+  const [isOpened, setIsOpened] = useState(false);
+  const router = useRouter();
+  const { data: session }: { data: customSession | null } =
+    useSession() as unknown as { data: customSession };
+  const token = session?.accessToken;
   return (
     <nav className="flex justify-between items-center bg-gray-100 p-4">
       <div className="flex gap-4">
@@ -89,6 +100,58 @@ export default function EditHeader({
           <PiCardsThin />
           <span className="hidden md:inline-block">フラッシュカード</span>
         </a>
+        <button
+          className="flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 disabled:text-gray-800 font-semibold"
+          onClick={() => setIsOpened(true)}
+        >
+          <HiOutlineDotsVertical />
+        </button>
+        {isOpened && (
+          <>
+            <div className="fixed bg-gray-300 z-20 [&>button]:block [&>button]:w-full right-4 top-32">
+              <button
+                className="hover:bg-gray-400 rounded p-2"
+                onClick={async () => {
+                  setIsOpened(false);
+                  if (
+                    window.confirm(
+                      "フラッシュカードの履歴を本当に削除しますか?"
+                    )
+                  ) {
+                    const deleteFileId = await listFiles(
+                      token,
+                      "name='" + fileID + ".json'",
+                      undefined,
+                      undefined,
+                      "spaces=appDataFolder"
+                    ).then((r) => r.files[0].id);
+                    if (deleteFileId) await deleteFile(token, deleteFileId);
+                    console.log("deleted");
+                  }
+                }}
+              >
+                フラッシュカードの履歴を削除
+              </button>
+              <button
+                className="hover:bg-gray-400 rounded p-2"
+                onClick={() => {
+                  setIsOpened(false);
+                  window.confirm("復元できません。よろしいでしょうか?") &&
+                    (async () => {
+                      router.push("/app");
+                      await deleteFile(token, fileID);
+                    })();
+                }}
+              >
+                ファイルを削除
+              </button>
+            </div>
+            <button
+              onClick={() => setIsOpened(false)}
+              className="w-screen h-screen absolute bg-opacity-0 inset-0 z-10 cursor-default"
+            />
+          </>
+        )}
       </div>
     </nav>
   );

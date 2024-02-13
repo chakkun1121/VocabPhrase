@@ -124,7 +124,7 @@ export default function Card({ fileId }: { fileId: string }) {
       </header>
       <main className="mt-20 h-full">
         {loading ? (
-          <div className="h-full p-4 select-none">loading...</div>
+          <div className="h-full p-4">loading...</div>
         ) : (
           fileContent && (
             <>
