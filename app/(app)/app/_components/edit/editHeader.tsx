@@ -1,6 +1,6 @@
 import { customSession } from "@/@types/customSession";
 import { fileType } from "@/@types/fileType";
-import { deleteFile } from "@/googledrive";
+import { deleteFile, listFiles } from "@/googledrive";
 import { sendGAEvent } from "@next/third-parties/google";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -108,12 +108,32 @@ export default function EditHeader({
         </button>
         {isOpened && (
           <>
-            <div className="fixed bg-gray-200 z-20 [&>button]:block [&>button]:w-full right-0 top-32">
-              <button className="hover:bg-gray-300 rounded p-2">
+            <div className="fixed bg-gray-300 z-20 [&>button]:block [&>button]:w-full right-4 top-32">
+              <button
+                className="hover:bg-gray-400 rounded p-2"
+                onClick={async () => {
+                  setIsOpened(false);
+                  if (
+                    window.confirm(
+                      "フラッシュカードの履歴を本当に削除しますか?"
+                    )
+                  ) {
+                    const deleteFileId = await listFiles(
+                      token,
+                      "name='" + fileID + ".json'",
+                      undefined,
+                      undefined,
+                      "spaces=appDataFolder"
+                    ).then((r) => r.files[0].id);
+                    if (deleteFileId) await deleteFile(token, deleteFileId);
+                    console.log("deleted");
+                  }
+                }}
+              >
                 フラッシュカードの履歴を削除
               </button>
               <button
-                className="hover:bg-gray-300 rounded p-2"
+                className="hover:bg-gray-400 rounded p-2"
                 onClick={() => {
                   setIsOpened(false);
                   window.confirm("復元できません。よろしいでしょうか?") &&
