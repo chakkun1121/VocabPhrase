@@ -3,6 +3,7 @@ import { useState } from "react";
 import { SpeechButton } from "./speechButton";
 import { useHotkeys } from "react-hotkeys-hook";
 import { flashCardMode } from "@/@types/flashCardSettings";
+import { DisabledCheckBox } from "@/app/_components/disabledCheckBox";
 
 export default function Answer({
   mode,
@@ -52,7 +53,7 @@ export default function Answer({
               disabled={isShowAnswer}
             />
             {isShowAnswer ? (
-              <p className="md:text-heading-S text-center bg-gray-200 rounded  p-4 flex-none">
+              <p className="md:text-heading-S text-center bg-gray-200 rounded p-4 flex-none !select-text">
                 {inputAnswer == currentQuestion.en ? "◯" : "✕"}
               </p>
             ) : (
@@ -66,14 +67,14 @@ export default function Answer({
           </div>
           <div>
             {isShowAnswer && (
-              <p className="md:text-heading-S p-4 bg-gray-200 rounded flex-1">
+              <p className="md:text-heading-S p-4 bg-gray-200 rounded flex-1 !select-text">
                 {mode == "ja-en" ? currentQuestion?.en : currentQuestion?.ja}
               </p>
             )}
           </div>
         </div>
       ) : isShowAnswer ? (
-        <p className="md:text-heading-S p-4 bg-gray-200 rounded flex-1">
+        <p className="md:text-heading-S p-4 bg-gray-200 rounded flex-1 !select-text">
           {mode == "ja-en" ? currentQuestion?.en : currentQuestion?.ja}
         </p>
       ) : (
@@ -84,27 +85,17 @@ export default function Answer({
           答えを見る
         </button>
       )}
-      <CheckBox
-        disabled={!isShowAnswer}
-        checked={isChecked}
-        onChange={(e) => setIsChecked((e.target as HTMLInputElement).checked)}
-      />
+      {isShowAnswer ? (
+        <input
+          type="checkbox"
+          className="w-12 h-12 border-none accent-primary-500 text-white"
+          checked={isChecked}
+          onChange={(e) => setIsChecked((e.target as HTMLInputElement).checked)}
+        />
+      ) : (
+        <DisabledCheckBox className="w-12 h-12 m-auto" checked={isChecked} />
+      )}
       {mode == "ja-en" && <SpeechButton text={currentQuestion?.en} />}
     </div>
-  );
-}
-function CheckBox(
-  props: React.DetailedHTMLProps<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    HTMLInputElement
-  >
-) {
-  const { className, ...rest } = props;
-  return (
-    <input
-      type="checkbox"
-      className={`${className} aspect-square bg-gray-200 hover:bg-gray-300 w-12 h-12 rounded-full border-none`}
-      {...rest}
-    />
   );
 }

@@ -146,7 +146,7 @@ export default function RightClick() {
       {isShow && (
         <>
           <div
-            className="absolute top-0 left-0 w-64 bg-gray-100 rounded shadow-lg z-50 select-none"
+            className="absolute top-0 left-0 w-64 bg-gray-100 rounded shadow-lg z-50"
             style={{
               top: y,
               left: x,

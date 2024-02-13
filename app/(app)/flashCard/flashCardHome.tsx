@@ -1,123 +1,139 @@
-import { cardResult } from "@/@types/cardResult";
-import { fileType } from "@/@types/fileType";
 import { flashCardSettings } from "@/@types/flashCardSettings";
+import { useState } from "react";
+import { atom, useRecoilState } from "recoil";
+import { recoilPersist } from "recoil-persist";
+import { flashcardOptions } from "./flashcardOptions";
+import React from "react";
 
 export default function FlashCardHome({
-  fileContent,
   setMode,
-  flashCardSettings,
   setFlashCardSettings,
-  checked,
 }: {
-  fileContent: fileType;
-  setMode: (mode: "home" | "cards" | "result") => void;
-  flashCardSettings: flashCardSettings;
+  setMode: (mode: "cards") => void;
   setFlashCardSettings: React.Dispatch<React.SetStateAction<flashCardSettings>>;
-  checked: cardResult["check"];
 }) {
+  const [previousSettings, setPreviousSettings] = useRecoilState(
+    previousSettingsState
+  );
+  const [isRandom, setIsRandom] = useState(previousSettings.isRandom);
+  const [questionCount, setQuestionCount] = useState<number>(
+    previousSettings.questionCount || Infinity
+  );
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <div className="my-4">
-        <p>オプション</p>
-        {(
-          [
-            {
-              name: "isRandom",
-              title: "ランダムに出題する",
-            },
-            flashCardSettings.mode == "ja-en" && {
-              name: "isAnswerWithKeyboard",
-              title: "キーボードで解答する",
-            },
-            {
-              name: "removeChecked",
-              title: "チェック済みの問題を除外する",
-            },
-          ] as { name: string; title: string }[]
-        )
-          .filter((a) => a)
-          .map((c) => (
-            <label className="block m-2" key={c.name}>
-              <input
-                className="p-2 w-4 h-4"
-                type="checkbox"
-                defaultChecked={flashCardSettings.isRandom}
-                onChange={(e) => {
-                  setFlashCardSettings({
-                    ...flashCardSettings,
-                    [c.name]: e.target.checked,
-                  });
-                }}
-              />
-              {c.title}
-            </label>
-          ))}
-        <label className="block m-2">
-          出題モード:
-          <select
-            className="p-2 rounded border"
-            value={flashCardSettings?.mode}
-            onChange={(e) => {
-              setFlashCardSettings({
-                ...flashCardSettings,
-                mode: e.target.value as unknown as "ja-en",
-              });
-            }}
-          >
-            <option value="ja-en">日本語→英語</option> {/*←初期設定*/}
-            <option value="en-ja">英語→日本語</option>
-          </select>
-        </label>
-        <label className="block m-2">
-          出題数:
-          <input
-            className="p-2 disabled:bg-gray-300 dark:disabled:border-none dark:bg-gray-800 rounded border w-20"
-            disabled={!flashCardSettings.isRandom}
-            type="number"
-            value={flashCardSettings?.questionCount}
-            defaultValue={
-              fileContent.content.length -
-              ((flashCardSettings?.removeChecked
-                ? checked?.[flashCardSettings.mode]?.length
-                : 0) ?? 0)
-            }
-            max={
-              fileContent.content.length -
-              ((flashCardSettings?.removeChecked
-                ? checked?.[flashCardSettings.mode]?.length
-                : 0) ?? 0)
-            }
-            min={1}
-            onChange={(e) => {
-              setFlashCardSettings({
-                ...flashCardSettings,
-                questionCount: Number(e.target.value),
-              });
-            }}
-          />
-          問/全
-          {fileContent.content.length -
-            ((flashCardSettings?.removeChecked
-              ? checked?.[flashCardSettings.mode]?.length
-              : 0) ?? 0)}
-          問
-          {!flashCardSettings.isRandom &&
-            "※この機能はランダム出題時のみしか利用できません。ランダム出題機能をオフにした場合はすべての問題が順に出題されます。"}
-        </label>
+    <form
+      className="flex flex-col gap-4 p-4 w-full max-w-7xl mx-auto"
+      onSubmit={(e) => {
+        e.preventDefault();
+        const settings = {
+          isRandom: e.currentTarget.isRandom.checked,
+          isAnswerWithKeyboard: e.currentTarget.isAnswerWithKeyboard.checked,
+          removeChecked: e.currentTarget.removeChecked.checked,
+          mode: e.currentTarget.mode.value as flashCardSettings["mode"],
+          questionCount: questionCount,
+        };
+        setPreviousSettings(settings);
+        setFlashCardSettings(settings);
+        setMode("cards");
+      }}
+    >
+      <div className="p-2 [&>*]:flex [&>*]:items-center grid gap-3 [&>*]:bg-gray-100 [&>*]:rounded [&>*]:p-2 [&>*]:justify-between bg-gray-50 rounded">
+        {flashcardOptions.map((option) => (
+          <React.Fragment key={option.name}>
+            {typeof option.default === "boolean" && (
+              <label>
+                {option.title}
+                <input
+                  type="checkbox"
+                  name={option.name}
+                  id={option.id}
+                  defaultChecked={previousSettings[option.name]}
+                  onChange={(e) => {
+                    if (option.name === "isRandom") {
+                      setIsRandom(e.currentTarget.checked);
+                      setQuestionCount(Infinity);
+                    }
+                  }}
+                  className="mr-2"
+                />
+              </label>
+            )}
+            {option.options && (
+              <div>
+                <p>{option.title}</p>
+                <div>
+                  {option.options?.map((o) => (
+                    <label key={o.value} className="flex items-center">
+                      <input
+                        type="radio"
+                        name={option.name}
+                        value={o.value || ""}
+                        defaultChecked={
+                          option.name == "questionCount"
+                            ? o.value
+                              ? o.value == questionCount
+                              : ![5, 10, Infinity].includes(questionCount)
+                            : o.value == previousSettings[option.name]
+                        }
+                        disabled={option.name == "questionCount" && !isRandom}
+                        onChange={(e) => {
+                          if (option.name == "questionCount") {
+                            setQuestionCount(Number(e.currentTarget.value));
+                          }
+                        }}
+                      />
+                      {!o.value && (
+                        <>
+                          {[5, 10, Infinity].includes(questionCount) ? (
+                            <p>カスタム</p>
+                          ) : (
+                            <>
+                              <input
+                                className="w-16"
+                                type="number"
+                                name="problemNumberInput"
+                                onChange={(e) => {
+                                  setQuestionCount(
+                                    Number(e.currentTarget.value)
+                                  );
+                                }}
+                                placeholder="カスタム 例:10"
+                                defaultValue={questionCount.toString()}
+                              />
+                              問
+                            </>
+                          )}
+                        </>
+                      )}
+                      {o.value && o.label}
+                    </label>
+                    // Todo: 出題数が
+                  ))}
+                </div>
+              </div>
+            )}
+          </React.Fragment>
+        ))}
       </div>
-      <button
+      <input
+        type="submit"
+        value="Start"
         className="p-4 text-2xl text-center text-white bg-primary-400 disabled:bg-primary-300 rounded-xl"
-        onClick={() => setMode("cards")}
-        disabled={
-          fileContent.content.length -
-            ((flashCardSettings?.removeChecked
-              ? checked?.[flashCardSettings.mode]?.length
-              : 0) ?? 0) ===
-          0
-        }
-      >
-        Start
-      </button>
-    </div>
+      />
+    </form>
   );
 }
+const { persistAtom } = recoilPersist({
+  key: "previousFlashcardSettings",
+  storage: typeof window === "undefined" ? undefined : localStorage,
+});
+const previousSettingsState = atom<flashCardSettings>({
+  key: "previousSettings",
+  default: {
+    isRandom: false,
+    isAnswerWithKeyboard: false,
+    removeChecked: true,
+    mode: "ja-en",
+    questionCount: Infinity,
+  },
+  effects_UNSTABLE: [persistAtom],
+});

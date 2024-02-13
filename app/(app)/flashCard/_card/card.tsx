@@ -85,11 +85,9 @@ export default function FlashCard({
     // preventDefaultTouchmoveEvent: true,
     trackMouse: true,
   });
-
   const currentQuestion = fileContent.content.find(
     (c) => c.id === questionList[questionIndex]
   );
-
   return (
     <>
       <button

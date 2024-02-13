@@ -10,13 +10,14 @@ import {
 } from "@/googledrive";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import FlashCardHome from "./flashCardHome";
 import { flashCardSettings } from "@/@types/flashCardSettings";
 import FlashCard from "./_card/card";
 import CardResult from "./cardResult";
 import HeaderRight from "./HeaderRight";
 import { cardResult } from "@/@types/cardResult";
 import { useDocumentTitle } from "@uidotdev/usehooks";
+import { useLeavePageConfirmation } from "../_library/useLeavePageConfirmation";
+import FlashCardHome from "./flashCardHome";
 
 export default function Card({ fileId }: { fileId: string }) {
   const [fileContent, setFileContent] = useState<fileType | undefined>();
@@ -32,6 +33,8 @@ export default function Card({ fileId }: { fileId: string }) {
     },
     results: [],
   });
+  const [savingResults, setSavingResults] = useState(false);
+  useLeavePageConfirmation(savingResults);
   const { data: session }: { data: customSession | null } =
     useSession() as unknown as { data: customSession };
   const [flashCardSettings, setFlashCardSettings] = useState<flashCardSettings>(
@@ -75,24 +78,30 @@ export default function Card({ fileId }: { fileId: string }) {
   useEffect(() => {
     (async () => {
       if (mode !== "result") return;
-      if (resultFileID) {
-        uploadFile(token, resultFileID, JSON.stringify(results));
-      } else {
-        setResultFileID(
-          await fetch("https://www.googleapis.com/drive/v3/files", {
-            method: "POST",
-            headers: {
-              Authorization: "Bearer " + token,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              name: fileId + ".json",
-              parents: ["appDataFolder"],
-            }),
-          })
-            .then((r) => r.json())
-            .then((r) => r.id)
-        );
+      setSavingResults(true);
+      try {
+        if (resultFileID) {
+          await uploadFile(token, resultFileID, JSON.stringify(results));
+        } else {
+          setResultFileID(
+            await fetch("https://www.googleapis.com/drive/v3/files", {
+              method: "POST",
+              headers: {
+                Authorization: "Bearer " + token,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                name: fileId + ".json",
+                parents: ["appDataFolder"],
+              }),
+            })
+              .then((r) => r.json())
+              .then((r) => r.id)
+          );
+        }
+        setSavingResults(false);
+      } catch (e) {
+        console.error(e);
       }
     })();
   }, [fileId, mode, resultFileID, results, token]);
@@ -115,17 +124,14 @@ export default function Card({ fileId }: { fileId: string }) {
       </header>
       <main className="mt-20 h-full">
         {loading ? (
-          <div className="h-full p-4 select-none">loading...</div>
+          <div className="h-full p-4">loading...</div>
         ) : (
           fileContent && (
             <>
               {mode === "home" && (
                 <FlashCardHome
-                  fileContent={fileContent}
                   setMode={setMode}
-                  flashCardSettings={flashCardSettings}
                   setFlashCardSettings={setFlashCardSettings}
-                  checked={results.check}
                 />
               )}
               {mode === "cards" && (

@@ -37,8 +37,7 @@ export default function PrintPage({ fileId }: { fileId: string }) {
       .slice(0, -1)
       .join(".")} | 印刷 | VocabPhrase | chakkun1121`
   );
-  if (loading)
-    return <div className="text-center print-none select-none">loading...</div>;
+  if (loading) return <div className="text-center print-none">loading...</div>;
   return (
     <div className="p-4 print:p-0">
       <div className="print:hidden">
