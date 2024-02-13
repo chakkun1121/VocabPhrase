@@ -1,6 +1,8 @@
 import { fileType } from "@/@types/fileType";
 import { sendGAEvent } from "@next/third-parties/google";
+import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
+import { HiOutlineDotsVertical } from "react-icons/hi";
 import { IoSaveOutline, IoPrintOutline } from "react-icons/io5";
 import { PiCardsThin } from "react-icons/pi";
 import { uuidv7 as createUUID } from "uuidv7";
@@ -20,6 +22,7 @@ export default function EditHeader({
   saveFileContent: () => void;
   saveFileInfo: () => void;
 }) {
+  const [isOpened, setIsOpened] = useState(false);
   return (
     <nav className="flex justify-between items-center bg-gray-100 p-4">
       <div className="flex gap-4">
@@ -89,6 +92,28 @@ export default function EditHeader({
           <PiCardsThin />
           <span className="hidden md:inline-block">フラッシュカード</span>
         </a>
+        <button
+          className="flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 disabled:text-gray-800 font-semibold"
+          onClick={() => setIsOpened(true)}
+        >
+          <HiOutlineDotsVertical />
+        </button>
+        {isOpened && (
+          <>
+            <div className="fixed bg-gray-200 z-20 [&>button]:block [&>button]:w-full right-0 top-32">
+              <button className="hover:bg-gray-300 rounded p-2">
+                フラッシュカードの履歴を削除
+              </button>
+              <button className="hover:bg-gray-300 rounded p-2">
+                ファイルを削除
+              </button>
+            </div>
+            <button
+              onClick={() => setIsOpened(false)}
+              className="w-screen h-screen absolute bg-opacity-0 inset-0 z-10 cursor-default"
+            />
+          </>
+        )}
       </div>
     </nav>
   );
