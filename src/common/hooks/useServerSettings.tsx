@@ -4,7 +4,7 @@ import { listFiles, getFileContent, uploadFile } from "@/googledrive";
 import { useEffect, useState } from "react";
 
 export function useServerSettings(token: string) {
-  const [settingsFileID, setSettingsFileID] = useState<string>();
+  const [settingsfileId, setSettingsfileId] = useState<string>();
   const [serverSettings, setServerSettings] = useState<
     serverSettingsType | undefined
   >();
@@ -22,7 +22,7 @@ export function useServerSettings(token: string) {
         "spaces=appDataFolder"
       ).then((r) => r.files?.[0]);
       if (settingsFile) {
-        setSettingsFileID(settingsFile.id);
+        setSettingsfileId(settingsFile.id);
         setServerSettings(
           JSON.parse((await getFileContent(token, settingsFile.id)) || "{}")
         );
@@ -34,10 +34,10 @@ export function useServerSettings(token: string) {
     (async () => {
       if (!token) return;
       setIsSaving(true);
-      if (settingsFileID) {
-        uploadFile(token, settingsFileID, JSON.stringify(serverSettings));
+      if (settingsfileId) {
+        uploadFile(token, settingsfileId, JSON.stringify(serverSettings));
       } else {
-        setSettingsFileID(
+        setSettingsfileId(
           await fetch("https://www.googleapis.com/drive/v3/files", {
             method: "POST",
             headers: {
@@ -55,6 +55,6 @@ export function useServerSettings(token: string) {
       }
       setIsSaving(false);
     })();
-  }, [serverSettings, settingsFileID, token]);
+  }, [serverSettings, settingsfileId, token]);
   return { serverSettings, setServerSettings, isLoading, isSaving };
 }

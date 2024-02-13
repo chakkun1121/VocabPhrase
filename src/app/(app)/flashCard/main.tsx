@@ -24,7 +24,7 @@ export default function Card({ fileId }: { fileId: string }) {
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<"home" | "cards" | "result">("home");
-  const [resultFileID, setResultFileID] = useState<string | undefined>(); // resultsのファイルID
+  const [resultfileId, setResultfileId] = useState<string | undefined>(); // resultsのファイルID
   const [results, setResults] = useState<cardResult>({
     fileInfo: { id: fileId },
     check: {
@@ -65,7 +65,7 @@ export default function Card({ fileId }: { fileId: string }) {
           "spaces=appDataFolder"
         ).then((r) => r.files[0]);
         if (resultFile) {
-          setResultFileID(resultFile.id);
+          setResultfileId(resultFile.id);
           setResults(JSON.parse(await getFileContent(token, resultFile.id)));
         }
         setLoading(false);
@@ -80,10 +80,10 @@ export default function Card({ fileId }: { fileId: string }) {
       if (mode !== "result") return;
       setSavingResults(true);
       try {
-        if (resultFileID) {
-          await uploadFile(token, resultFileID, JSON.stringify(results));
+        if (resultfileId) {
+          await uploadFile(token, resultfileId, JSON.stringify(results));
         } else {
-          setResultFileID(
+          setResultfileId(
             await fetch("https://www.googleapis.com/drive/v3/files", {
               method: "POST",
               headers: {
@@ -104,7 +104,7 @@ export default function Card({ fileId }: { fileId: string }) {
         console.error(e);
       }
     })();
-  }, [fileId, mode, resultFileID, results, token]);
+  }, [fileId, mode, resultfileId, results, token]);
   useDocumentTitle(
     `${title
       .split(".")

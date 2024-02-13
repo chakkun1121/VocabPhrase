@@ -68,7 +68,7 @@ export default function LeftBarButtons({ reload }: { reload: () => void }) {
       );
       reload();
       const file = await response.json();
-      router.push(`/app?fileID=${file?.id}`);
+      router.push(`/app?fileId=${file?.id}`);
     } catch (e) {
       console.error(e);
     } finally {
@@ -91,7 +91,7 @@ export default function LeftBarButtons({ reload }: { reload: () => void }) {
           return;
         }
         if (data?.docs?.[0]?.name?.endsWith(".vocabphrase")) {
-          router.push(`/app?fileID=${data.docs[0].id}`);
+          router.push(`/app?fileId=${data.docs[0].id}`);
         }
       },
     });

@@ -3,14 +3,14 @@ import HowToUse from "./howToUse";
 import Print from "./print";
 
 export default function App({
-  searchParams: { fileID },
+  searchParams: { fileId },
 }: {
-  searchParams: { fileID?: string };
+  searchParams: { fileId?: string };
 }) {
-  return fileID ? (
+  return fileId ? (
     <>
-      <FileMenu fileID={fileID} key={fileID} />
-      <Print fileId={fileID} />
+      <FileMenu fileId={fileId} key={fileId} />
+      <Print fileId={fileId} />
     </>
   ) : (
     <Home />

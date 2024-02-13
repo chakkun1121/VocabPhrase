@@ -15,7 +15,7 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
   const { data: session }: { data: customSession | null } =
     useSession() as unknown as { data: customSession };
   const [recentFile, setRecentFile] = useState<
-    { title: string; fileID: string }[]
+    { title: string; fileId: string }[]
   >([]);
   const [error, setError] = useState<any>(undefined);
   const token = session?.accessToken;
@@ -31,7 +31,7 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
         files
           .map((file: { name: string; id: string }) => ({
             title: file.name,
-            fileID: file.id,
+            fileId: file.id,
           }))
           .filter((file: { title: string }) =>
             file.title.endsWith(".vocabphrase")
@@ -76,7 +76,7 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
               <File
                 file={file}
                 token={token}
-                key={file.fileID}
+                key={file.fileId}
                 getRecentFile={getRecentFile}
               />
             ))}
@@ -94,7 +94,7 @@ function File({
   token,
   getRecentFile,
 }: {
-  file: { title: string; fileID: string };
+  file: { title: string; fileId: string };
   token: string;
   getRecentFile: () => void;
 }) {
@@ -110,16 +110,16 @@ function File({
   //   };
   // }, [isOpened]);
   return (
-    <li key={file.fileID} className="list-none">
+    <li key={file.fileId} className="list-none">
       <div className="flex items-center gap-2">
         <Link
-          href={`./app?fileID=${file.fileID}`}
+          href={`./app?fileId=${file.fileId}`}
           className="text-black hover:text-black visited:text-black flex-1 truncate"
         >
           {file.title.split(".").slice(0, -1).join(".")}
         </Link>
         <Link
-          href={`./app?fileID=${file.fileID}`}
+          href={`./app?fileId=${file.fileId}`}
           target="_blank"
           aria-label="新しいタブで開く"
           className="text-black hover:text-black visited:text-black flex-none"
@@ -137,7 +137,7 @@ function File({
                 window.confirm("復元できません。よろしいでしょうか?") &&
                   (async () => {
                     router.push("/app");
-                    await deleteFile(token, file.fileID);
+                    await deleteFile(token, file.fileId);
                     getRecentFile();
                   })();
               }}

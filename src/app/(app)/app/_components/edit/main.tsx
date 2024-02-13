@@ -9,7 +9,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import EditHeader from "./editHeader";
 import { useFile } from "@/googledrive/useFile";
-export default function FileMenu({ fileID }: { fileID: string }) {
+export default function FileMenu({ fileId }: { fileId: string }) {
   const { data: session }: { data: customSession | null } =
     useSession() as unknown as { data: customSession };
   const token = session?.accessToken;
@@ -22,7 +22,7 @@ export default function FileMenu({ fileID }: { fileID: string }) {
     saving,
     saveFileContent,
     saveFileInfo,
-  } = useFile(token, fileID);
+  } = useFile(token, fileId);
 
   useHotkeys(
     "ctrl+s",
@@ -51,7 +51,7 @@ export default function FileMenu({ fileID }: { fileID: string }) {
   return (
     <>
       <EditHeader
-        fileID={fileID}
+        fileId={fileId}
         fileContent={fileContent as fileType}
         setFileContent={
           setFileContent as React.Dispatch<React.SetStateAction<fileType>>
@@ -61,7 +61,7 @@ export default function FileMenu({ fileID }: { fileID: string }) {
         saveFileInfo={saveFileInfo}
       />
       <EditMenu
-        key={fileID}
+        key={fileId}
         title={title.split(".").slice(0, -1).join(".")}
         setTitle={(newTitle) => {
           setTitle(newTitle + ".vocabphrase");

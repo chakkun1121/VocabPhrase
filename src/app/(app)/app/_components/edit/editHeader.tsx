@@ -12,14 +12,14 @@ import { PiCardsThin } from "react-icons/pi";
 import { uuidv7 as createUUID } from "uuidv7";
 
 export default function EditHeader({
-  fileID,
+  fileId,
   fileContent,
   setFileContent,
   saving,
   saveFileContent,
   saveFileInfo,
 }: {
-  fileID: string;
+  fileId: string;
   fileContent: fileType;
   setFileContent: React.Dispatch<React.SetStateAction<fileType>>;
   saving: boolean;
@@ -73,7 +73,7 @@ export default function EditHeader({
             fileContent?.content?.length === 0 &&
             "pointer-events-none text-gray-600"
           }`}
-          href={"/print?fileId=" + fileID}
+          href={"/print?fileId=" + fileId}
           target="_blank"
           title={
             fileContent?.content?.length === 0
@@ -89,7 +89,7 @@ export default function EditHeader({
             fileContent?.content?.length === 0 &&
             "pointer-events-none text-gray-600"
           }`}
-          href={"/flashCard?fileId=" + fileID}
+          href={"/flashCard?fileId=" + fileId}
           target="_blank"
           title={
             fileContent?.content?.length === 0
@@ -118,14 +118,14 @@ export default function EditHeader({
                       "フラッシュカードの履歴を本当に削除しますか?"
                     )
                   ) {
-                    const deleteFileId = await listFiles(
+                    const deletefileId = await listFiles(
                       token,
-                      "name='" + fileID + ".json'",
+                      "name='" + fileId + ".json'",
                       undefined,
                       undefined,
                       "spaces=appDataFolder"
                     ).then((r) => r.files[0].id);
-                    if (deleteFileId) await deleteFile(token, deleteFileId);
+                    if (deletefileId) await deleteFile(token, deletefileId);
                     console.log("deleted");
                   }
                 }}
@@ -139,7 +139,7 @@ export default function EditHeader({
                   window.confirm("復元できません。よろしいでしょうか?") &&
                     (async () => {
                       router.push("/app");
-                      await deleteFile(token, fileID);
+                      await deleteFile(token, fileId);
                     })();
                 }}
               >
