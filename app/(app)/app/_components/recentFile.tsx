@@ -100,6 +100,15 @@ function File({
 }) {
   const router = useRouter();
   const [isOpened, setIsOpened] = useState(false);
+  // useEffect(() => {
+  //   function close() {
+  //     if (isOpened) setIsOpened(false);
+  //   }
+  //   window.addEventListener("click", close);
+  //   return () => {
+  //     window.removeEventListener("click", close);
+  //   };
+  // }, [isOpened]);
   return (
     <li key={file.fileID} className="list-none">
       <div className="flex items-center gap-2">
@@ -121,7 +130,7 @@ function File({
           <HiOutlineDotsVertical />
         </button>
         {isOpened && (
-          <div className="fixed">
+          <div className="fixed left-[calc(min(24rem,calc(theme(width.screen)-3rem))-theme(width.3))] bg-gray-100 rounded p-2 z-50">
             <button
               onClick={() => {
                 setIsOpened(false);
@@ -138,6 +147,12 @@ function File({
           </div>
         )}
       </div>
+      {isOpened && (
+        <button
+          onClick={() => setIsOpened(false)}
+          className="w-screen h-screen absolute bg-opacity-0 inset-0 z-40 cursor-default"
+        />
+      )}
     </li>
   );
 }
