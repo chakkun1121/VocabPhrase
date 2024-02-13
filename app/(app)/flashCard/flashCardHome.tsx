@@ -2,6 +2,8 @@ import { flashCardSettings } from "@/@types/flashCardSettings";
 import { useState } from "react";
 import { atom, useRecoilState } from "recoil";
 import { recoilPersist } from "recoil-persist";
+import { flashcardOptions } from "./flashcardOptions";
+import React from "react";
 
 export default function FlashCardHome({
   setMode,
@@ -14,13 +16,12 @@ export default function FlashCardHome({
     previousSettingsState
   );
   const [isRandom, setIsRandom] = useState(previousSettings.isRandom);
-  const [infiniteProblem, setInfiniteProblem] = useState(
-    isRandom ? previousSettings.questionCount === Infinity : true
+  const [questionCount, setQuestionCount] = useState<number>(
+    previousSettings.questionCount || Infinity
   );
-  console.log(previousSettings);
   return (
     <form
-      className="flex flex-col gap-4 p-4"
+      className="flex flex-col gap-4 p-4 w-full max-w-7xl mx-auto"
       onSubmit={(e) => {
         e.preventDefault();
         const settings = {
@@ -28,114 +29,90 @@ export default function FlashCardHome({
           isAnswerWithKeyboard: e.currentTarget.isAnswerWithKeyboard.checked,
           removeChecked: e.currentTarget.removeChecked.checked,
           mode: e.currentTarget.mode.value as flashCardSettings["mode"],
-          questionCount: infiniteProblem
-            ? Infinity
-            : e.currentTarget.problemNumberInput.value,
+          questionCount: questionCount,
         };
         setPreviousSettings(settings);
         setFlashCardSettings(settings);
         setMode("cards");
       }}
     >
-      <div className="my-4 [&>label]:block grid gap-2">
-        <p>オプション</p>
-        {[
-          {
-            name: "isRandom",
-            title: "ランダムに出題する",
-            default: previousSettings.isRandom,
-            onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-              setIsRandom(e.target.checked),
-          },
-          {
-            name: "isAnswerWithKeyboard",
-            title: "キーボードで解答する",
-            default: previousSettings.isAnswerWithKeyboard,
-          },
-          {
-            name: "removeChecked",
-            title: "チェック済みの問題を除外する",
-            default: previousSettings.removeChecked,
-          },
-        ].map((c) => (
-          <label key={c.name}>
-            <input
-              className="p-2 w-4 h-4"
-              type="checkbox"
-              defaultChecked={c.default}
-              name={c.name}
-              onChange={c.onChange}
-            />
-            {c.title}
-          </label>
-        ))}
-        <label>
-          出題モード:
-          <select
-            className="p-2 rounded border"
-            defaultValue={previousSettings.mode}
-            name="mode"
-          >
-            <option value="ja-en">日本語→英語</option> {/*←初期設定*/}
-            <option value="en-ja">英語→日本語</option>
-          </select>
-        </label>
-        <div>
-          出題数:
-          <label
-            className={`p-2 border ${
-              infiniteProblem ? "bg-primary-200" : "bg-gray-100"
-            }`}
-          >
-            <input
-              type="radio"
-              name="problemNumber"
-              value="Infinity"
-              checked={infiniteProblem}
-              className="hidden"
-              onChange={() => setInfiniteProblem(true)}
-            />
-            すべて
-          </label>
-          <label
-            className={`p-2 border ${
-              infiniteProblem ? "bg-gray-100" : "bg-primary-200"
-            } ${isRandom ? "" : "cursor-not-allowed bg-gray-400"}`}
-          >
-            <input
-              type="radio"
-              name="problemNumber"
-              className="hidden"
-              disabled={!isRandom}
-              checked={!infiniteProblem}
-              onChange={() => setInfiniteProblem(false)}
-            />
-            {!isRandom || infiniteProblem ? (
-              <span className="w-16 inline-block">
-                {previousSettings.questionCount === Infinity
-                  ? "10"
-                  : previousSettings.questionCount}
-              </span>
-            ) : (
-              <input
-                type="number"
-                defaultValue={
-                  previousSettings.questionCount === Infinity
-                    ? "10"
-                    : previousSettings.questionCount
-                }
-                placeholder="10"
-                className="w-16 bg-primary-200"
-                name="problemNumberInput"
-                disabled={infiniteProblem}
-              />
+      <div className="p-2 [&>*]:flex [&>*]:items-center grid gap-3 [&>*]:bg-gray-100 [&>*]:rounded [&>*]:p-2 [&>*]:justify-between bg-gray-50 rounded">
+        {flashcardOptions.map((option) => (
+          <React.Fragment key={option.name}>
+            {typeof option.default === "boolean" && (
+              <label>
+                {option.title}
+                <input
+                  type="checkbox"
+                  name={option.name}
+                  id={option.id}
+                  defaultChecked={previousSettings[option.name]}
+                  onChange={(e) => {
+                    if (option.name === "isRandom") {
+                      setIsRandom(e.currentTarget.checked);
+                      setQuestionCount(Infinity);
+                    }
+                  }}
+                  className="mr-2"
+                />
+              </label>
             )}
-            問
-          </label>
-          {isRandom
-            ? "※設定した問題数が出題可能数よりも少ない場合はすべての問題が出題されます。"
-            : "※この機能はランダム出題時のみしか利用できません。"}
-        </div>
+            {option.options && (
+              <div>
+                <p>{option.title}</p>
+                <div>
+                  {option.options?.map((o) => (
+                    <label key={o.value} className="flex items-center">
+                      <input
+                        type="radio"
+                        name={option.name}
+                        value={o.value || ""}
+                        defaultChecked={
+                          option.name == "questionCount"
+                            ? o.value
+                              ? o.value == questionCount
+                              : ![5, 10, Infinity].includes(questionCount)
+                            : o.value == previousSettings[option.name]
+                        }
+                        disabled={option.name == "questionCount" && !isRandom}
+                        onChange={(e) => {
+                          if (option.name == "questionCount") {
+                            setQuestionCount(Number(e.currentTarget.value));
+                          }
+                        }}
+                      />
+                      {!o.value && (
+                        <>
+                          {[5, 10, Infinity].includes(questionCount) ? (
+                            <p>カスタム</p>
+                          ) : (
+                            <>
+                              <input
+                                className="w-16"
+                                type="number"
+                                name="problemNumberInput"
+                                onChange={(e) => {
+                                  setQuestionCount(
+                                    Number(e.currentTarget.value)
+                                  );
+                                }}
+                                placeholder="カスタム 例:10"
+                                defaultValue={questionCount.toString()}
+                              />
+                              問
+                            </>
+                          )}
+                        </>
+                      )}
+                      {o.value && o.label}
+                    </label>
+                    // Todo: 出題数が
+                  ))}
+                </div>
+              </div>
+            )}
+          </React.Fragment>
+        ))}
       </div>
       <input
         type="submit"
