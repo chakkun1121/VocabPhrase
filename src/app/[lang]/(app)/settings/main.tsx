@@ -2,9 +2,9 @@
 
 import { customSession } from "@/types/customSession";
 import { useSession } from "next-auth/react";
-import { useServerSettings } from "../../../common/hooks/useServerSettings";
+import { useServerSettings } from "../../../../common/hooks/useServerSettings";
 import { useRecoilState } from "recoil";
-import { localSettingsState } from "../../../common/hooks/localSettings";
+import { localSettingsState } from "../../../../common/hooks/localSettings";
 
 export default function Settings() {
   const { data: session }: { data: customSession | null } =

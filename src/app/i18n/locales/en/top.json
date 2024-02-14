@@ -1,0 +1,25 @@
+{
+  "header": "use VocabPhrase",
+  "catchCopy": "Web vocabulary app exclusively for English sentences and words",
+  "whatIs": "What is VocabPhrase?",
+  "about": "VocabPhrase is a web vocabulary book application that can be used on the web exclusively for English sentences and words.",
+  "functions": {
+    "title": "Function introduction",
+    "1": {
+      "title": "Create your vocabulary books",
+      "description": "You can create own vocabulary books using this app. The created vocabulary books are saved in your Google Drive.",
+      "alt": "Create vocabulary book"
+    },
+    "2": {
+      "title": "Memorize using flashcards",
+      "description": "You can memorize the vocabulary you created using flashcards. There are Japanese to English and English to Japanese modes. You can also check the questions you have memorized, so you can study efficiently.",
+      "alt": "Flashcard"
+    },
+    "3": {
+      "title": "Speaking practice (under development)",
+      "description": "This app not only has a vocabulary book function, but also allows you to practice speaking using the vocabulary books you have created.",
+      "alt": "Speaking practice"
+    }
+  },
+  "letsUse": "Let's use VocabPhrase!"
+}

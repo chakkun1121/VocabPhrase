@@ -16,7 +16,7 @@ import CardResult from "./cardResult";
 import HeaderRight from "./HeaderRight";
 import { cardResult } from "@/types/cardResult";
 import { useDocumentTitle } from "@uidotdev/usehooks";
-import { useLeavePageConfirmation } from "../../../common/hooks/useLeavePageConfirmation";
+import { useLeavePageConfirmation } from "../../../../common/hooks/useLeavePageConfirmation";
 import FlashCardHome from "./flashCardHome";
 
 export default function Card({ fileId }: { fileId: string }) {

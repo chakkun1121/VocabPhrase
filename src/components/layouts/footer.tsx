@@ -1,7 +1,10 @@
 import Link from "next/link";
-import { CONTACT_FORM_URL } from "../../app/meta";
+import { CONTACT_FORM_URL } from "../../app/[lang]/meta";
+import { getTranslation } from "@/app/i18n/server";
 
-export default function Footer() {
+export default async function Footer({ lang }: { lang: string }) {
+  const { t } = await getTranslation(lang);
+
   return (
     <footer className="flex-none text-center p-4 bg-BahamaBlue-700 text-white justify-center">
       <p>© 2024 chakkun1121</p>
@@ -10,13 +13,13 @@ export default function Footer() {
           className="text-white hover:text-white visited:text-white"
           href="/terms"
         >
-          利用規約
+          {t("footer.terms")}
         </Link>
         <Link
           className="text-white hover:text-white visited:text-white"
           href="/privacy"
         >
-          プライバシーポリシー
+          {t("footer:privacy")}
         </Link>
         <Link
           className="text-white hover:text-white visited:text-white"
@@ -28,7 +31,7 @@ export default function Footer() {
           }
           target="_blank"
         >
-          お問い合わせ
+          {t("footer:contact")}
         </Link>
       </div>
     </footer>

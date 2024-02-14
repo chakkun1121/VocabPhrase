@@ -1,3 +1,4 @@
+import { dir } from "i18next";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
@@ -9,7 +10,7 @@ import {
   AUTHOR_NAME,
   THEME_COLOR,
 } from "./meta";
-import HelpKeyShortCut from "../components/functional/helpKeyShortCut";
+import HelpKeyShortCut from "../../components/functional/helpKeyShortCut";
 import RecoilProvider from "@/components/functional/recoil";
 import NextAuthProvider from "@/components/providers/NextAuth";
 
@@ -59,11 +60,13 @@ export const viewport: Viewport = {
 };
 export default function RootLayout({
   children,
+  params: { lang },
 }: {
   children: React.ReactNode;
+  params: { lang: string };
 }) {
   return (
-    <html lang="ja">
+    <html lang={lang} dir={dir(lang)}>
       {process.env.NODE_ENV === "production" && (
         <GoogleAnalytics gaId="G-MNPB0JEZCF" />
       )}

@@ -1,4 +1,4 @@
-import MdxContent from "@/app/(home)/(mdx_documents)/help/edit/page.mdx";
+import MdxContent from "@/app/[lang]/(home)/(mdx_documents)/help/edit/page.mdx";
 import Link from "next/link";
 export default function HowToUse() {
   return (
