@@ -13,6 +13,7 @@ import {
 import HelpKeyShortCut from "../../components/functional/helpKeyShortCut";
 import RecoilProvider from "@/components/functional/recoil";
 import NextAuthProvider from "@/components/providers/NextAuth";
+const languages = ["en", "ja"];
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
@@ -78,4 +79,7 @@ export default function RootLayout({
       </NextAuthProvider>
     </html>
   );
+}
+export async function generateStaticParams() {
+  return languages.map((lang) => ({ lang }));
 }

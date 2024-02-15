@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import { getFileMetadata } from "./(home)/help/getFileMetadata";
+import { getFileMetadata } from "./[lang]/(home)/help/getFileMetadata";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const helpPages = (await getFileMetadata())

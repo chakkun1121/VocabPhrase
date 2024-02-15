@@ -9,6 +9,7 @@ export async function getFileMetadata(): Promise<
         process.cwd(),
         "src",
         "app",
+        "[lang]",
         "(home)",
         "(mdx_documents)",
         "help"
@@ -19,7 +20,7 @@ export async function getFileMetadata(): Promise<
   return await Promise.all(
     files.map(async (file) => {
       const { metadata } = await import(
-        `@/app/(home)/(mdx_documents)/help/${file}/page.mdx`
+        `@/app/[lang]/(home)/(mdx_documents)/help/${file}/page.mdx`
       );
       return { fileName: file, ...metadata };
     })

@@ -3,7 +3,13 @@ import Footer from "../../../components/layouts/footer";
 import Link from "next/link";
 import Header from "@/components/layouts/header";
 
-export default function HomeLayout({ children }: { children: ReactNode }) {
+export default function HomeLayout({
+  children,
+  lang,
+}: {
+  children: ReactNode;
+  lang: string;
+}) {
   return (
     <div className="flex flex-col gap-4 h-screen">
       <Header
@@ -14,7 +20,7 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
         }
       />
       <main className="flex-1 p-4 !select-text mt-20">{children}</main>
-      <Footer />
+      <Footer lang={lang} />
     </div>
   );
 }
