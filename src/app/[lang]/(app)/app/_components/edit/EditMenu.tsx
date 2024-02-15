@@ -56,9 +56,19 @@ export default function EditMenu({
             <div className="flex-none flex items-center">
               <p>{index + 1}</p>
             </div>
-            <div className="flex flex-col gap-4 flex-1">
+            <div
+              className={
+                "flex gap-4 flex-1 " +
+                (fileContent.mode == "words" || fileContent.mode == "phrases"
+                  ? "flex-wrap"
+                  : "flex-col")
+              }
+            >
               <input
-                className="rounded p-2"
+                className={
+                  "rounded p-2 flex-1 min-w-12 " +
+                  (fileContent.mode == "phrases" ? "min-w-64" : "")
+                }
                 placeholder="英文を入力"
                 defaultValue={field.en}
                 onChange={(e) =>
@@ -71,7 +81,10 @@ export default function EditMenu({
                 }
               />
               <input
-                className="rounded p-2"
+                className={
+                  "rounded p-2 flex-1 min-w-12 " +
+                  (fileContent.mode == "phrases" ? "min-w-64" : "")
+                }
                 placeholder="日本語訳を入力"
                 defaultValue={field.ja}
                 onChange={(e) =>
