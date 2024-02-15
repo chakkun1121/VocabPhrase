@@ -10,7 +10,9 @@ const getNegotiatedLanguage = (
 
 export const config = {
   // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
-  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$|.*\\.webp$|sitemap.xml).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|.*\\.png$|.*\\.webp$|sitemap.xml).*)",
+  ],
 };
 
 export function middleware(request: NextRequest) {
@@ -20,6 +22,8 @@ export function middleware(request: NextRequest) {
   const preferredLanguage = getNegotiatedLanguage(headers) || defaultLanguage;
 
   const pathname = request.nextUrl.pathname;
+  const searchParams = request.nextUrl.searchParams;
+
   const pathnameIsMissingLocale = availableLanguages.every(
     (lang) => !pathname.startsWith(`/${lang}/`) && pathname !== `/${lang}`
   );
@@ -27,10 +31,13 @@ export function middleware(request: NextRequest) {
   if (pathnameIsMissingLocale) {
     if (preferredLanguage !== defaultLanguage) {
       return NextResponse.redirect(
-        new URL(`/${preferredLanguage}${pathname}`, request.url)
+        new URL(
+          `/${preferredLanguage}${pathname}?${searchParams.toString()}`,
+          request.url
+        )
       );
     } else {
-      const newPathname = `/${defaultLanguage}${pathname}`;
+      const newPathname = `/${defaultLanguage}${pathname}?${searchParams.toString()}`;
       return NextResponse.rewrite(new URL(newPathname, request.url));
     }
   }
