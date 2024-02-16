@@ -1,6 +1,6 @@
 import { fileType } from "@/types/fileType";
 import { useState } from "react";
-import { SpeechButton } from "./speechButton";
+import SpeechButton from "./speechButton";
 import { useHotkeys } from "react-hotkeys-hook";
 import { flashCardMode } from "@/types/flashCardSettings";
 import { DisabledCheckBox } from "@/components/ui-parts/disabledCheckBox";

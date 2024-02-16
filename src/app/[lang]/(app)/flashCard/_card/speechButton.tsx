@@ -1,9 +1,8 @@
+import SpeechButton from "@/components/ui-parts/speechButton";
 import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { FaStop } from "react-icons/fa";
-import { AiOutlineSound } from "react-icons/ai";
 
-export function SpeechButton({
+export default function Speech({
   text,
   lang = "en",
 }: {
@@ -27,12 +26,10 @@ export function SpeechButton({
     isSpeaking ? stop() : speech();
   });
   return (
-    <button
-      onClick={isSpeaking ? stop : speech}
-      title={isSpeaking ? "停止" : "再生"}
-      className="rounded-full aspect-square  bg-gray-200 hover:bg-gray-300 p-4 w-16 h-16 grid place-items-center"
-    >
-      {isSpeaking ? <FaStop /> : <AiOutlineSound />}
-    </button>
+    <SpeechButton
+      isSpeaking={isSpeaking}
+      speech={speech}
+      className="rounded-full bg-gray-200 hover:bg-gray-300 w-16 h-16 p-4"
+    />
   );
 }

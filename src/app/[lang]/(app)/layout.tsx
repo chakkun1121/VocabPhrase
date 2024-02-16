@@ -9,7 +9,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   if (!session) redirect("/login?redirectTo=/app");
   return (
     <>
-      {children} <RightClick />
+      {children} {process.env.NOT_USE_RIGHT_CLICK ? <></> : <RightClick />}
     </>
   );
 }
