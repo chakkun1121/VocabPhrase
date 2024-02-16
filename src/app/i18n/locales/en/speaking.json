@@ -1,4 +1,5 @@
 {
   "title": "Speaking Practice Page",
-  "select": "Select mode and start"
+  "select": "Select mode and start",
+  "backToSelect": "Back to mode selection page"
 }

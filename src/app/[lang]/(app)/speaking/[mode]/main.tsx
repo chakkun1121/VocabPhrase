@@ -90,8 +90,6 @@ export default function Speaking({
   if (loading) return <p className="text-center">loading...</p>;
   return (
     <>
-      {/* 録音を強制的に止めるためにaタグを使用 */}
-      <a href={"./?fileId=" + fileId}>モード選択へ戻る</a>
       <nav className="bg-gray-100 p-2 rounded ">
         <div className="[&>label]:block grid gap-2">
           <label>
