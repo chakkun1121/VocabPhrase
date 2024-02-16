@@ -9,7 +9,8 @@ export default function Page({
   params: { lang: "ja" | "en"; mode: string };
   searchParams: { fileId: string };
 }) {
-  if (!fileId || !speakingMode.find((m) => m.id === mode)) redirect("./app");
+  if (!fileId || !speakingMode.find((m) => m.id === mode))
+    redirect("./speaking");
 
   return <Speaking fileId={fileId} mode={mode} lang={lang} />;
 }

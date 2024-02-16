@@ -1,5 +1,5 @@
 import { fileType } from "@/types/fileType";
-import { SpeechButton } from "./speechButton";
+import SpeechButton from "./speechButton";
 import Answer from "./answer";
 import { flashCardMode } from "@/types/flashCardSettings";
 

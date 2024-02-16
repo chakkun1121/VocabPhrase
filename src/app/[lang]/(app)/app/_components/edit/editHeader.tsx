@@ -10,6 +10,7 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import { IoSaveOutline, IoPrintOutline } from "react-icons/io5";
 import { PiCardsThin } from "react-icons/pi";
 import { uuidv7 as createUUID } from "uuidv7";
+import { RiSpeakFill, RiSpeakLine } from "react-icons/ri";
 
 export default function EditHeader({
   fileId,
@@ -99,6 +100,22 @@ export default function EditHeader({
         >
           <PiCardsThin />
           <span className="hidden md:inline-block">フラッシュカード</span>
+        </a>
+        <a
+          className={`flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 text-black hover:text-black visited:text-black text-button ${
+            fileContent?.content?.length === 0 &&
+            "pointer-events-none text-gray-600"
+          }`}
+          href={"./speaking?fileId=" + fileId}
+          target="_blank"
+          title={
+            fileContent?.content?.length === 0
+              ? "コンテンツがない状態ではスピーキング練習機能を利用できません。"
+              : undefined
+          }
+        >
+          <RiSpeakLine />
+          <span className="hidden md:inline-block">スピーキング練習</span>
         </a>
         <button
           className="flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 disabled:text-gray-800 font-semibold"
