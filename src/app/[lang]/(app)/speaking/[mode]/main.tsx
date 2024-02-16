@@ -30,22 +30,40 @@ export default function Speaking({
   const [recordingIndex, setRecordingIndex] = useState<number | undefined>(
     undefined
   );
+  const [playingIndex, setPlayingIndex] = useState<number | undefined>(
+    undefined
+  );
   useEffect(() => {
-    if (!recordingIndex) {
+    if (!recordingIndex && !playingIndex) {
       window.scrollTo({ behavior: "smooth", top: 0, left: 0 });
       return;
     }
-    const element = document.getElementById("content_" + recordingIndex);
+    const element = document.getElementById(
+      "content_" + (recordingIndex || playingIndex)
+    );
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "center" });
     }
-  }, [recordingIndex]);
-  const [recordedUrl, setRecordedUrl] = useState<string | undefined>(undefined);
+  }, [playingIndex, recordingIndex]);
+  const [recordedData, setRecordedData] = useState<
+    | {
+        url: string;
+        info: {
+          id: string;
+          start: number;
+          end: number;
+        }[];
+      }
+    | undefined
+  >(undefined);
+  const [speed, setSpeed] = useState(1);
   async function recording() {
     setIsRecording(true);
     // 録音開始
+    const info: { id: string; start: number; end: number }[] = [];
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const mediaRecorder = new MediaRecorder(stream);
+    const recordedStart = Date.now();
     const chunks: Blob[] = [];
     mediaRecorder.ondataavailable = (e) => {
       chunks.push(e.data);
@@ -53,8 +71,7 @@ export default function Speaking({
     mediaRecorder.onstop = async () => {
       const blob = new Blob(chunks, { type: "audio/ogg; codecs=opus" });
       const url = URL.createObjectURL(blob);
-      console.log(url);
-      setRecordedUrl(url);
+      setRecordedData({ url, info });
     };
     mediaRecorder.start();
     // 音声を順に流していく
@@ -64,27 +81,43 @@ export default function Speaking({
       const useLang = mode == "ja2en" ? "ja" : "en";
       const utterance = new SpeechSynthesisUtterance(content[useLang]);
       utterance.lang = useLang;
+      utterance.rate = speed;
       speechSynthesis.speak(utterance);
       await new Promise((resolve) => {
         utterance.onend = resolve;
       });
       const end = Date.now();
-      console.log(end - start);
       if (mode !== "shadowing")
         await new Promise((resolve) => setTimeout(resolve, end - start));
+      info.push({
+        id: content.id,
+        start: start - recordedStart,
+        end: Date.now() - recordedStart,
+      });
     }
     setRecordingIndex(undefined);
     mediaRecorder.stop();
     setIsRecording(false);
   }
   async function play() {
-    if (!recordedUrl) return;
+    if (!recordedData) return;
     setIsPlaying(true);
-    const audio = new Audio(recordedUrl);
+    const audio = new Audio(recordedData.url);
     audio.play();
-    await new Promise((resolve) => {
-      audio.onended = resolve;
-    });
+    await Promise.all([
+      new Promise((resolve) => {
+        audio.onended = resolve;
+      }),
+      (async () => {
+        let i = 0;
+        for (const { start, end } of recordedData.info) {
+          setPlayingIndex(i);
+          await new Promise((resolve) => setTimeout(resolve, end - start));
+          setPlayingIndex(undefined);
+          i++;
+        }
+      })(),
+    ]);
     setIsPlaying(false);
   }
   if (loading) return <p className="text-center">loading...</p>;
@@ -107,6 +140,17 @@ export default function Speaking({
               onChange={(e) => setIsShowJa(e.target.checked)}
             />
             日本語訳を表示する
+          </label>
+          <label>
+            <input
+              type="range"
+              min="0.1"
+              max="2"
+              step="0.1"
+              value={speed}
+              onChange={(e) => setSpeed(Number(e.target.value))}
+            />
+            英文、日本語再生速度(x{speed})
           </label>
         </div>
         <div className="flex gap-2">
@@ -139,7 +183,7 @@ export default function Speaking({
               isShowEn={isShowEn}
               isShowJa={isShowJa}
               canPlay={!isRecording}
-              isForced={index === recordingIndex}
+              isForced={index === recordingIndex || index === playingIndex}
             />
           ))}
         </div>
