@@ -5,10 +5,10 @@ import Header from "@/components/layouts/header";
 
 export default function HomeLayout({
   children,
-  lang,
+  params: { lang },
 }: {
   children: ReactNode;
-  lang: string;
+  params: { lang: string };
 }) {
   return (
     <div className="flex flex-col gap-4 h-screen">
