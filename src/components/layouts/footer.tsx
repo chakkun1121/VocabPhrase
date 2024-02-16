@@ -13,7 +13,7 @@ export default async function Footer({ lang }: { lang: string }) {
           className="text-white hover:text-white visited:text-white"
           href="/terms"
         >
-          {t("footer.terms")}
+          {t("footer:terms")}
         </Link>
         <Link
           className="text-white hover:text-white visited:text-white"
