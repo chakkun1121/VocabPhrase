@@ -42,7 +42,7 @@ export default function Speaking({
       "content_" + (recordingIndex || playingIndex)
     );
     if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "center" });
+      element.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
   }, [playingIndex, recordingIndex]);
   const [recordedData, setRecordedData] = useState<
