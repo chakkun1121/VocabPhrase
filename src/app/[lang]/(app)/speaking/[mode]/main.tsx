@@ -87,8 +87,9 @@ export default function Speaking({
         utterance.onend = resolve;
       });
       const end = Date.now();
-      if (mode !== "shadowing")
-        await new Promise((resolve) => setTimeout(resolve, end - start));
+      await new Promise((resolve) =>
+        setTimeout(resolve, (end - start) / (mode == "shadowing" ? 10 : 1))
+      );
       info.push({
         id: content.id,
         start: start - recordedStart,
