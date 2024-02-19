@@ -11,7 +11,7 @@ import {
   THEME_COLOR,
 } from "./meta";
 import HelpKeyShortCut from "../../components/functional/helpKeyShortCut";
-import RecoilProvider from "@/components/functional/recoil";
+import RecoilProvider from "@/components/providers/recoil";
 import NextAuthProvider from "@/components/providers/NextAuth";
 const languages = ["en", "ja"];
 
