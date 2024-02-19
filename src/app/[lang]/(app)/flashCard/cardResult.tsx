@@ -1,34 +1,46 @@
 import { cardResult } from "@/types/cardResult";
 import { fileType } from "@/types/fileType";
 import { DisabledCheckBox } from "../../../../components/ui-parts/disabledCheckBox";
+import { flashCardMode } from "@/types/flashCardSettings";
 
 export default function CardResult({
   fileContent,
   results,
+  mode,
   currentProblemIdList,
 }: {
   fileContent: fileType;
   results: cardResult;
+  mode: flashCardMode;
   currentProblemIdList: string[];
 }) {
+  console.log(results.check["en-ja"]);
   return (
     <div className="grid p-4 w-full max-w-7xl mx-auto gap-4">
       <div>
         <div>
           <h2>チェック率</h2>
-          <p>
-            英語→日本語:
+          <p
+            className={
+              mode == "ja-en" ? "bg-SelectivYellow-100 rounded w-max" : ""
+            }
+          >
+            日本語→英語:
             {Math.round(
-              ((results.check["en-ja"]?.length || 0) /
+              ((results.check["ja-en"]?.length || 0) /
                 fileContent.content.length) *
                 100
             )}
             %
           </p>
-          <p>
-            日本語→英語:
+          <p
+            className={
+              mode == "en-ja" ? "bg-SelectivYellow-100 rounded w-max" : ""
+            }
+          >
+            英語→日本語:
             {Math.round(
-              ((results.check["ja-en"]?.length || 0) /
+              ((results.check["en-ja"]?.length || 0) /
                 fileContent.content.length) *
                 100
             )}
@@ -58,15 +70,25 @@ export default function CardResult({
             <th className="px-4 py-6">英文</th>
             <th className="px-4 py-6">日本語訳</th>
             {/* <th className="px-4"></th> */}
-            <th className="px-4 py-6 w-20">
-              英語→
-              <br />
-              日本語
-            </th>
-            <th className="px-4 py-6 w-20">
+            <th
+              className={
+                "px-4 py-6 w-20 " +
+                (mode == "ja-en" ? "bg-SelectivYellow-100" : "")
+              }
+            >
               日本語
               <br />
               →英語
+            </th>
+            <th
+              className={
+                "px-4 py-6 w-20 " +
+                (mode == "en-ja" ? "bg-SelectivYellow-100" : "")
+              }
+            >
+              英語→
+              <br />
+              日本語
             </th>
           </tr>
         </thead>
@@ -75,7 +97,6 @@ export default function CardResult({
             const currentQuestion = fileContent.content.find(
               (c) => c.id === id
             ) as fileType["content"][0];
-
             return (
               <tr
                 key={currentQuestion.id}
@@ -85,16 +106,34 @@ export default function CardResult({
                 <td>{currentQuestion.en}</td>
                 <td>{currentQuestion.ja}</td>
                 {/* <td className="text-center">{result ? "○" : "×"}</td> */}
-                <td className="text-center">
+                <td
+                  className={
+                    "text-center " +
+                    (mode == "ja-en"
+                      ? i % 2 == 0
+                        ? "bg-SelectivYellow-50"
+                        : "bg-SelectivYellow-100"
+                      : "")
+                  }
+                >
                   <DisabledCheckBox
                     className="w-6 h-6 m-auto"
-                    checked={!!results.check?.["ja-en"]?.find((r) => r === id)}
+                    checked={results.check["ja-en"]?.includes(id) as boolean}
                   />
                 </td>
-                <td className="text-center">
+                <td
+                  className={
+                    "text-center " +
+                    (mode == "en-ja"
+                      ? i % 2 == 0
+                        ? "bg-SelectivYellow-50"
+                        : "bg-SelectivYellow-100"
+                      : "")
+                  }
+                >
                   <DisabledCheckBox
                     className="w-6 h-6 m-auto"
-                    checked={!!results.check?.["en-ja"]?.find((r) => r === id)}
+                    checked={results.check["en-ja"]?.includes(id) as boolean}
                   />
                 </td>
               </tr>

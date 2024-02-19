@@ -24,7 +24,7 @@ export default function Card({ fileId }: { fileId: string }) {
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<"home" | "cards" | "result">("home");
-  const [resultfileId, setResultfileId] = useState<string | undefined>(); // resultsのファイルID
+  const [resultFileId, setResultFileId] = useState<string | undefined>(); // resultsのファイルID
   const [results, setResults] = useState<cardResult>({
     fileInfo: { id: fileId },
     check: {
@@ -65,7 +65,7 @@ export default function Card({ fileId }: { fileId: string }) {
           "spaces=appDataFolder"
         ).then((r) => r.files[0]);
         if (resultFile) {
-          setResultfileId(resultFile.id);
+          setResultFileId(resultFile.id);
           setResults(JSON.parse(await getFileContent(token, resultFile.id)));
         }
         setLoading(false);
@@ -80,10 +80,10 @@ export default function Card({ fileId }: { fileId: string }) {
       if (mode !== "result") return;
       setSavingResults(true);
       try {
-        if (resultfileId) {
-          await uploadFile(token, resultfileId, JSON.stringify(results));
+        if (resultFileId) {
+          await uploadFile(token, resultFileId, JSON.stringify(results));
         } else {
-          setResultfileId(
+          setResultFileId(
             await fetch("https://www.googleapis.com/drive/v3/files", {
               method: "POST",
               headers: {
@@ -104,7 +104,7 @@ export default function Card({ fileId }: { fileId: string }) {
         console.error(e);
       }
     })();
-  }, [fileId, mode, resultfileId, results, token]);
+  }, [fileId, mode, resultFileId, results, token]);
   useDocumentTitle(
     `${title
       .split(".")
@@ -148,6 +148,7 @@ export default function Card({ fileId }: { fileId: string }) {
                 <CardResult
                   results={results}
                   fileContent={fileContent}
+                  mode={flashCardSettings.mode}
                   currentProblemIdList={currentProblemIdList}
                 />
               )}
