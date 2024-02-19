@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { fileType } from "@/types/fileType";
 import { flashCardSettings } from "@/types/flashCardSettings";
-import { IoChevronBackSharp } from "react-icons/io5";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useSwipeable } from "react-swipeable";
 import { CardMain } from "./main";
 import { cardResult } from "@/types/cardResult";
+import ProgressBar from "../../../../../components/ui-elements/ProgressBar";
 
 export default function FlashCard({
   fileContent,
@@ -113,34 +113,12 @@ export default function FlashCard({
           />
         )}
         <nav className="flex w-full max-w-7xl bottom-2 fixed p-4 right-0 left-0 mx-auto">
-          <button
-            onClick={back}
-            className="p-2 rounded-l-full bg-gray-100 hover:bg-gray-200 w-12 h-12 flex-none grid items-center justify-center"
-            title="戻る"
-          >
-            <IoChevronBackSharp />
-          </button>
-          <div
-            className="flex-1 border h-12 flex items-center justify-center"
-            style={{
-              background: `linear-gradient(to right, #dbb946 ${
-                ((questionIndex + 1) / questionList.length) * 100
-              }%, #f4f8f9 ${
-                ((questionIndex + 1) / questionList.length) * 100
-              }%)`,
-            }}
-          >
-            <p className="text-center select-none">
-              {questionIndex + 1}/{questionList.length}
-            </p>
-          </div>
-          <button
-            onClick={next}
-            className="p-2 rounded-r-full bg-gray-100 hover:bg-gray-200 w-12 h-12 grid items-center justify-center flex-none"
-            title="次へ"
-          >
-            <IoChevronBackSharp className="transform rotate-180" />
-          </button>
+          <ProgressBar
+            questionIndex={questionIndex}
+            questionList={questionList}
+            next={next}
+            back={back}
+          />
         </nav>
       </div>
     </>
