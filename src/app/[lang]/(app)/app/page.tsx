@@ -1,6 +1,6 @@
+import Print from "@/components/functional/print";
 import FileMenu from "./_components/edit/main";
 import HowToUse from "./howToUse";
-import Print from "./print";
 
 export default function App({
   searchParams: { fileId },

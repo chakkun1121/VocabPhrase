@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { speakingMode } from "./menu";
 import Link from "next/link";
 import { getTranslation } from "@/app/i18n/server";
+import Print from "@/components/functional/print";
 
 export default async function Speaking({
   params: { lang },
@@ -14,6 +15,7 @@ export default async function Speaking({
   const { t } = await getTranslation(lang);
   return (
     <>
+      <Print fileId={fileId} />
       <h2>{t("speaking:title")}</h2>
       <div>
         <p>{t("speaking:select")}</p>

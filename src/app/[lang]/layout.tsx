@@ -74,7 +74,7 @@ export default function RootLayout({
       <NextAuthProvider>
         <RecoilProvider>
           <HelpKeyShortCut />
-          <body className="select-none">{children}</body>
+          <body className="select-none print:hidden">{children}</body>
         </RecoilProvider>
       </NextAuthProvider>
     </html>
