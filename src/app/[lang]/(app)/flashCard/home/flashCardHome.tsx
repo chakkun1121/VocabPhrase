@@ -2,7 +2,7 @@ import { flashCardSettings } from "@/types/flashCardSettings";
 import { useState } from "react";
 import { atom, useRecoilState } from "recoil";
 import { recoilPersist } from "recoil-persist";
-import { flashcardOptions } from "./flashcardOptions";
+import { flashcardOptions } from "../flashcardOptions";
 import React from "react";
 
 export default function FlashCardHome({
@@ -22,7 +22,7 @@ export default function FlashCardHome({
   return (
     <form
       className="flex flex-col gap-4 p-4 w-full max-w-7xl mx-auto"
-      onSubmit={(e) => {
+      onSubmit={e => {
         e.preventDefault();
         const settings = {
           isRandom: e.currentTarget.isRandom.checked,
@@ -37,7 +37,7 @@ export default function FlashCardHome({
       }}
     >
       <div className="p-2 [&>*]:flex [&>*]:items-center grid gap-3 [&>*]:bg-gray-100 [&>*]:rounded [&>*]:p-2 [&>*]:justify-between bg-gray-50 rounded">
-        {flashcardOptions.map((option) => (
+        {flashcardOptions.map(option => (
           <React.Fragment key={option.name}>
             {typeof option.default === "boolean" && (
               <label>
@@ -47,7 +47,7 @@ export default function FlashCardHome({
                   name={option.name}
                   id={option.id}
                   defaultChecked={previousSettings[option.name]}
-                  onChange={(e) => {
+                  onChange={e => {
                     if (option.name === "isRandom") {
                       setIsRandom(e.currentTarget.checked);
                       setQuestionCount(Infinity);
@@ -61,7 +61,7 @@ export default function FlashCardHome({
               <div>
                 <p>{option.title}</p>
                 <div>
-                  {option.options?.map((o) => (
+                  {option.options?.map(o => (
                     <label key={o.value} className="flex items-center">
                       <input
                         type="radio"
@@ -75,7 +75,7 @@ export default function FlashCardHome({
                             : o.value == previousSettings[option.name]
                         }
                         disabled={option.name == "questionCount" && !isRandom}
-                        onChange={(e) => {
+                        onChange={e => {
                           if (option.name == "questionCount") {
                             setQuestionCount(Number(e.currentTarget.value));
                           }
@@ -91,7 +91,7 @@ export default function FlashCardHome({
                                 className="w-16"
                                 type="number"
                                 name="problemNumberInput"
-                                onChange={(e) => {
+                                onChange={e => {
                                   setQuestionCount(
                                     Number(e.currentTarget.value)
                                   );
@@ -106,7 +106,6 @@ export default function FlashCardHome({
                       )}
                       {o.value && o.label}
                     </label>
-                    // Todo: 出題数が
                   ))}
                 </div>
               </div>

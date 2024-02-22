@@ -1,6 +1,6 @@
 import SpeechButton from "@/components/ui-parts/speechButton";
-import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
+import { useSpeech } from "../../../../../common/hooks/useSpeech";
 
 export default function Speech({
   text,
@@ -9,19 +9,8 @@ export default function Speech({
   text: string;
   lang?: string;
 }) {
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  function speech() {
-    stop();
-    setIsSpeaking(true);
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = lang;
-    speechSynthesis.speak(utterance);
-    utterance.onend = () => setIsSpeaking(false);
-  }
-  function stop() {
-    setIsSpeaking(false);
-    speechSynthesis.cancel();
-  }
+  const { isSpeaking, speech, stop } = useSpeech(text, lang);
+
   useHotkeys("s,r", () => {
     isSpeaking ? stop() : speech();
   });

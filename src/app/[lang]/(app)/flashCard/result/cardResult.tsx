@@ -1,6 +1,6 @@
 import { cardResult } from "@/types/cardResult";
 import { fileType } from "@/types/fileType";
-import { DisabledCheckBox } from "../../../../components/ui-parts/disabledCheckBox";
+import { DisabledCheckBox } from "../../../../../components/ui-parts/disabledCheckBox";
 import { flashCardMode } from "@/types/flashCardSettings";
 import { useEffect } from "react";
 

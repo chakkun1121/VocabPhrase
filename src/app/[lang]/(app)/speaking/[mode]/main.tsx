@@ -1,12 +1,12 @@
 "use client";
 
 import { useFile } from "@/googledrive/useFile";
-
 import { SpeakingMode, speakingMode } from "../menu";
 import { useEffect, useState } from "react";
 import SpeechButton from "@/components/ui-parts/speechButton";
 import { removeExtension } from "@/common/library/removeExtension";
 import { useToken } from "@/common/hooks/useToken";
+import { useSpeech } from "@/common/hooks/useSpeech";
 export default function Speaking({
   fileId,
   mode,
@@ -245,25 +245,14 @@ function Speech({
   lang?: string;
   canPlay?: boolean;
 }) {
-  const [isSpeaking, setIsSpeaking] = useState(false);
   window.addEventListener("beforeunload", () => {
     stop();
   });
   useEffect(() => {
     if (!canPlay) stop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canPlay]);
-  function speech() {
-    stop();
-    setIsSpeaking(true);
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = lang;
-    speechSynthesis.speak(utterance);
-    utterance.onend = () => setIsSpeaking(false);
-  }
-  function stop() {
-    setIsSpeaking(false);
-    speechSynthesis.cancel();
-  }
+  const { isSpeaking, speech, stop } = useSpeech(text, lang);
   return (
     <SpeechButton
       isSpeaking={isSpeaking}

@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { flashCardSettings } from "@/types/flashCardSettings";
 import FlashCard from "./_card/card";
-import CardResult from "./cardResult";
+import CardResult from "./result/cardResult";
 import HeaderRight from "./HeaderRight";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { useLeavePageConfirmation } from "../../../../common/hooks/useLeavePageConfirmation";
-import FlashCardHome from "./flashCardHome";
+import FlashCardHome from "./home/flashCardHome";
 import Header from "@/components/layouts/header";
 import { useFile } from "@/googledrive/useFile";
 import { removeExtension } from "../../../../common/library/removeExtension";
