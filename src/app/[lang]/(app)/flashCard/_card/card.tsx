@@ -6,6 +6,7 @@ import { useSwipeable } from "react-swipeable";
 import { CardMain } from "./main";
 import { cardResult } from "@/types/cardResult";
 import ProgressBar from "../../../../../components/ui-elements/ProgressBar";
+import { useDisableSwiping } from "@/common/hooks/useDisableSwiping";
 
 export default function FlashCard({
   fileContent,
@@ -22,6 +23,7 @@ export default function FlashCard({
   setResults: React.Dispatch<React.SetStateAction<cardResult>>;
   setCurrentProblemIdList: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
+  useDisableSwiping();
   const [questionList, setQuestionList] = useState<string[]>([]); // idの配列
   const [questionIndex, setQuestionIndex] = useState<number>(0); // 現在の問題のindex
   const [checked, setIsChecked] = useState<string[]>(
