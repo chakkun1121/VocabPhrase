@@ -2,19 +2,25 @@ import { cardResult } from "@/types/cardResult";
 import { fileType } from "@/types/fileType";
 import { DisabledCheckBox } from "../../../../components/ui-parts/disabledCheckBox";
 import { flashCardMode } from "@/types/flashCardSettings";
+import { useEffect } from "react";
 
 export default function CardResult({
   fileContent,
   results,
   mode,
   currentProblemIdList,
+  saveResults,
 }: {
   fileContent: fileType;
   results: cardResult;
   mode: flashCardMode;
   currentProblemIdList: string[];
+  saveResults: () => void;
 }) {
-  console.log(results.check["en-ja"]);
+  useEffect(() => {
+    saveResults();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div className="grid p-4 w-full max-w-7xl mx-auto gap-4">
       <div>
@@ -95,7 +101,7 @@ export default function CardResult({
         <tbody className="overflow-y-scroll">
           {currentProblemIdList.map((id, i) => {
             const currentQuestion = fileContent.content.find(
-              (c) => c.id === id
+              c => c.id === id
             ) as fileType["content"][0];
             return (
               <tr
