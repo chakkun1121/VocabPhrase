@@ -45,7 +45,7 @@ export default function Answer({
               className="md:text-heading-S p-4 bg-gray-200 rounded flex-1"
               autoFocus
               value={inputAnswer}
-              onChange={(e) => setInputAnswer(e.target.value)}
+              onChange={e => setInputAnswer(e.target.value)}
               spellCheck={false}
               autoComplete="off"
               autoCorrect="off"
@@ -90,7 +90,7 @@ export default function Answer({
           type="checkbox"
           className="w-12 h-12 border-none accent-primary-500 text-white"
           checked={isChecked}
-          onChange={(e) => setIsChecked((e.target as HTMLInputElement).checked)}
+          onChange={e => setIsChecked((e.target as HTMLInputElement).checked)}
         />
       ) : (
         <DisabledCheckBox className="w-12 h-12 m-auto" checked={isChecked} />

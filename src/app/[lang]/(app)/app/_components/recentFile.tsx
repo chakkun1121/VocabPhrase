@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { IoMdOpen } from "react-icons/io";
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { customSession } from "../../../../../types/customSession";
 import { IoReload } from "react-icons/io5";
@@ -9,22 +8,23 @@ import LeftBarButtons from "./LeftBarButtons";
 import { deleteFile, listFiles } from "@/googledrive";
 import { useRouter } from "next/navigation";
 import { HiOutlineDotsVertical } from "react-icons/hi";
+import { removeExtension } from "@/common/library/removeExtension";
+import { useToken } from "@/common/hooks/useToken";
 
 export default function RecentFile({ hidden }: { hidden: boolean }) {
   const [isLoading, setIsLoading] = useState(true);
-  const { data: session }: { data: customSession | null } =
-    useSession() as unknown as { data: customSession };
+
   const [recentFile, setRecentFile] = useState<
     { title: string; fileId: string }[]
   >([]);
   const [error, setError] = useState<any>(undefined);
-  const token = session?.accessToken;
+  const token = useToken();
   async function getRecentFile() {
     try {
       setIsLoading(true);
       const files = await listFiles(token, "trashed=false")
-        .then((res) => res.files)
-        .catch((e) => {
+        .then(res => res.files)
+        .catch(e => {
           throw e;
         });
       setRecentFile(
@@ -72,7 +72,7 @@ export default function RecentFile({ hidden }: { hidden: boolean }) {
           <p className="text-center">loading...</p>
         ) : recentFile?.length ? (
           <ul className="p-4 flex flex-col gap-4 ">
-            {recentFile.map((file) => (
+            {recentFile.map(file => (
               <File
                 file={file}
                 token={token}
@@ -116,7 +116,7 @@ function File({
           href={`./app?fileId=${file.fileId}`}
           className="text-black hover:text-black visited:text-black flex-1 truncate"
         >
-          {file.title.split(".").slice(0, -1).join(".")}
+          {removeExtension(file.title)}
         </Link>
         <Link
           href={`./app?fileId=${file.fileId}`}

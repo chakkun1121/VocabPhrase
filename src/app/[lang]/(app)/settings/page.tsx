@@ -6,6 +6,4 @@ export default function Page() {
 }
 export const metadata: Metadata = {
   title: "設定",
-  description: "VocabPhraseの設定ページです。",
-  robots: "noindex",
 };

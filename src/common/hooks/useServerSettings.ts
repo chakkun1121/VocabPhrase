@@ -20,7 +20,7 @@ export function useServerSettings(token: string) {
         undefined,
         undefined,
         "spaces=appDataFolder"
-      ).then((r) => r.files?.[0]);
+      ).then(r => r.files?.[0]);
       if (settingsFile) {
         setSettingsfileId(settingsFile.id);
         setServerSettings(
@@ -49,8 +49,8 @@ export function useServerSettings(token: string) {
               parents: ["appDataFolder"],
             }),
           })
-            .then((r) => r.json())
-            .then((r) => r.id)
+            .then(r => r.json())
+            .then(r => r.id)
         );
       }
       setIsSaving(false);

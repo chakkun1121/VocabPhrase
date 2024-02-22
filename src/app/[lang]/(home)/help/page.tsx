@@ -1,7 +1,5 @@
-import { promises as fsPromises } from "fs";
 import { Metadata } from "next";
 import Link from "next/link";
-import path from "path";
 import { getFileMetadata } from "./getFileMetadata";
 export default async function HelpTop() {
   const metadatas = await getFileMetadata();
@@ -9,7 +7,7 @@ export default async function HelpTop() {
     <section>
       <h2> ヘルプ記事一覧 </h2>
       <ul>
-        {metadatas.map((metadata) => (
+        {metadatas.map(metadata => (
           <li key={metadata.fileName}>
             <Link href={`/help/${metadata.fileName}`}>{metadata.title}</Link>
           </li>

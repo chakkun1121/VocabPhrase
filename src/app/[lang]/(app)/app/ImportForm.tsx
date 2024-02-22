@@ -6,6 +6,7 @@ import { flashCardMode } from "@/types/flashCardSettings";
 import { wayakuFile2file } from "@/common/library/wayaku";
 import { csvToFileContent } from "@/common/library/csvToFileContent";
 import { uploadFile } from "@/common/library/uploadFile";
+import { removeExtension } from "@/common/library/removeExtension";
 
 export default function ImportForm({
   close,
@@ -18,7 +19,7 @@ export default function ImportForm({
 }) {
   const [formContent, setFormContent] = useState("");
   function importFromBox() {
-    const temp = formContent.split(/[\n\t]/).filter((e) => e);
+    const temp = formContent.split(/[\n\t]/).filter(e => e);
     const content: fileType["content"] = [];
     for (let i = 0; i < temp.length; i += 2) {
       content.push({
@@ -28,7 +29,7 @@ export default function ImportForm({
       });
     }
 
-    setFileContent((fileContent) => ({ ...fileContent, content }));
+    setFileContent(fileContent => ({ ...fileContent, content }));
     setFormContent("");
     close();
   }
@@ -53,9 +54,9 @@ export default function ImportForm({
       },
     ]);
     if (!content) return;
-    const csv = content.split("\n").map((line) => line.split(","));
+    const csv = content.split("\n").map(line => line.split(","));
     const fileContent = csvToFileContent(csv, mode);
-    const title = fileName.split(".").slice(0, -1).join(".");
+    const title = removeExtension(fileName);
     setFileContent({ content: fileContent, mode: null });
     setTitle(title);
   }
@@ -66,7 +67,7 @@ export default function ImportForm({
         className="rounded bg-gray-200  h-48 border border-gray-800 w-full p-4 resize-none"
         style={{ tabSize: 4 }}
         placeholder={`英文or単語,日本語訳の順に入力\n例) \n単語1\t日本語訳1\n単語2\t日本語訳2`}
-        onChange={(e) => setFormContent(e.target.value)}
+        onChange={e => setFormContent(e.target.value)}
       />
       <div className="flex gap-4">
         <button

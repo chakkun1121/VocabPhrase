@@ -23,7 +23,7 @@ export default function Header({
         >
           <h1>VocabPhrase</h1>
         </Link>
-      </div>{" "}
+      </div>
       <div className="flex-none items-center flex">{rightContent}</div>
     </header>
   );

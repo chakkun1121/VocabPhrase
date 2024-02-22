@@ -1,18 +1,16 @@
 "use client";
 
-import { customSession } from "@/types/customSession";
 import { fileType } from "@/types/fileType";
-import { useSession } from "next-auth/react";
 import React from "react";
 import EditMenu from "./EditMenu";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import EditHeader from "./editHeader";
 import { useFile } from "@/googledrive/useFile";
+import { removeExtension } from "@/common/library/removeExtension";
+import { useToken } from "@/common/hooks/useToken";
 export default function FileMenu({ fileId }: { fileId: string }) {
-  const { data: session }: { data: customSession | null } =
-    useSession() as unknown as { data: customSession };
-  const token = session?.accessToken;
+  const token = useToken();
   const {
     title,
     setTitle,
@@ -62,8 +60,8 @@ export default function FileMenu({ fileId }: { fileId: string }) {
       />
       <EditMenu
         key={fileId}
-        title={title.split(".").slice(0, -1).join(".")}
-        setTitle={(newTitle) => {
+        title={removeExtension(title)}
+        setTitle={newTitle => {
           setTitle(newTitle + ".vocabphrase");
         }}
         fileContent={fileContent as fileType}

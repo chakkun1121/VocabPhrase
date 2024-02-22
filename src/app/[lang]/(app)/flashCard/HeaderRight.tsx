@@ -12,7 +12,7 @@ export default function HeaderRight({
 }) {
   const [isMaximized, setIsMaximized] = useState(false);
   document.addEventListener("fullscreenchange", () => {
-    setIsMaximized((prev) => !prev);
+    setIsMaximized(prev => !prev);
   });
 
   return (
@@ -23,7 +23,7 @@ export default function HeaderRight({
           isMaximized
             ? document.exitFullscreen()
             : document.documentElement.requestFullscreen();
-          setIsMaximized((prev) => !prev);
+          setIsMaximized(prev => !prev);
         }}
         title={isMaximized ? "戻す" : "最大化"}
       >

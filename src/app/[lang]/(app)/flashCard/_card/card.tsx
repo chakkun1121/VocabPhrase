@@ -30,10 +30,10 @@ export default function FlashCard({
 
   useEffect(() => {
     // 初期設定
-    let idList = fileContent.content.map((c) => c.id);
+    let idList = fileContent.content.map(c => c.id);
     let questionList: string[] = [];
     if (flashCardSettings.removeChecked) {
-      idList = idList.filter((id) => !checked?.includes(id));
+      idList = idList.filter(id => !checked?.includes(id));
     }
     if (flashCardSettings.isRandom) {
       const randomSectionList = idList.sort(() => Math.random() - 0.5);
@@ -69,13 +69,11 @@ export default function FlashCard({
   }
   function finish() {
     setMode("result");
-    setResults((prev: cardResult) => ({
-      ...prev,
-      check: {
-        ...prev.check,
-        [flashCardSettings.mode]: checked,
-      },
-    }));
+    const results = {
+      ...cardResult,
+      check: { ...cardResult.check, [flashCardSettings.mode]: checked },
+    };
+    setResults(results);
   }
   useHotkeys("right", next);
   useHotkeys("left", back);
@@ -86,7 +84,7 @@ export default function FlashCard({
     trackMouse: true,
   });
   const currentQuestion = fileContent.content.find(
-    (c) => c.id === questionList[questionIndex]
+    c => c.id === questionList[questionIndex]
   );
   return (
     <>
@@ -101,10 +99,10 @@ export default function FlashCard({
           <CardMain
             currentQuestion={currentQuestion as fileType["content"][0]}
             key={currentQuestion?.id}
-            isChecked={!!checked?.find((v) => v == currentQuestion.id) ?? false}
+            isChecked={!!checked?.find(v => v == currentQuestion.id) ?? false}
             setIsChecked={(isChecked: boolean) => {
-              setIsChecked((prev) => [
-                ...prev.filter((v) => v !== currentQuestion.id),
+              setIsChecked(prev => [
+                ...prev.filter(v => v !== currentQuestion.id),
                 ...(isChecked ? [currentQuestion.id] : []),
               ]);
             }}

@@ -81,5 +81,5 @@ export default function RootLayout({
   );
 }
 export async function generateStaticParams() {
-  return languages.map((lang) => ({ lang }));
+  return languages.map(lang => ({ lang }));
 }

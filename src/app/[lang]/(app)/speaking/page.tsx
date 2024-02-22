@@ -20,7 +20,7 @@ export default async function Speaking({
       <div>
         <p>{t("speaking:select")}</p>
         <ul>
-          {speakingMode.map((mode) => (
+          {speakingMode.map(mode => (
             <li key={mode.id}>
               <Link href={`./speaking/${mode.id}?fileId=${fileId}`}>
                 {mode.name[lang]}

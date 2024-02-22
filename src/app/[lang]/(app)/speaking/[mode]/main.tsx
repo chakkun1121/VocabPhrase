@@ -1,11 +1,12 @@
 "use client";
 
 import { useFile } from "@/googledrive/useFile";
-import { customSession } from "@/types/customSession";
-import { useSession } from "next-auth/react";
+
 import { SpeakingMode, speakingMode } from "../menu";
 import { useEffect, useState } from "react";
 import SpeechButton from "@/components/ui-parts/speechButton";
+import { removeExtension } from "@/common/library/removeExtension";
+import { useToken } from "@/common/hooks/useToken";
 export default function Speaking({
   fileId,
   mode,
@@ -15,15 +16,13 @@ export default function Speaking({
   mode: SpeakingMode;
   lang: "ja" | "en";
 }) {
-  const { data: session }: { data: customSession | null } =
-    useSession() as unknown as { data: customSession };
-  const token = session?.accessToken;
+  const token = useToken();
   const { title, fileContent, loading } = useFile(token, fileId);
   const [isShowEn, setIsShowEn] = useState(
-    speakingMode.find((m) => m.id === mode)?.defaultShow[lang] ?? true
+    speakingMode.find(m => m.id === mode)?.defaultShow[lang] ?? true
   );
   const [isShowJa, setIsShowJa] = useState(
-    speakingMode.find((m) => m.id === mode)?.defaultShow[lang] ?? true
+    speakingMode.find(m => m.id === mode)?.defaultShow[lang] ?? true
   );
   const [isRecording, setIsRecording] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -65,7 +64,7 @@ export default function Speaking({
     const mediaRecorder = new MediaRecorder(stream);
     const recordedStart = Date.now();
     const chunks: Blob[] = [];
-    mediaRecorder.ondataavailable = (e) => {
+    mediaRecorder.ondataavailable = e => {
       chunks.push(e.data);
     };
     mediaRecorder.onstop = async () => {
@@ -83,11 +82,11 @@ export default function Speaking({
       utterance.lang = useLang;
       utterance.rate = speed;
       speechSynthesis.speak(utterance);
-      await new Promise((resolve) => {
+      await new Promise(resolve => {
         utterance.onend = resolve;
       });
       const end = Date.now();
-      await new Promise((resolve) =>
+      await new Promise(resolve =>
         setTimeout(resolve, (end - start) / (mode == "shadowing" ? 10 : 1))
       );
       info.push({
@@ -106,14 +105,14 @@ export default function Speaking({
     const audio = new Audio(recordedData.url);
     audio.play();
     await Promise.all([
-      new Promise((resolve) => {
+      new Promise(resolve => {
         audio.onended = resolve;
       }),
       (async () => {
         let i = 0;
         for (const { start, end } of recordedData.info) {
           setPlayingIndex(i);
-          await new Promise((resolve) => setTimeout(resolve, end - start));
+          await new Promise(resolve => setTimeout(resolve, end - start));
           setPlayingIndex(undefined);
           i++;
         }
@@ -130,7 +129,7 @@ export default function Speaking({
             <input
               type="checkbox"
               checked={isShowEn}
-              onChange={(e) => setIsShowEn(e.target.checked)}
+              onChange={e => setIsShowEn(e.target.checked)}
             />
             英文を表示する
           </label>
@@ -138,7 +137,7 @@ export default function Speaking({
             <input
               type="checkbox"
               checked={isShowJa}
-              onChange={(e) => setIsShowJa(e.target.checked)}
+              onChange={e => setIsShowJa(e.target.checked)}
             />
             日本語訳を表示する
           </label>
@@ -149,7 +148,7 @@ export default function Speaking({
               max="2"
               step="0.1"
               value={speed}
-              onChange={(e) => setSpeed(Number(e.target.value))}
+              onChange={e => setSpeed(Number(e.target.value))}
             />
             英文、日本語再生速度(x{speed})
           </label>
@@ -173,7 +172,7 @@ export default function Speaking({
       </nav>
       <div className="bg-primary-50 p-2 rounded">
         <div>
-          <h2>{title.split(".").slice(0, -1).join(".")}</h2>
+          <h2>{removeExtension(title)}</h2>
         </div>
         <div className="grid gap-4">
           {fileContent?.content.map((content, index) => (

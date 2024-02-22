@@ -1,22 +1,19 @@
 "use client";
 
-import { customSession } from "@/types/customSession";
-import { useSession } from "next-auth/react";
 import { useServerSettings } from "../../../../common/hooks/useServerSettings";
 import { useRecoilState } from "recoil";
 import { localSettingsState } from "../../../../common/hooks/localSettings";
+import { useToken } from "@/common/hooks/useToken";
 
 export default function Settings() {
-  const { data: session }: { data: customSession | null } =
-    useSession() as unknown as { data: customSession };
-  const token = session?.accessToken;
+  const token = useToken();
   const [localSettings, setLocalSettings] = useRecoilState(localSettingsState);
   const { serverSettings, setServerSettings, isLoading, isSaving } =
     useServerSettings(token);
   if (isLoading) return <p className="text-center">loading...</p>;
   return (
     <form
-      onSubmit={(e) => {
+      onSubmit={e => {
         e.preventDefault();
         const form = e.target as HTMLFormElement;
         const serverSettings = form.serverSettings.value;

@@ -10,8 +10,7 @@ export default async function Page({
   params: { lang: "ja" | "en"; mode: string };
   searchParams: { fileId: string };
 }) {
-  if (!fileId || !speakingMode.find((m) => m.id === mode))
-    redirect("./speaking");
+  if (!fileId || !speakingMode.find(m => m.id === mode)) redirect("./speaking");
   const { t } = await getTranslation(lang);
   return (
     <>

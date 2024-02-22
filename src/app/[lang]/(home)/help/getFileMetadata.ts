@@ -15,10 +15,10 @@ export async function getFileMetadata(): Promise<
         "help"
       )
     )
-  ).filter((file) => !file.includes("."));
+  ).filter(file => !file.includes("."));
   files.sort(); //文字列のみなので比較関数は不要
   return await Promise.all(
-    files.map(async (file) => {
+    files.map(async file => {
       const { metadata } = await import(
         `@/app/[lang]/(home)/(mdx_documents)/help/${file}/page.mdx`
       );

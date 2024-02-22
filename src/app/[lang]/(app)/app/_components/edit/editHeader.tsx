@@ -1,8 +1,6 @@
-import { customSession } from "@/types/customSession";
 import { fileType } from "@/types/fileType";
 import { deleteFile, listFiles } from "@/googledrive";
 import { sendGAEvent } from "@next/third-parties/google";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -10,7 +8,8 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import { IoSaveOutline, IoPrintOutline } from "react-icons/io5";
 import { PiCardsThin } from "react-icons/pi";
 import { uuidv7 as createUUID } from "uuidv7";
-import { RiSpeakFill, RiSpeakLine } from "react-icons/ri";
+import { RiSpeakLine } from "react-icons/ri";
+import { useToken } from "@/common/hooks/useToken";
 
 export default function EditHeader({
   fileId,
@@ -29,9 +28,7 @@ export default function EditHeader({
 }) {
   const [isOpened, setIsOpened] = useState(false);
   const router = useRouter();
-  const { data: session }: { data: customSession | null } =
-    useSession() as unknown as { data: customSession };
-  const token = session?.accessToken;
+  const token = useToken();
   return (
     <nav className="flex justify-between items-center bg-gray-100 p-4">
       <div className="flex gap-4">
@@ -44,7 +41,7 @@ export default function EditHeader({
                 content: [
                   ...(fileContent?.content as fileType["content"]),
                   { id: createUUID(), en: "", ja: "" },
-                ].filter((e) => e),
+                ].filter(e => e),
               } as fileType);
             }}
           >
@@ -141,7 +138,7 @@ export default function EditHeader({
                       undefined,
                       undefined,
                       "spaces=appDataFolder"
-                    ).then((r) => r.files[0].id);
+                    ).then(r => r.files[0].id);
                     if (deletefileId) await deleteFile(token, deletefileId);
                     console.log("deleted");
                   }

@@ -1,6 +1,5 @@
 "use client";
 import { FaGoogleDrive, FaPlus } from "react-icons/fa";
-import { useSession } from "next-auth/react";
 import { customSession } from "../../../../../types/customSession";
 import { useRouter } from "next/navigation";
 import { listFiles } from "@/googledrive";
@@ -10,12 +9,11 @@ import Link from "next/link";
 import { MdOutlineQuestionMark } from "react-icons/md";
 import useDrivePicker from "react-google-drive-picker";
 import { env } from "process";
+import { useToken } from "@/common/hooks/useToken";
 
 export default function LeftBarButtons({ reload }: { reload: () => void }) {
-  const { data: session }: { data: customSession | null } =
-    useSession() as unknown as { data: customSession };
   const [isCreating, setIsCreating] = useState(false);
-  const token = session?.accessToken;
+  const token = useToken();
   const router = useRouter();
   const [openPicker, authResponse] = useDrivePicker();
 
@@ -27,8 +25,8 @@ export default function LeftBarButtons({ reload }: { reload: () => void }) {
     setIsCreating(true);
     try {
       let parentFolder = await listFiles(token)
-        .then((res) => res.files)
-        .then((files) => {
+        .then(res => res.files)
+        .then(files => {
           return files.find(
             (file: { name: string }) => file.name === "VocabPhrase"
           );
@@ -48,7 +46,7 @@ export default function LeftBarButtons({ reload }: { reload: () => void }) {
               mimeType: "application/vnd.google-apps.folder",
             }),
           }
-        ).then((res) => res.json());
+        ).then(res => res.json());
       }
       const response = await fetch(
         "https://www.googleapis.com/drive/v3/files",
@@ -85,7 +83,7 @@ export default function LeftBarButtons({ reload }: { reload: () => void }) {
       supportDrives: true,
       multiselect: true,
       // customViews: customViewsArray, // custom view
-      callbackFunction: (data) => {
+      callbackFunction: data => {
         if (data.action === "cancel") {
           console.warn("User clicked cancel/close button");
           return;

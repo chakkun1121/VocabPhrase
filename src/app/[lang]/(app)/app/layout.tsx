@@ -16,5 +16,4 @@ export default function AppLayout({ children }: { children: ReactNode }) {
 }
 export const metadata: Metadata = {
   title: "アプリ",
-  robots: "noindex",
 };

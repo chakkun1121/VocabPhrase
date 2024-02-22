@@ -1,19 +1,18 @@
 "use client";
 
-import { customSession } from "@/types/customSession";
 import { fileType } from "@/types/fileType";
 import { getFileInfo, getFileContent, listFiles } from "@/googledrive";
 import { useDocumentTitle } from "@uidotdev/usehooks";
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { removeExtension } from "@/common/library/removeExtension";
+import { useToken } from "@/common/hooks/useToken";
 
 export default function PrintPage({ fileId }: { fileId: string }) {
   const [fileContent, setFileContent] = useState<fileType | undefined>();
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(true);
-  const { data: session }: { data: customSession | null } =
-    useSession() as unknown as { data: customSession };
-  const token = session?.accessToken;
+
+  const token = useToken();
 
   // 初期読み込み
   useEffect(() => {
@@ -45,9 +44,7 @@ export default function PrintPage({ fileId }: { fileId: string }) {
       </div>
       <div className="border print:border-none">
         <p className="print:hidden">印刷プレビュー</p>
-        <h1 className="text-center">
-          {title.split(".").slice(0, -1).join(".")}
-        </h1>
+        <h1 className="text-center">{removeExtension(title)}</h1>
         <table className="print:w-full">
           <thead>
             <tr>

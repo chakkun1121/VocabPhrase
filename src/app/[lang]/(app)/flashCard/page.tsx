@@ -17,5 +17,4 @@ export default function FlashCard({
 }
 export const metadata = {
   title: "フラッシュカード",
-  robots: "noindex",
 };
