@@ -16,7 +16,6 @@ import { useToken } from "../../../../common/hooks/useToken";
 
 export default function Card({ fileId }: { fileId: string }) {
   const [mode, setMode] = useState<"home" | "cards" | "result">("home");
-
   const [flashCardSettings, setFlashCardSettings] = useState<flashCardSettings>(
     {
       isRandom: false,
@@ -49,7 +48,7 @@ export default function Card({ fileId }: { fileId: string }) {
             <p className="md:absolute mx-auto left-0 right-0 block w-max">
               {removeExtension(title)}
             </p>
-            <HeaderRight mode={mode} setMode={setMode} />
+            <HeaderRight />
           </>
         }
       />

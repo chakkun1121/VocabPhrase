@@ -1,20 +1,20 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CgMaximizeAlt } from "react-icons/cg";
 import { MdOutlineZoomInMap } from "react-icons/md";
 
-export default function HeaderRight({
-  mode,
-  setMode,
-}: {
-  mode: "home" | "cards" | "result";
-  setMode: (mode: "home" | "cards" | "result") => void;
-}) {
+export default function HeaderRight() {
   const [isMaximized, setIsMaximized] = useState(false);
-  document.addEventListener("fullscreenchange", () => {
-    setIsMaximized(prev => !prev);
-  });
-
+  useEffect(() => {
+    document.addEventListener("fullscreenchange", () => {
+      setIsMaximized(prev => !prev);
+    });
+    return () => {
+      document.removeEventListener("fullscreenchange", () => {
+        setIsMaximized(prev => !prev);
+      });
+    };
+  }, []);
   return (
     <nav className="gap-4 flex">
       <button
