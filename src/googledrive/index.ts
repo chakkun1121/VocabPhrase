@@ -1,7 +1,7 @@
 export async function getFileInfo(token: string, fileId: string) {
   try {
     const res = await fetch(
-      `https://www.googleapis.com/drive/v3/files/${fileId}`,
+      `https://www.googleapis.com/drive/v3/files/${fileId}?includePermissionsForView=published`,
       {
         method: "GET",
         headers: {
@@ -95,4 +95,17 @@ export function deleteFile(token: string, fileId: string) {
       Authorization: "Bearer " + token,
     },
   });
+}
+export async function getFilePermission(token: string, fileId: string) {
+  const res = await fetch(
+    `https://www.googleapis.com/drive/v3/files/${fileId}/permissions`,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+  return await res.json();
 }

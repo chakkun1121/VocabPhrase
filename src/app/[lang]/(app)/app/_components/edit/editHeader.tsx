@@ -18,6 +18,7 @@ export default function EditHeader({
   saving,
   saveFileContent,
   saveFileInfo,
+  readOnly,
 }: {
   fileId: string;
   fileContent: fileType;
@@ -25,6 +26,7 @@ export default function EditHeader({
   saving: boolean;
   saveFileContent: () => void;
   saveFileInfo: () => void;
+  readOnly: boolean;
 }) {
   const [isOpened, setIsOpened] = useState(false);
   const router = useRouter();
@@ -33,39 +35,45 @@ export default function EditHeader({
     <nav className="flex justify-between items-center bg-gray-100 p-4">
       <div className="flex gap-4">
         <div className="flex gap-4">
-          <button
-            className="flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300"
-            onClick={() => {
-              setFileContent({
-                ...fileContent,
-                content: [
-                  ...(fileContent?.content as fileType["content"]),
-                  { id: createUUID(), en: "", ja: "" },
-                ].filter(e => e),
-              } as fileType);
-            }}
-          >
-            <FaPlus />
-            <span className="hidden md:inline-block">追加</span>
-          </button>
+          {readOnly ? (
+            <p className="text-gray-800">読み取り専用</p>
+          ) : (
+            <button
+              className="flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300"
+              onClick={() => {
+                setFileContent({
+                  ...fileContent,
+                  content: [
+                    ...(fileContent?.content as fileType["content"]),
+                    { id: createUUID(), en: "", ja: "" },
+                  ].filter(e => e),
+                } as fileType);
+              }}
+            >
+              <FaPlus />
+              <span className="hidden md:inline-block">追加</span>
+            </button>
+          )}
         </div>
       </div>
       <div className="flex gap-4">
-        <button
-          className="flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 disabled:text-gray-800 font-semibold"
-          disabled={saving}
-          onClick={() => {
-            sendGAEvent({
-              event: "clickSaveButton",
-              category: "file",
-            });
-            saveFileContent();
-            saveFileInfo();
-          }}
-        >
-          <IoSaveOutline />
-          <span className="hidden md:inline-block">保存{saving && "中"}</span>
-        </button>
+        {!readOnly && (
+          <button
+            className="flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 disabled:text-gray-800 font-semibold"
+            disabled={saving}
+            onClick={() => {
+              sendGAEvent({
+                event: "clickSaveButton",
+                category: "file",
+              });
+              saveFileContent();
+              saveFileInfo();
+            }}
+          >
+            <IoSaveOutline />
+            <span className="hidden md:inline-block">保存{saving && "中"}</span>
+          </button>
+        )}
         <a
           className={`flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 text-black hover:text-black visited:text-black text-button ${
             fileContent?.content?.length === 0 &&
@@ -146,19 +154,21 @@ export default function EditHeader({
               >
                 フラッシュカードの履歴を削除
               </button>
-              <button
-                className="hover:bg-gray-400 rounded p-2"
-                onClick={() => {
-                  setIsOpened(false);
-                  window.confirm("復元できません。よろしいでしょうか?") &&
-                    (async () => {
-                      router.push("/app");
-                      await deleteFile(token, fileId);
-                    })();
-                }}
-              >
-                ファイルを削除
-              </button>
+              {!readOnly && (
+                <button
+                  className="hover:bg-gray-400 rounded p-2"
+                  onClick={() => {
+                    setIsOpened(false);
+                    window.confirm("復元できません。よろしいでしょうか?") &&
+                      (async () => {
+                        router.push("/app");
+                        await deleteFile(token, fileId);
+                      })();
+                  }}
+                >
+                  ファイルを削除
+                </button>
+              )}
             </div>
             <button
               onClick={() => setIsOpened(false)}

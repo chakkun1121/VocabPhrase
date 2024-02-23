@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import {
   getFileContent,
   getFileInfo,
+  getFilePermission,
   updateFileInfo,
   uploadFile,
 } from "@/googledrive";
@@ -21,16 +22,20 @@ export function useFile(token: string, fileId: string) {
   const [serverTitle, setServerTitle] = useState(undefined); //拡張子付き
   const [shouldSaveTitle, setShouldSaveTitle] = useState(false); // タイトルを保存する必要があるときはtrue
   const [shouldSaveFileContent, setShouldSaveFileContent] = useState(false); // ファイルコンテンツを保存する必要があるときはtrue
+  const [readOnly, setReadOnly] = useState<boolean>(true);
   useEffect(() => {
     (async () => {
       if (!token) return;
       try {
-        const title = (await getFileInfo(token, fileId)).name;
+        const fileInfo = await getFileInfo(token, fileId);
+        getFilePermission(token, fileId).then(permission => {
+          setReadOnly(typeof permission.error == "object");
+        });
+        const title = fileInfo.name;
         if (!title) throw new Error("file is not found");
         const fileContent =
           JSON.parse(await getFileContent(token, fileId)) ||
           ({ mode: null, content: [] } as fileType);
-        console.log("fileFound");
         setTitle(title);
         setServerTitle(title);
         setFileContent(fileContent);
@@ -54,6 +59,7 @@ export function useFile(token: string, fileId: string) {
   async function saveFileInfo() {
     if (!token) return;
     if (title === "") return;
+    if (readOnly) throw new Error("This file is read only");
     if (titleSaving) {
       setShouldSaveTitle(true);
       return;
@@ -75,6 +81,7 @@ export function useFile(token: string, fileId: string) {
   async function saveFileContent() {
     if (!token) return;
     if (fileContent?.content?.length === 0) return;
+    if (readOnly) throw new Error("This file is read only");
     if (fileContentSaving) {
       setShouldSaveFileContent(true);
       return;
@@ -106,5 +113,6 @@ export function useFile(token: string, fileId: string) {
     saving,
     saveFileContent,
     saveFileInfo,
+    readOnly,
   };
 }

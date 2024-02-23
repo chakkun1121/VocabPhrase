@@ -11,11 +11,13 @@ export default function EditMenu({
   setTitle,
   fileContent,
   setFileContent,
+  readOnly,
 }: {
   title: string;
   setTitle: (title: string) => void;
   fileContent: fileType;
   setFileContent: React.Dispatch<React.SetStateAction<fileType>>;
+  readOnly: boolean;
 }) {
   const [isShowImportBox, setIsShowImportBox] = useState(false);
   return (
@@ -24,14 +26,15 @@ export default function EditMenu({
         <input
           type="text"
           value={title}
-          className="flex-1 p-4 rounded bg-white"
+          className="flex-1 p-4 rounded bg-white disabled:bg-gray-100 disabled:text-gray-800"
           placeholder="ファイル名を入力してください"
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={e => setTitle(e.target.value)}
+          disabled={readOnly}
         />
         <select
           className="flex-none bg-white p-4 rounded"
           value={fileContent.mode ?? "none"}
-          onChange={(e) =>
+          onChange={e =>
             setFileContent({
               ...fileContent,
               mode:
@@ -40,6 +43,7 @@ export default function EditMenu({
                   : (e.target.value as fileType["mode"]),
             })
           }
+          disabled={readOnly}
         >
           <option value="none">モードを選択</option>
           <option value="words">単語</option>
@@ -64,67 +68,58 @@ export default function EditMenu({
                   : "flex-col")
               }
             >
-              <input
-                className={
-                  "rounded p-2 flex-1 min-w-12 " +
-                  (fileContent.mode == "phrases" ? "min-w-64" : "")
-                }
-                placeholder="英文を入力"
-                defaultValue={field.en}
-                onChange={(e) =>
-                  setFileContent({
-                    ...fileContent,
-                    content: fileContent.content.map((field, i) =>
-                      i === index ? { ...field, en: e.target.value } : field
-                    ),
-                  })
-                }
+              <TextInput
+                mode={fileContent.mode}
+                field={field}
+                index={index}
+                fileContent={fileContent}
+                setFileContent={setFileContent}
+                readOnly={readOnly}
+                lang="en"
               />
-              <input
-                className={
-                  "rounded p-2 flex-1 min-w-12 " +
-                  (fileContent.mode == "phrases" ? "min-w-64" : "")
-                }
-                placeholder="日本語訳を入力"
-                defaultValue={field.ja}
-                onChange={(e) =>
-                  setFileContent({
-                    ...fileContent,
-                    content: fileContent.content.map((field, i) =>
-                      i === index ? { ...field, ja: e.target.value } : field
-                    ),
-                  })
-                }
+              <TextInput
+                mode={fileContent.mode}
+                field={field}
+                index={index}
+                fileContent={fileContent}
+                setFileContent={setFileContent}
+                readOnly={readOnly}
+                lang="ja"
               />
             </div>
-            <div className="flex-none flex flex-col gap-4">
-              <Button
-                onClick={() =>
-                  setFileContent({
-                    ...fileContent,
-                    content: fileContent.content.filter((_, i) => i !== index),
-                  })
-                }
-                title="削除"
-              >
-                <MdDeleteOutline />
-              </Button>
-              {/* <Button>
-                <LuGripVertical />
-              </Button> */}
-            </div>
+            {!readOnly && (
+              <div className="flex-none flex flex-col gap-4">
+                <Button
+                  onClick={() =>
+                    setFileContent({
+                      ...fileContent,
+                      content: fileContent.content.filter(
+                        (_, i) => i !== index
+                      ),
+                    })
+                  }
+                  title="削除"
+                  disabled={readOnly}
+                >
+                  <MdDeleteOutline />
+                </Button>
+                {/* <Button>
+                  <LuGripVertical />
+                </Button> */}
+              </div>
+            )}
           </div>
         ))}
-        {fileContent.content.length === 0 && isShowImportBox && (
+        {fileContent.content.length === 0 && isShowImportBox && !readOnly && (
           <ImportForm
             close={() => setIsShowImportBox(false)}
             setFileContent={setFileContent}
             setTitle={setTitle}
           />
         )}
-        {!isShowImportBox && (
+        {!isShowImportBox && !readOnly && (
           <div className="flex gap-4">
-            {fileContent.content.length === 0 && (
+            {fileContent.content.length === 0 && !readOnly && (
               <button
                 className="flex flex-none gap-4 p-4 bg-gray-200 hover:bg-gray-300 rounded-full items-center justify-center"
                 onClick={() => setIsShowImportBox(true)}
@@ -164,6 +159,49 @@ function Button(
     <button
       className={`bg-gray-300 hover:bg-gray-400 rounded-full p-2 ${className}`}
       {...rest}
+    />
+  );
+}
+function TextInput({
+  mode,
+  field,
+  index,
+  fileContent,
+  setFileContent,
+  readOnly,
+  lang,
+}: {
+  mode: fileType["mode"];
+  field: fileType["content"][0];
+  index: number;
+  fileContent: fileType;
+  setFileContent: React.Dispatch<React.SetStateAction<fileType>>;
+  readOnly: boolean;
+  lang: "en" | "ja";
+}) {
+  return readOnly ? (
+    <p
+      lang={lang}
+      className="select-text p-1 rounded text-gray-800 bg-gray-100"
+    >
+      {field[lang]}
+    </p>
+  ) : (
+    <input
+      className={
+        "rounded p-2 flex-1 min-w-12 " + (mode == "phrases" ? "min-w-64" : "")
+      }
+      placeholder={lang == "en" ? "英文を入力" : "日本語訳を入力"}
+      defaultValue={field[lang]}
+      onChange={e =>
+        setFileContent({
+          ...fileContent,
+          content: fileContent.content.map((field, i) =>
+            i === index ? { ...field, [lang]: e.target.value } : field
+          ),
+        })
+      }
+      disabled={readOnly}
     />
   );
 }

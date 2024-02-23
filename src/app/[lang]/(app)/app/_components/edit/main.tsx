@@ -20,6 +20,7 @@ export default function FileMenu({ fileId }: { fileId: string }) {
     saving,
     saveFileContent,
     saveFileInfo,
+    readOnly,
   } = useFile(token, fileId);
 
   useHotkeys(
@@ -57,6 +58,7 @@ export default function FileMenu({ fileId }: { fileId: string }) {
         saving={saving}
         saveFileContent={saveFileContent}
         saveFileInfo={saveFileInfo}
+        readOnly={readOnly}
       />
       <EditMenu
         key={fileId}
@@ -68,6 +70,7 @@ export default function FileMenu({ fileId }: { fileId: string }) {
         setFileContent={
           setFileContent as React.Dispatch<React.SetStateAction<fileType>>
         }
+        readOnly={readOnly}
       />
     </>
   );
