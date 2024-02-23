@@ -28,7 +28,9 @@ export function useResultFile(fileId: string, token: string) {
       ).then(r => r.files[0]);
       if (resultFile) {
         setResultFileId(resultFile.id);
-        setResults(JSON.parse(await getFileContent(token, resultFile.id)));
+        setResults(
+          JSON.parse((await getFileContent(token, resultFile.id)) || "{}")
+        );
       }
       setLoading(false);
     })();
@@ -38,8 +40,9 @@ export function useResultFile(fileId: string, token: string) {
       if (resultFileId) {
         await uploadFile(token, resultFileId, JSON.stringify(results));
       } else {
-        setResultFileId(
-          await fetch("https://www.googleapis.com/drive/v3/files", {
+        const newResultFileId = await fetch(
+          "https://www.googleapis.com/drive/v3/files",
+          {
             method: "POST",
             headers: {
               Authorization: "Bearer " + token,
@@ -49,10 +52,12 @@ export function useResultFile(fileId: string, token: string) {
               name: fileId + ".json",
               parents: ["appDataFolder"],
             }),
-          })
-            .then(r => r.json())
-            .then(r => r.id)
-        );
+          }
+        )
+          .then(r => r.json())
+          .then(r => r.id);
+        setResultFileId(newResultFileId);
+        await uploadFile(token, newResultFileId, JSON.stringify(results));
       }
       setSavingResults(false);
     } catch (e) {
