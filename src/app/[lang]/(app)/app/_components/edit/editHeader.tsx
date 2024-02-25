@@ -10,6 +10,7 @@ import { PiCardsThin } from "react-icons/pi";
 import { uuidv7 as createUUID } from "uuidv7";
 import { RiSpeakLine } from "react-icons/ri";
 import { useToken } from "@/common/hooks/useToken";
+import { CiShare2 } from "react-icons/ci";
 
 export default function EditHeader({
   fileId,
@@ -58,21 +59,32 @@ export default function EditHeader({
       </div>
       <div className="flex gap-4">
         {!readOnly && (
-          <button
-            className="flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 disabled:text-gray-800 font-semibold"
-            disabled={saving}
-            onClick={() => {
-              sendGAEvent({
-                event: "clickSaveButton",
-                category: "file",
-              });
-              saveFileContent();
-              saveFileInfo();
-            }}
-          >
-            <IoSaveOutline />
-            <span className="hidden md:inline-block">保存{saving && "中"}</span>
-          </button>
+          <>
+            <button
+              className="flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 disabled:text-gray-800 font-semibold"
+              disabled={saving}
+              onClick={() => {
+                sendGAEvent({
+                  event: "clickSaveButton",
+                  category: "file",
+                });
+                saveFileContent();
+                saveFileInfo();
+              }}
+            >
+              <IoSaveOutline />
+              <span className="hidden md:inline-block">
+                保存{saving && "中"}
+              </span>
+            </button>
+            <a
+              className="flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 text-black hover:text-black visited:text-black text-button"
+              href={`https://drive.google.com/file/d/${fileId}/view?usp=sharing`}
+            >
+              <CiShare2 />
+              <span className="hidden md:inline-block">共有</span>
+            </a>
+          </>
         )}
         <a
           className={`flex items-center gap-2 p-2 rounded bg-gray-200 hover:bg-gray-300 text-black hover:text-black visited:text-black text-button ${
