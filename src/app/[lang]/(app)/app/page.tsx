@@ -2,6 +2,7 @@ import Print from "@/components/functional/print";
 import FileMenu from "./_components/edit/main";
 import HowToUse from "./howToUse";
 import { redirect } from "next/navigation";
+import CreateFile from "./_components/createFile";
 
 export default function App({
   searchParams: { fileId, state },
@@ -10,13 +11,19 @@ export default function App({
 }) {
   const stateFileId = JSON.parse(state || "{}")?.ids?.[0];
   if (stateFileId) redirect(`./app?fileId=${stateFileId}`);
-  return fileId ? (
+  const stateFolderId = JSON.parse(state || "{}")?.folderId;
+  return (
     <>
-      <FileMenu fileId={fileId} key={fileId} />
-      <Print fileId={fileId} />
+      {fileId ? (
+        <>
+          <FileMenu fileId={fileId} key={fileId} />
+          <Print fileId={fileId} />
+        </>
+      ) : (
+        <Home />
+      )}
+      {stateFolderId && <CreateFile folderId={stateFolderId} />}
     </>
-  ) : (
-    <Home />
   );
 }
 function Home() {
