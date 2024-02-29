@@ -5,8 +5,8 @@ import { ReactNode } from "react";
 import RightClick from "../../../components/functional/rightClick";
 
 export default async function AppLayout({ children }: { children: ReactNode }) {
-  const session = await getServerSession();
-  if (!session) redirect("/login?redirectTo=/app");
+  // const session = await getServerSession();
+  // if (!session) redirect("/login?redirectTo=/app");
   return (
     <>
       {children} {process.env.NOT_USE_RIGHT_CLICK ? <></> : <RightClick />}

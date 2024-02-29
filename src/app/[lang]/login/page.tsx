@@ -1,5 +1,3 @@
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 import LoginPage from "./LoginPage";
 import { Metadata } from "next";
 
@@ -8,11 +6,7 @@ export default async function Login({
 }: {
   searchParams: { redirectTo: string };
 }) {
-  const session = await getServerSession();
-  if (session) {
-    redirect(redirectTo);
-  }
-  return <LoginPage />;
+  return <LoginPage redirectTo={redirectTo} />;
 }
 export const metadata: Metadata = {
   title: "ログイン",

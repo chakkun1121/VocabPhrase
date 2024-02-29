@@ -1,10 +1,7 @@
 "use client";
-import { customSession } from "@/types/customSession";
-import { useSession } from "next-auth/react";
+import { auth } from "@/app/auth";
 
 export function useToken() {
-  const { data: session }: { data: customSession | null } =
-    useSession() as unknown as { data: customSession };
-  const token = session?.accessToken;
+  const token = auth?.token;
   return token;
 }

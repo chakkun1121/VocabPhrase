@@ -8,11 +8,12 @@ export default async function Login({
 }: {
   searchParams: { redirectTo: string };
 }) {
-  const session = await getServerSession();
+  // const session = await getServerSession();
 
-  if (!session) {
-    redirect(redirectTo);
-  }
+  // if (!session) {
+  //   redirect(redirectTo);
+  // }
+
   return <LogoutPage />;
 }
 export const metadata: Metadata = {
