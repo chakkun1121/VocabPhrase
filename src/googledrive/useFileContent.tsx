@@ -10,6 +10,8 @@ export function useFileContent(token: string, fileId: string) {
   const [fileContent, setFileContent] = useState<fileType | undefined>();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false); // 保存中はtrue
+  const [saved, setSaved] = useState(true); //保存完了時にtrue
+  const [first, setFirst] = useState(true);
   useEffect(() => {
     (async () => {
       const fileContent = JSON.parse(
@@ -19,6 +21,7 @@ export function useFileContent(token: string, fileId: string) {
       setFileContent(fileContent);
       setServerFileContent(fileContent);
       setLoading(false);
+      setSaved(true);
     })();
   }, [fileId, token]);
   /**
@@ -34,11 +37,22 @@ export function useFileContent(token: string, fileId: string) {
     await uploadFile(token, fileId, JSON.stringify(saveContent));
     if (fileContent !== saveContent) saveFileContent(true);
     setSaving(false);
+    setSaved(true);
   }
   useEffect(() => {
-    if (serverFileContent === fileContent) return;
-    saveFileContent();
+    if (first) {
+      setFirst(false);
+      return;
+    }
+    setSaved(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fileId, fileContent, serverFileContent, token]);
-  return { fileContent, setFileContent, saveFileContent, loading, saving };
+  }, [fileContent]);
+  return {
+    fileContent,
+    setFileContent,
+    saveFileContent,
+    loading,
+    saving,
+    saved,
+  };
 }

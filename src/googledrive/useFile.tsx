@@ -10,6 +10,7 @@ export function useFile(token: string, fileId: string) {
     saveFileContent,
     loading: fileContentLoading,
     saving: fileContentSaving,
+    saved: fileContentSaved,
   } = useFileContent(token, fileId);
   const {
     title,
@@ -17,6 +18,7 @@ export function useFile(token: string, fileId: string) {
     saveFileInfo,
     loading: fileInfoLoading,
     saving: fileInfoSaving,
+    saved: titleSaved,
   } = useFileInfo(token, fileId);
   const { readOnly } = useFilePermission(token, fileId);
 
@@ -27,6 +29,7 @@ export function useFile(token: string, fileId: string) {
     setFileContent,
     loading: fileInfoLoading || fileContentLoading,
     saving: fileInfoSaving || fileContentSaving,
+    saved: fileContentSaved && titleSaved,
     saveFileContent,
     saveFileInfo,
     readOnly,

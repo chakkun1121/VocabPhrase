@@ -6,6 +6,7 @@ export function useFileInfo(token: string, fileId: string) {
   const [title, setTitle] = useState(""); //拡張子付き
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false); // 保存中はtrue
+  const [saved, setSaved] = useState(true);
   const [serverTitle, setServerTitle] = useState(undefined); //拡張子付き
   useEffect(() => {
     (async () => {
@@ -16,6 +17,7 @@ export function useFileInfo(token: string, fileId: string) {
       setTitle(title);
       setServerTitle(title);
       setLoading(false);
+      setSaved(true);
     })();
   }, [token, fileId]);
   /**
@@ -31,11 +33,17 @@ export function useFileInfo(token: string, fileId: string) {
     await updateFileInfo(token, fileId, saveData);
     if (title !== saveData.name) saveFileInfo(true);
     setSaving(false);
+    setSaved(true);
   }
   useEffect(() => {
-    if (serverTitle === title) return;
-    saveFileInfo();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fileId, serverTitle, title, token]);
-  return { title, setTitle, saveFileInfo, loading, saving };
+    setSaved(false);
+  }, [title]);
+  return {
+    title,
+    setTitle,
+    saveFileInfo,
+    loading,
+    saving,
+    saved,
+  };
 }
