@@ -40,8 +40,8 @@ export default function FlashCard({
     setResults,
     setCurrentProblemIdList,
   });
-  useHotkeys("right", next);
-  useHotkeys("left", back);
+  useHotkeys("right,d", next);
+  useHotkeys("left,a", back);
   const handles = useSwipeable({
     onSwipedLeft: () => next(),
     onSwipedRight: () => back(),
