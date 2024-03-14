@@ -9,6 +9,7 @@ import EditHeader from "./editHeader";
 import { useFile } from "@/googledrive/useFile";
 import { removeExtension } from "@/common/library/removeExtension";
 import { useToken } from "@/common/hooks/useToken";
+import { useLeavePageConfirmation } from "@/common/hooks/useLeavePageConfirmation";
 export default function FileMenu({ fileId }: { fileId: string }) {
   const token = useToken();
   const {
@@ -18,6 +19,7 @@ export default function FileMenu({ fileId }: { fileId: string }) {
     setFileContent,
     loading,
     saving,
+    saved,
     saveFileContent,
     saveFileInfo,
     readOnly,
@@ -42,6 +44,7 @@ export default function FileMenu({ fileId }: { fileId: string }) {
           .join(".")} | 編集ページ | vocabphrase | chakkun1121`
       : "アプリ | vocabphrase | chakkun1121 "
   );
+  useLeavePageConfirmation(!saved);
   if (loading) return <div className="text-center p-4">loading...</div>;
   if (!loading && !fileContent)
     return (
