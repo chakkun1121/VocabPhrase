@@ -23,6 +23,7 @@ export function useFile(token: string, fileId: string) {
   const [shouldSaveTitle, setShouldSaveTitle] = useState(false); // タイトルを保存する必要があるときはtrue
   const [shouldSaveFileContent, setShouldSaveFileContent] = useState(false); // ファイルコンテンツを保存する必要があるときはtrue
   const [readOnly, setReadOnly] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
   useEffect(() => {
     (async () => {
       if (!token) return;
@@ -46,6 +47,7 @@ export function useFile(token: string, fileId: string) {
           setFileContent({ mode: null, content: [] } as fileType);
           return;
         }
+        setError(e);
         console.error(e);
       } finally {
         setLoading(false);
@@ -114,5 +116,6 @@ export function useFile(token: string, fileId: string) {
     saveFileContent,
     saveFileInfo,
     readOnly,
+    error,
   };
 }
