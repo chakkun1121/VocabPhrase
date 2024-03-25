@@ -20,7 +20,7 @@ export default async function Home({
         }
         className="opacity-75 backdrop-blur-lg"
       />
-      <main className=" bg-gradient-to-br from-primary-200 to-JungleGreen-200 !select-text">
+      <main className="  !select-text">
         <section className="h-screen text-center p-10 grid content-center">
           <div className="flex flex-col items-center gap-8">
             <h2 className="text-4xl">{t("top:catchCopy")}</h2>

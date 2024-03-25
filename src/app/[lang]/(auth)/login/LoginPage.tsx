@@ -1,13 +1,14 @@
 "use client";
 import { signIn, useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   const { status } = useSession();
   return (
     <>
-      <div className="flex flex-col items-center">
-        <h1>ログイン</h1>
-        <button
+      <div className="flex flex-col items-center p-4">
+        <h1 className="text-3xl">ログイン</h1>
+        <Button
           onClick={() =>
             signIn(
               "google",
@@ -19,8 +20,8 @@ export default function LoginPage() {
           }
           disabled={status === "loading"}
         >
-          ログイン
-        </button>
+          googleでログイン
+        </Button>
       </div>
     </>
   );

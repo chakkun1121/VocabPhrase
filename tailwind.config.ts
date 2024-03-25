@@ -1,145 +1,80 @@
-const colors = require("tailwindcss/colors");
-const BahamaBlue = {
-  "50": "#f4f8f9",
-  "100": "#daf1fa",
-  "200": "#afe2f5",
-  "300": "#7bc3e5",
-  "400": "#44a0cf",
-  "500": "#327eba",
-  "600": "#2a64a1",
-  "700": "#234b7f",
-  "800": "#19325a",
-  "900": "#0f1e3b",
-};
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}", "./mdx-components.tsx"],
-  darkMode: "class",
+import type { Config } from "tailwindcss";
+
+const config = {
+  darkMode: ["class"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
+  prefix: "",
   theme: {
-    colors: {
-      BahamaBlue,
-      primary: BahamaBlue,
-      JungleGreen: {
-        "50": "#edf5f2",
-        "100": "#cef0eb",
-        "200": "#94e9cf",
-        "300": "#58d1a1",
-        "400": "#1db46f",
-        "500": "#149b46",
-        "600": "#128733",
-        "700": "#12682b",
-        "800": "#0e4823",
-        "900": "#0a2c1c",
-      },
-      SelectivYellow: {
-        "50": "#faf9f0",
-        "100": "#f8efa1",
-        "200": "#eee05e",
-        "300": "#d4be34",
-        "400": "#a89619",
-        "500": "#85790b",
-        "600": "#6a6107",
-        "700": "#524907",
-        "800": "#383207",
-        "900": "#271f06",
-      },
-      Pizazz: {
-        "50": "#fbfaf3",
-        "100": "#f9efb4",
-        "200": "#f1dd75",
-        "300": "#dbb946",
-        "400": "#ba9024",
-        "500": "#9a7112",
-        "600": "#7d570b",
-        "700": "#60420b",
-        "800": "#412d0a",
-        "900": "#2c1c08",
-      },
-      BlazeOrange: {
-        "50": "#fcfbf7",
-        "100": "#faf0d3",
-        "200": "#f5d8a6",
-        "300": "#e6af72",
-        "400": "#d68246",
-        "500": "#bf6028",
-        "600": "#a2461a",
-        "700": "#7d3515",
-        "800": "#562411",
-        "900": "#37160b",
-      },
-      black: colors.black,
-      white: colors.white,
-      gray: colors.gray,
-      link: {
-        DEFAULT: "#327eba",
-        hover: "#234b7f",
-        visited: "#234b7f",
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
       },
     },
     extend: {
-      height: {
-        screen: ["100vh", "100dvh"],
+      colors: {
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
       },
-      minHeight: {
-        screen: ["100vh", "100dvh"],
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
-      maxHeight: {
-        screen: ["100vh", "100dvh"],
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
       },
-      gridTemplateColumns: {
-        auto: "repeat(auto-fit, minmax(0, 1fr))",
-      },
-      fontSize: {
-        "heading-L": [
-          "36px",
-          {
-            lineHeight: 1.4,
-            letterSpacing: "0.04em",
-            fontWeight: "Regular",
-          },
-        ],
-        "heading-M": [
-          "32px",
-          {
-            lineHeight: 1.5,
-            letterSpacing: "0.04em",
-            fontWeight: "Regular",
-          },
-        ],
-        "heading-S": [
-          "28px",
-          {
-            lineHeight: 1.5,
-            letterSpacing: "0.04em",
-            fontWeight: "Regular",
-          },
-        ],
-        L: [
-          // 通常の本文
-          "16px",
-          {
-            lineHeight: 1.7,
-            letterSpacing: "0.04em",
-            fontWeight: "Regular",
-          },
-        ],
-        M: [
-          "14px",
-          {
-            lineHeight: 1.7,
-            letterSpacing: "0.04em",
-            fontWeight: "Regular",
-          },
-        ],
-        button: [
-          "16px",
-          {
-            lineHeight: 1.5,
-            letterSpacing: "0.04em",
-            fontWeight: "Bold",
-          },
-        ],
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },
-};
+  plugins: [require("tailwindcss-animate")],
+} satisfies Config;
+
+export default config;
