@@ -3,6 +3,7 @@ import Image from "next/image";
 import Footer from "../../../components/layouts/footer";
 import Header from "@/components/layouts/header";
 import { getTranslation } from "@/app/i18n/server";
+import { auth } from "auth";
 
 export default async function Home({
   params: { lang },
@@ -10,6 +11,7 @@ export default async function Home({
   params: { lang: string };
 }) {
   const { t } = await getTranslation(lang);
+  const session = await auth();
   return (
     <>
       <Header

@@ -1,5 +1,5 @@
 "use client";
-import { auth } from "@/app/auth";
+import { auth } from "@/auth";
 
 export function useToken() {
   const token = auth?.token;

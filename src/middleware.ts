@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Negotiator from "negotiator";
 import { defaultLanguage, availableLanguages } from "@/app/i18n/settings";
-import { auth } from "./app/auth";
+import { auth } from "./auth";
 
 const getNegotiatedLanguage = (
   headers: Negotiator.Headers
