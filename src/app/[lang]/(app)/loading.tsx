@@ -1,3 +1,5 @@
-export default function Loading() {
-  return <div className="text-center">Loading...</div>;
+import Loading from "@/components/ui-elements/loading";
+
+export default function CustomLoading() {
+  return <Loading />;
 }
