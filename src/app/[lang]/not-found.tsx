@@ -1,6 +1,6 @@
 import Header from "@/components/layouts/header";
 
-export default function NotFound() {
+export default function NotFound({ lang }: { lang: string }) {
   return (
     <>
       <Header />

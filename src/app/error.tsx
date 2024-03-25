@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
-import { CONTACT_FORM_ERROR, CONTACT_FORM_URL } from "./meta";
+import { CONTACT_FORM_ERROR, CONTACT_FORM_URL } from "./[lang]/meta";
 
 export default function Error({
   error,
