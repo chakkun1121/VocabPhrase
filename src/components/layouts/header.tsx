@@ -22,6 +22,7 @@ export default function Header({
           href="/"
           aria-label="ホームへ"
           className="text-black hover:text-black visited:text-black no-underline flex items-center gap-2"
+          prefetch={false}
         >
           <Image
             src="/icon48.webp"

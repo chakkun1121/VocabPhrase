@@ -1,26 +1,29 @@
-import { ReactNode } from "react";
-import Footer from "../../../components/layouts/footer";
-import Link from "next/link";
+import { getTranslation } from "@/app/i18n/server";
+import Footer from "@/components/layouts/footer";
 import Header from "@/components/layouts/header";
+import Link from "next/link";
+import { ReactNode } from "react";
 
-export default function HomeLayout({
-  children,
+export default async function Layout({
   params: { lang },
+  children,
 }: {
-  children: ReactNode;
   params: { lang: string };
+  children: ReactNode;
 }) {
+  const { t } = await getTranslation(lang);
   return (
-    <div className="flex flex-col gap-4 h-screen">
+    <>
       <Header
         rightContent={
           <Link href="/app" className="">
-            単語帳を使う
+            {t("top:header")}
           </Link>
         }
+        className="opacity-80 backdrop-blur-3xl"
       />
-      <main className="flex-1 p-4 !select-text mt-20">{children}</main>
+      <main className="!select-text pt-20">{children}</main>{" "}
       <Footer lang={lang} />
-    </div>
+    </>
   );
 }
