@@ -13,8 +13,11 @@ import {
 import HelpKeyShortCut from "../../components/functional/helpKeyShortCut";
 import RecoilProvider from "@/components/providers/recoil";
 import NextAuthProvider from "@/components/providers/NextAuth";
+import { Noto_Sans_JP } from "next/font/google";
 const languages = ["en", "ja"];
-
+const notoSansJP = Noto_Sans_JP({
+  subsets: ["latin"],
+});
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title: {
@@ -67,7 +70,7 @@ export default function RootLayout({
   params: { lang: string };
 }) {
   return (
-    <html lang={lang} dir={dir(lang)}>
+    <html lang={lang} dir={dir(lang)} className={notoSansJP.className}>
       {process.env.NODE_ENV === "production" && (
         <GoogleAnalytics gaId="G-MNPB0JEZCF" />
       )}
