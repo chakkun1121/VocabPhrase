@@ -1,6 +1,7 @@
 import remarkGfm from "remark-gfm";
 import createMDX from "@next/mdx";
 import nextPWA from "next-pwa";
+import  withPlugins from "next-compose-plugins";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -20,4 +21,4 @@ const withMDX = createMDX({
 });
 
 // Merge MDX config with Next.js config
-export default withMDX(withPWA(nextConfig));
+export default withPlugins([withMDX, withPWA], nextConfig);

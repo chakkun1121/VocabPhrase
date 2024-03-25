@@ -24,7 +24,7 @@ export default async function Home({
         <section className="h-screen text-center p-10 grid content-center">
           <div className="flex flex-col items-center gap-8">
             <h2 className="text-4xl">{t("top:catchCopy")}</h2>
-            <h1 className="text-6xl">VocabPhrase</h1>
+            <h2 className="text-6xl">VocabPhrase</h2>
             <Image
               src="/img/app.webp"
               alt="アプリケーション画面"
