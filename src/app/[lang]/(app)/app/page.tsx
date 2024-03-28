@@ -1,5 +1,5 @@
 import Print from "@/components/functional/print";
-import FileMenu from "./_components/edit/main";
+import FileMenu from "../../../../components/functional/edit";
 import HowToUse from "./howToUse";
 import { redirect } from "next/navigation";
 import CreateFile from "./_components/createFile";

@@ -7,7 +7,6 @@ import { CaretSortIcon } from "@radix-ui/react-icons";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { IoMdOpen } from "react-icons/io";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +17,8 @@ import {
 import { DataTable } from "@/components/ui/data-table";
 import { toast } from "sonner";
 import { MoreHorizontal } from "lucide-react";
+import { MdOutlineModeEdit } from "react-icons/md";
+import { PiCardsLight, PiCardsThin } from "react-icons/pi";
 
 type TableInfo = {
   fileId: string;
@@ -28,7 +29,6 @@ type TableInfo = {
 export default function FilesTable() {
   const [isLoading, setIsLoading] = useState(true);
   const [recentFile, setRecentFile] = useState<TableInfo[]>([]);
-  console.log("recentFile: ", recentFile);
   const [error, setError] = useState<any>(undefined);
   const token = useToken();
   useEffect(() => {
@@ -47,14 +47,6 @@ export default function FilesTable() {
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       ),
-      cell: ({ row }) => (
-        <Link
-          href={`/${row.original.fileId}`}
-          className="text-blue-500 hover:underline"
-        >
-          {row.getValue("title")}
-        </Link>
-      ),
     },
     {
       id: "lastModified",
@@ -63,57 +55,65 @@ export default function FilesTable() {
       cell: ({ row }) => row.original.lastModified?.toLocaleDateString(),
     },
     {
-      id: "links",
-      header: "",
-      cell: ({ row }) => (
-        <Link
-          href={`/${row.original.fileId}`}
-          target="_blank"
-          className="h-8 w-8 p-0 data-[state=open]:bg-muted"
-        >
-          <IoMdOpen className="" />
-        </Link>
-      ),
-    },
-    {
       id: "actions",
       header: "",
       cell: ({ row }) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className="h-8 w-8 p-0 data-[state=open]:bg-muted"
+        <nav className="flex items-center justify-end">
+          <Button asChild variant="ghost" className="p-0">
+            <Link
+              href={`./${row.original.fileId}/edit`}
+              className="aspect-square"
             >
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel asChild>
-              <Link href={`/${row.original.fileId}`} className="block">
-                開く
-              </Link>
-            </DropdownMenuLabel>
-            <DropdownMenuLabel asChild>
-              <Link href={`/${row.original.fileId}/edit`} className="block">
-                編集
-              </Link>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuLabel
-              onClick={() => {
-                window.confirm("復元できません。よろしいでしょうか?") &&
-                  (async () => {
-                    await deleteFile(token, row.original.fileId);
-                    getRecentFile();
-                  })();
-              }}
+              <MdOutlineModeEdit title="編集" />
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" className="p-0">
+            <Link
+              href={`./${row.original.fileId}/flashCard`}
+              className="aspect-square"
             >
-              削除
-            </DropdownMenuLabel>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <PiCardsLight title="フラッシュカード" />
+            </Link>
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="h-8 w-8 p-0 data-[state=open]:bg-muted aspect-square"
+              >
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel asChild>
+                <Link href={`/${row.original.fileId}/edit`} className="block">
+                  編集
+                </Link>
+              </DropdownMenuLabel>
+              <DropdownMenuLabel asChild>
+                <Link
+                  href={`./${row.original.fileId}/flashCard`}
+                  className="block"
+                >
+                  フラッシュカード
+                </Link>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuLabel
+                onClick={() => {
+                  window.confirm("復元できません。よろしいでしょうか?") &&
+                    (async () => {
+                      await deleteFile(token, row.original.fileId);
+                      getRecentFile();
+                    })();
+                }}
+              >
+                削除
+              </DropdownMenuLabel>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </nav>
       ),
     },
   ];

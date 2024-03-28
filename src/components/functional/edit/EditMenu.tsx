@@ -3,8 +3,17 @@ import { fileType } from "@/types/fileType";
 import { uuidv7 as createUUID } from "uuidv7";
 import { MdDeleteOutline } from "react-icons/md";
 import { FaPlus } from "react-icons/fa";
-import { ButtonHTMLAttributes, DetailedHTMLProps, useState } from "react";
-import ImportForm from "../../ImportForm";
+import { useState } from "react";
+import ImportForm from "./ImportForm";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 export default function EditMenu({
   title,
@@ -22,41 +31,39 @@ export default function EditMenu({
   const [isShowImportBox, setIsShowImportBox] = useState(false);
   return (
     <div className="flex flex-col p-4 gap-4">
-      <div className="flex-none flex gap-4 bg-gray-200 p-2 rounded">
-        <input
+      <div className="flex-none flex gap-4 p-2">
+        <Input
           type="text"
           value={title}
-          className="flex-1 p-4 rounded bg-white disabled:bg-gray-100 disabled:text-gray-800"
+          className="flex-1 p-4 rounded"
           placeholder="ファイル名を入力してください"
           onChange={e => setTitle(e.target.value)}
           disabled={readOnly}
         />
-        <select
-          className="flex-none bg-white p-4 rounded"
+        <Select
           value={fileContent.mode ?? "none"}
-          onChange={e =>
+          onValueChange={value => {
             setFileContent({
               ...fileContent,
-              mode:
-                e.target.value === "none"
-                  ? null
-                  : (e.target.value as fileType["mode"]),
-            })
-          }
+              mode: value === "none" ? null : (value as fileType["mode"]),
+            });
+          }}
           disabled={readOnly}
         >
-          <option value="none">モードを選択</option>
-          <option value="words">単語</option>
-          <option value="phrases">フレーズ</option>
-          <option value="sentences">文章</option>
-        </select>
+          <SelectTrigger className="flex-none p-4 rounded w-36">
+            <SelectValue placeholder="モードを選択" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">モードを選択</SelectItem>
+            <SelectItem value="words">単語</SelectItem>
+            <SelectItem value="phrases">フレーズ</SelectItem>
+            <SelectItem value="sentences">文章</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
-      <div className="flex-1 flex flex-col gap-4 bg-gray-100 rounded p-2">
+      <div className="flex-1 flex flex-col gap-2 p-2">
         {fileContent.content.map((field, index) => (
-          <div
-            key={field.id}
-            className="flex gap-4 p-4 bg-gray-200 rounded items-center"
-          >
+          <div key={field.id} className="flex gap-4 p-4 rounded items-center">
             <div className="flex-none flex items-center">
               <p>{index + 1}</p>
             </div>
@@ -90,6 +97,8 @@ export default function EditMenu({
             {!readOnly && (
               <div className="flex-none flex flex-col gap-4">
                 <Button
+                  className="aspect-square p-0"
+                  variant="outline"
                   onClick={() =>
                     setFileContent({
                       ...fileContent,
@@ -101,7 +110,7 @@ export default function EditMenu({
                   title="削除"
                   disabled={readOnly}
                 >
-                  <MdDeleteOutline />
+                  <MdDeleteOutline className="w-4 h-4" />
                 </Button>
                 {/* <Button>
                   <LuGripVertical />
@@ -110,58 +119,34 @@ export default function EditMenu({
             )}
           </div>
         ))}
-        {fileContent.content.length === 0 && isShowImportBox && !readOnly && (
-          <ImportForm
-            close={() => setIsShowImportBox(false)}
-            setFileContent={setFileContent}
-            setTitle={setTitle}
-          />
-        )}
-        {!isShowImportBox && !readOnly && (
-          <div className="flex gap-4">
-            {fileContent.content.length === 0 && !readOnly && (
-              <button
-                className="flex flex-none gap-4 p-4 bg-gray-200 hover:bg-gray-300 rounded-full items-center justify-center"
-                onClick={() => setIsShowImportBox(true)}
-              >
-                インポート
-              </button>
-            )}
-            <button
-              className="flex flex-1 gap-4 p-4 bg-gray-200 hover:bg-gray-300 rounded-full items-center justify-center"
-              onClick={() => {
-                setFileContent({
-                  ...fileContent,
-                  content: [
-                    ...fileContent.content,
-                    { id: createUUID(), en: "", ja: "" },
-                  ],
-                });
-              }}
-              title="追加"
-            >
-              <FaPlus />
-            </button>
-          </div>
-        )}
       </div>
+      {!readOnly && (
+        <div className="flex gap-4">
+          {fileContent.content.length === 0 && !readOnly && (
+            <ImportForm setFileContent={setFileContent} setTitle={setTitle} />
+          )}
+          <Button
+            className="flex flex-1 gap-4 p-4 items-center justify-center"
+            variant={fileContent.content.length === 0 ? "default" : "secondary"}
+            onClick={() => {
+              setFileContent({
+                ...fileContent,
+                content: [
+                  ...fileContent.content,
+                  { id: createUUID(), en: "", ja: "" },
+                ],
+              });
+            }}
+            title="追加"
+          >
+            <FaPlus />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
-function Button(
-  props: DetailedHTMLProps<
-    ButtonHTMLAttributes<HTMLButtonElement>,
-    HTMLButtonElement
-  >
-) {
-  const { className, ...rest } = props;
-  return (
-    <button
-      className={`bg-gray-300 hover:bg-gray-400 rounded-full p-2 ${className}`}
-      {...rest}
-    />
-  );
-}
+
 function TextInput({
   mode,
   field,
@@ -187,7 +172,7 @@ function TextInput({
       {field[lang]}
     </p>
   ) : (
-    <input
+    <Input
       className={
         "rounded p-2 flex-1 min-w-12 " + (mode == "phrases" ? "min-w-64" : "")
       }

@@ -16,7 +16,7 @@ export default async function Layout({
     <>
       <Header
         rightContent={
-          <Link href="/app" className="">
+          <Link href="/dashboard" className="">
             {t("top:header")}
           </Link>
         }

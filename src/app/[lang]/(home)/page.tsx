@@ -84,7 +84,7 @@ export default async function Home({
         <section className="text-center sticky bottom-4 my-4">
           <Button asChild className="">
             <Link
-              href="/app"
+              href="/dashboard"
               className="text-white bg-Pizazz-200 hover:bg-Pizazz-300 p-6 rounded visited:text-white hover:text-white"
             >
               {t("top:letsUse")}
