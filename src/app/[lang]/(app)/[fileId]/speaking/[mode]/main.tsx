@@ -7,6 +7,10 @@ import SpeechButton from "@/components/ui-parts/speechButton";
 import { removeExtension } from "@/common/library/removeExtension";
 import { useToken } from "@/common/hooks/useToken";
 import { useSpeech } from "@/common/hooks/useSpeech";
+import { Select } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 export default function Speaking({
   fileId,
   mode,
@@ -123,25 +127,17 @@ export default function Speaking({
   if (loading) return <p className="text-center">loading...</p>;
   return (
     <>
-      <nav className="bg-gray-100 p-2 rounded ">
+      <nav className="p-2">
         <div className="[&>label]:block grid gap-2">
-          <label>
-            <input
-              type="checkbox"
-              checked={isShowEn}
-              onChange={e => setIsShowEn(e.target.checked)}
-            />
+          <Label>
+            <Switch checked={isShowEn} onCheckedChange={c => setIsShowEn(c)} />
             英文を表示する
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              checked={isShowJa}
-              onChange={e => setIsShowJa(e.target.checked)}
-            />
+          </Label>
+          <Label>
+            <Switch checked={isShowJa} onCheckedChange={c => setIsShowJa(c)} />
             日本語訳を表示する
-          </label>
-          <label>
+          </Label>
+          <Label>
             <input
               type="range"
               min="0.1"
@@ -151,30 +147,30 @@ export default function Speaking({
               onChange={e => setSpeed(Number(e.target.value))}
             />
             英文、日本語再生速度(x{speed})
-          </label>
+          </Label>
         </div>
         <div className="flex gap-2">
-          <button
+          <Button
             onClick={recording}
             disabled={isRecording || isPlaying}
-            className="bg-gray-200 rounded p-2 disabled:opacity-50"
+            className="p-2 disabled:opacity-50"
           >
             録音{isRecording && "中"}
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={play}
             disabled={isRecording || isPlaying}
-            className="bg-gray-200 rounded p-2 disabled:opacity-50"
+            className="p-2 disabled:opacity-50"
           >
             再生{isPlaying && "中"}
-          </button>
+          </Button>
         </div>
       </nav>
-      <div className="bg-primary-50 p-2 rounded">
+      <div className="py-4 px-2">
         <div>
-          <h2>{removeExtension(title)}</h2>
+          <h2 className="text-2xl">{removeExtension(title)}</h2>
         </div>
-        <div className="grid gap-4">
+        <div className="grid gap-2">
           {fileContent?.content.map((content, index) => (
             <Content
               key={index}
