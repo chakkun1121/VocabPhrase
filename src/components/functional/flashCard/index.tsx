@@ -6,13 +6,14 @@ import FlashCard from "./_card/card";
 import CardResult from "./result/cardResult";
 import HeaderRight from "./HeaderRight";
 import { useDocumentTitle } from "@uidotdev/usehooks";
-import { useLeavePageConfirmation } from "../../../../common/hooks/useLeavePageConfirmation";
 import FlashCardHome from "./home/flashCardHome";
 import Header from "@/components/layouts/header";
 import { useFile } from "@/googledrive/useFile";
-import { removeExtension } from "../../../../common/library/removeExtension";
-import { useResultFile } from "../../../../common/hooks/useFlashcardResultFile";
-import { useToken } from "../../../../common/hooks/useToken";
+import { useResultFile } from "@/common/hooks/useFlashcardResultFile";
+import { useToken } from "@/common/hooks/useToken";
+import { removeExtension } from "@/common/library/removeExtension";
+import { useLeavePageConfirmation } from "@/common/hooks/useLeavePageConfirmation";
+import Loading from "@/components/ui-elements/loading";
 
 export default function Card({ fileId }: { fileId: string }) {
   const [mode, setMode] = useState<"home" | "cards" | "result">("home");
@@ -52,9 +53,10 @@ export default function Card({ fileId }: { fileId: string }) {
           </>
         }
       />
+
       <main className="mt-20 h-full">
         {loading ? (
-          <div className="h-full p-4">loading...</div>
+          <Loading />
         ) : (
           fileContent && (
             <>

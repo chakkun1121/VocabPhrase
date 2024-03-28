@@ -4,9 +4,9 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { useSwipeable } from "react-swipeable";
 import { CardMain } from "./main";
 import { cardResult } from "@/types/cardResult";
-import ProgressBar from "../../../../../components/ui-elements/ProgressBar";
 import { useDisableSwiping } from "@/common/hooks/useDisableSwiping";
 import { useCard } from "./useCard";
+import ProgressBar from "@/components/ui-elements/ProgressBar";
 
 export default function FlashCard({
   fileContent,

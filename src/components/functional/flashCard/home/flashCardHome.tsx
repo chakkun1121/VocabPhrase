@@ -4,6 +4,10 @@ import { atom, useRecoilState } from "recoil";
 import { recoilPersist } from "recoil-persist";
 import { flashcardOptions } from "../flashcardOptions";
 import React from "react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export default function FlashCardHome({
   setMode,
@@ -21,7 +25,7 @@ export default function FlashCardHome({
   );
   return (
     <form
-      className="flex flex-col gap-4 p-4 w-full max-w-7xl mx-auto"
+      className="flex flex-col gap-4 p-4 w-full max-w-5xl mx-auto"
       onSubmit={e => {
         e.preventDefault();
         const settings = {
@@ -36,50 +40,44 @@ export default function FlashCardHome({
         setMode("cards");
       }}
     >
-      <div className="p-2 [&>*]:flex [&>*]:items-center grid gap-3 [&>*]:bg-gray-100 [&>*]:rounded [&>*]:p-2 [&>*]:justify-between bg-gray-50 rounded">
+      <div className="p-2 [&>*]:flex [&>*]:items-center grid gap-3 [&>*]:p-2 [&>*]:justify-between ">
         {flashcardOptions.map(option => (
           <React.Fragment key={option.name}>
             {typeof option.default === "boolean" && (
-              <label>
-                {option.title}
-                <input
-                  type="checkbox"
+              <Label className="flex">
+                <span className="flex-1"> {option.title}</span>
+                <Switch
                   name={option.name}
                   id={option.id}
                   defaultChecked={previousSettings[option.name]}
-                  onChange={e => {
+                  onCheckedChange={c => {
                     if (option.name === "isRandom") {
-                      setIsRandom(e.currentTarget.checked);
+                      setIsRandom(c);
                       setQuestionCount(Infinity);
                     }
                   }}
-                  className="mr-2"
+                  className="mr-2 flex-none"
                 />
-              </label>
+              </Label>
             )}
             {option.options && (
               <div>
                 <p>{option.title}</p>
-                <div>
+                <RadioGroup
+                  defaultValue={previousSettings[option.name]}
+                  onValueChange={(v: string) => {
+                    if (option.name == "questionCount") {
+                      setQuestionCount(Number(v));
+                    }
+                  }}
+                >
                   {option.options?.map(o => (
-                    <label key={o.value} className="flex items-center">
-                      <input
+                    <Label key={o.value} className="flex items-center">
+                      <RadioGroupItem
                         type="radio"
                         name={option.name}
                         value={o.value || ""}
-                        defaultChecked={
-                          option.name == "questionCount"
-                            ? o.value
-                              ? o.value == questionCount
-                              : ![5, 10, Infinity].includes(questionCount)
-                            : o.value == previousSettings[option.name]
-                        }
                         disabled={option.name == "questionCount" && !isRandom}
-                        onChange={e => {
-                          if (option.name == "questionCount") {
-                            setQuestionCount(Number(e.currentTarget.value));
-                          }
-                        }}
                       />
                       {!o.value && (
                         <>
@@ -105,19 +103,15 @@ export default function FlashCardHome({
                         </>
                       )}
                       {o.value && o.label}
-                    </label>
+                    </Label>
                   ))}
-                </div>
+                </RadioGroup>
               </div>
             )}
           </React.Fragment>
         ))}
       </div>
-      <input
-        type="submit"
-        value="Start"
-        className="p-4 text-2xl text-center text-white bg-primary-400 disabled:bg-primary-300 rounded-xl"
-      />
+      <Input type="submit" value="Start" className="text-center" />
     </form>
   );
 }

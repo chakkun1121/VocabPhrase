@@ -1,6 +1,6 @@
+import { useSpeech } from "@/common/hooks/useSpeech";
 import SpeechButton from "@/components/ui-parts/speechButton";
 import { useHotkeys } from "react-hotkeys-hook";
-import { useSpeech } from "../../../../../common/hooks/useSpeech";
 
 export default function Speech({
   text,

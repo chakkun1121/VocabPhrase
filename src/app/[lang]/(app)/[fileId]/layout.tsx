@@ -1,16 +1,13 @@
+import { notFound } from "next/navigation";
 import { ReactNode } from "react";
 
 export default function Layout({
+  params: { fileId },
   children,
-  modal,
 }: {
+  params: { fileId: string };
   children: ReactNode;
-  modal: React.ReactNode;
 }) {
-  return (
-    <>
-      {children}
-      {modal}
-    </>
-  );
+  if (fileId.length !== 33) notFound();
+  return <>{children}</>;
 }
