@@ -1,6 +1,7 @@
 "use client";
 import { useResultFile } from "@/common/hooks/useFlashcardResultFile";
 import { useToken } from "@/common/hooks/useToken";
+import FlashCard from "@/components/functional/flashCard";
 import Loading from "@/components/ui-elements/loading";
 import { useFile } from "@/googledrive/useFile";
 
@@ -25,5 +26,5 @@ export default function FlashCardPage({
   } = useResultFile(fileId, token);
   if (fileLoading || resultLoading) return <Loading />;
   if (error) throw error;
-  return <div></div>;
+  return <FlashCard />;
 }
