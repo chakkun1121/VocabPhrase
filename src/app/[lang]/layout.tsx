@@ -14,6 +14,7 @@ import HelpKeyShortCut from "../../components/functional/helpKeyShortCut";
 import RecoilProvider from "@/components/providers/recoil";
 import NextAuthProvider from "@/components/providers/NextAuth";
 import { Noto_Sans_JP } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
 const languages = ["en", "ja"];
 const notoSansJP = Noto_Sans_JP({
   subsets: ["latin"],
@@ -77,7 +78,10 @@ export default function RootLayout({
       <NextAuthProvider>
         <RecoilProvider>
           <HelpKeyShortCut />
-          <body className="select-none print:hidden">{children}</body>
+          <body className="select-none print:hidden">
+            {children}
+            <Toaster />
+          </body>
         </RecoilProvider>
       </NextAuthProvider>
     </html>

@@ -3,34 +3,120 @@
 import { useToken } from "@/common/hooks/useToken";
 import { deleteFile, listFiles } from "@/googledrive";
 import { useState, useEffect } from "react";
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { CaretSortIcon } from "@radix-ui/react-icons";
+import { ColumnDef } from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { IoMdOpen } from "react-icons/io";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { HiOutlineDotsVertical } from "react-icons/hi";
-import { Button } from "@/components/ui/button";
+import { DataTable } from "@/components/ui/data-table";
+import { toast } from "sonner";
+import { MoreHorizontal } from "lucide-react";
+
+type TableInfo = {
+  fileId: string;
+  title: string;
+  lastModified?: Date;
+};
 
 export default function FilesTable() {
   const [isLoading, setIsLoading] = useState(true);
-
-  const [recentFile, setRecentFile] = useState<
-    { title: string; fileId: string }[]
-  >([]);
+  const [recentFile, setRecentFile] = useState<TableInfo[]>([]);
+  console.log("recentFile: ", recentFile);
   const [error, setError] = useState<any>(undefined);
   const token = useToken();
+  useEffect(() => {
+    if (error) toast.error(error.message);
+  }, [error]);
+  const columns: ColumnDef<TableInfo>[] = [
+    {
+      id: "title",
+      accessorKey: "title",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          タイトル
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <Link
+          href={`/${row.original.fileId}`}
+          className="text-blue-500 hover:underline"
+        >
+          {row.getValue("title")}
+        </Link>
+      ),
+    },
+    {
+      id: "lastModified",
+      accessorKey: "lastModified",
+      header: "最終更新日",
+      cell: ({ row }) => row.original.lastModified?.toLocaleDateString(),
+    },
+    {
+      id: "links",
+      header: "",
+      cell: ({ row }) => (
+        <Link
+          href={`/${row.original.fileId}`}
+          target="_blank"
+          className="h-8 w-8 p-0 data-[state=open]:bg-muted"
+        >
+          <IoMdOpen className="" />
+        </Link>
+      ),
+    },
+    {
+      id: "actions",
+      header: "",
+      cell: ({ row }) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="h-8 w-8 p-0 data-[state=open]:bg-muted"
+            >
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel asChild>
+              <Link href={`/${row.original.fileId}`} className="block">
+                開く
+              </Link>
+            </DropdownMenuLabel>
+            <DropdownMenuLabel asChild>
+              <Link href={`/${row.original.fileId}/edit`} className="block">
+                編集
+              </Link>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel
+              onClick={() => {
+                window.confirm("復元できません。よろしいでしょうか?") &&
+                  (async () => {
+                    await deleteFile(token, row.original.fileId);
+                    getRecentFile();
+                  })();
+              }}
+            >
+              削除
+            </DropdownMenuLabel>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
+  ];
   async function getRecentFile() {
     try {
       setIsLoading(true);
@@ -42,13 +128,13 @@ export default function FilesTable() {
       console.log(files);
       setRecentFile(
         files
+          .filter((file: { name: string }) =>
+            file.name.endsWith(".vocabphrase")
+          )
           .map((file: { name: string; id: string }) => ({
-            title: file.name,
+            title: file.name.replace(/\.vocabphrase$/, ""),
             fileId: file.id,
           }))
-          .filter((file: { title: string }) =>
-            file.title.endsWith(".vocabphrase")
-          )
       );
       setIsLoading(false);
     } catch (e) {
@@ -63,60 +149,5 @@ export default function FilesTable() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
   if (isLoading) return <div>Loading...</div>;
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>ファイル名</TableHead>
-          <TableHead>最終更新日</TableHead>
-          <TableHead />
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {recentFile.map(file => (
-          <TableRow key={file.fileId}>
-            <TableCell className="flex">
-              <Link href={`/${file.fileId}`}>
-                {file.title.replace(/\.vocabphrase$/, "")}
-              </Link>
-            </TableCell>
-            <TableCell>2021-08-02</TableCell>
-            <TableCell className="w-min">
-              <Link href={`/${file.fileId}`} target="_blank">
-                <IoMdOpen />
-              </Link>
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <HiOutlineDotsVertical />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuLabel asChild>
-                    <Link href={`/${file.fileId}`} className="block">
-                      開く
-                    </Link>
-                  </DropdownMenuLabel>
-                  <DropdownMenuLabel asChild>
-                    <Link href={`/${file.fileId}/edit`} className="block">
-                      編集
-                    </Link>
-                  </DropdownMenuLabel>
-                  <DropdownMenuLabel
-                    onClick={() => {
-                      window.confirm("復元できません。よろしいでしょうか?") &&
-                        (async () => {
-                          await deleteFile(token, file.fileId);
-                          getRecentFile();
-                        })();
-                    }}
-                  >
-                    削除
-                  </DropdownMenuLabel>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  );
+  return <DataTable columns={columns} data={recentFile} />;
 }
