@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { flashCardSettings } from "@/types/flashCardSettings";
-import FlashCard from "./_card/card";
+import FlashCard from "./card";
 import CardResult from "./result/cardResult";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import FlashCardHome from "./home/flashCardHome";
@@ -22,11 +22,14 @@ export default function Card({ fileId }: { fileId: string }) {
       isAnswerWithKeyboard: false,
     }
   );
-  const [currentProblemIdList, setCurrentProblemIdList] = useState<string[]>(
-    []
-  );
+
   const token = useToken();
-  const { title, fileContent, loading: fileLoading } = useFile(token, fileId);
+  const {
+    title,
+    fileContent,
+    loading: fileLoading,
+    setFileContent,
+  } = useFile(token, fileId);
   const {
     results,
     setResults,
@@ -34,6 +37,10 @@ export default function Card({ fileId }: { fileId: string }) {
     saveResults,
     loading: resultLoading,
   } = useResultFile(fileId, token);
+  const [currentResult, setCurrentResult] = useState<{
+    [problemId: string]: boolean;
+  }>({});
+  console.log(currentResult);
   const loading = fileLoading || resultLoading;
   useLeavePageConfirmation(mode == "cards" || savingResults);
   useDocumentTitle(
@@ -60,7 +67,8 @@ export default function Card({ fileId }: { fileId: string }) {
                   setMode={setMode}
                   cardResult={results}
                   setResults={setResults}
-                  setCurrentProblemIdList={setCurrentProblemIdList}
+                  setCurrentResult={setCurrentResult}
+                  setFileContent={setFileContent}
                 />
               )}
               {mode === "result" && (
@@ -68,7 +76,7 @@ export default function Card({ fileId }: { fileId: string }) {
                   results={results}
                   fileContent={fileContent}
                   mode={flashCardSettings.mode}
-                  currentProblemIdList={currentProblemIdList}
+                  currentResult={currentResult}
                   saveResults={saveResults}
                 />
               )}

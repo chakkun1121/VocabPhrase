@@ -1,4 +1,4 @@
-import { DisabledCheckBox } from "@/components/ui-parts/disabledCheckBox";
+import { Button } from "@/components/ui/button";
 import { cardResult } from "@/types/cardResult";
 import { fileType } from "@/types/fileType";
 import { flashCardMode } from "@/types/flashCardSettings";
@@ -9,12 +9,14 @@ export default function CardResult({
   results,
   mode,
   currentProblemIdList,
+  currentResult,
   saveResults,
 }: {
   fileContent: fileType;
   results: cardResult;
   mode: flashCardMode;
   currentProblemIdList: string[];
+  currentResult: { [problemId: string]: boolean };
   saveResults: () => void;
 }) {
   useEffect(() => {
@@ -23,8 +25,7 @@ export default function CardResult({
   }, []);
   return (
     <div className="grid p-4 w-full max-w-7xl mx-auto gap-4">
-      <div>
-        <div>
+      {/*<div>
           <h2>チェック率</h2>
           <p
             className={
@@ -52,30 +53,29 @@ export default function CardResult({
             )}
             %
           </p>
-        </div>
-      </div>
+        </div> */}
       <nav className="flex-none flex gap-4">
-        <button
+        <Button
           onClick={() => window.location.reload()}
           className="p-2 rounded bg-gray-100 hover:bg-gray-200"
         >
           もう一度
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => window.close()}
           className="p-2 rounded bg-gray-100 hover:bg-gray-200"
         >
           閉じる
-        </button>
+        </Button>
       </nav>
-      <table className="w-full rounded">
+      {/* <table className="w-full rounded">
         <caption className="text-heading-S">結果</caption>
         <thead className="bg-gray-200">
           <tr>
             <th className="px-4 py-6"></th>
             <th className="px-4 py-6">英文</th>
             <th className="px-4 py-6">日本語訳</th>
-            {/* <th className="px-4"></th> */}
+            <th className="px-4"></th>
             <th
               className={
                 "px-4 py-6 w-20 " +
@@ -111,7 +111,7 @@ export default function CardResult({
                 <td className="text-center">{i + 1}</td>
                 <td>{currentQuestion.en}</td>
                 <td>{currentQuestion.ja}</td>
-                {/* <td className="text-center">{result ? "○" : "×"}</td> */}
+                <td className="text-center">{result ? "○" : "×"}</td>
                 <td
                   className={
                     "text-center " +
@@ -146,7 +146,7 @@ export default function CardResult({
             );
           })}
         </tbody>
-      </table>
+      </table> */}
     </div>
   );
 }

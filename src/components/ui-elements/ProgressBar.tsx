@@ -3,12 +3,12 @@ import { IoChevronBackSharp } from "react-icons/io5";
 
 export default function ProgressBar({
   questionIndex,
-  questionList,
+  allQuestionCount,
   next,
   back,
 }: {
   questionIndex: number;
-  questionList: string[];
+  allQuestionCount: number;
   next: () => void;
   back: () => void;
 }) {
@@ -28,14 +28,14 @@ export default function ProgressBar({
         className="flex-1 h-12 flex items-center justify-center"
         style={{
           background: `linear-gradient(to right, #dbb946 ${
-            ((questionIndex + 1) / questionList.length) * 100
-          }%, #f4f8f9 ${((questionIndex + 1) / questionList.length) * 100}%)`,
+            ((questionIndex + 1) / allQuestionCount) * 100
+          }%, #f4f8f9 ${((questionIndex + 1) / allQuestionCount) * 100}%)`,
         }}
       >
         <button
           className="text-center select-none"
           onClick={() =>
-            setShowMode((showMode) =>
+            setShowMode(showMode =>
               showMode == "progress"
                 ? "percent"
                 : showMode == "percent"
@@ -45,11 +45,11 @@ export default function ProgressBar({
           }
         >
           {showMode === "progress" &&
-            `${questionIndex + 1}/${questionList.length}`}
+            `${questionIndex + 1}/${allQuestionCount}`}
           {showMode === "percent" &&
-            `${Math.round(((questionIndex + 1) / questionList.length) * 100)}%`}
+            `${Math.round(((questionIndex + 1) / allQuestionCount) * 100)}%`}
           {showMode === "rest" &&
-            `残り${questionList.length - questionIndex - 1}問`}
+            `残り${allQuestionCount - questionIndex - 1}問`}
         </button>
       </div>
       <button

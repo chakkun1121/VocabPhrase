@@ -1,5 +1,3 @@
-import { flashCardMode } from "./flashCardSettings";
-
 // 保存するファイル名は result/<本体のファイルID>.jsonとすること
 export type cardResult = {
   fileInfo: {
