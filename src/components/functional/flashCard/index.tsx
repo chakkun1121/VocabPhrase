@@ -4,10 +4,8 @@ import { useState } from "react";
 import { flashCardSettings } from "@/types/flashCardSettings";
 import FlashCard from "./_card/card";
 import CardResult from "./result/cardResult";
-import HeaderRight from "./HeaderRight";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import FlashCardHome from "./home/flashCardHome";
-import Header from "@/components/layouts/header";
 import { useFile } from "@/googledrive/useFile";
 import { useResultFile } from "@/common/hooks/useFlashcardResultFile";
 import { useToken } from "@/common/hooks/useToken";
@@ -43,18 +41,7 @@ export default function Card({ fileId }: { fileId: string }) {
   );
   return (
     <>
-      <Header
-        rightContent={
-          <>
-            <p className="md:absolute mx-auto left-0 right-0 block w-max">
-              {removeExtension(title)}
-            </p>
-            <HeaderRight />
-          </>
-        }
-      />
-
-      <main className="mt-20 h-full">
+      <main className="h-full">
         {loading ? (
           <Loading />
         ) : (

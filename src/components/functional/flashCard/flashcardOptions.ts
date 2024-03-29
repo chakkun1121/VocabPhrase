@@ -1,4 +1,32 @@
-export const flashcardOptions = [
+import { flashCardSettings } from "@/types/flashCardSettings";
+
+export const flashcardOptions: (
+  | {
+      name: keyof flashCardSettings;
+      id: string;
+      title: string;
+      default: string;
+      options?: {
+        value: string;
+        label: string;
+        inputType?: string;
+      }[];
+    }
+  | {
+      name: keyof flashCardSettings;
+      id: string;
+      title: string;
+      default: boolean;
+      options?: undefined;
+    }
+  | {
+      name: keyof flashCardSettings;
+      id: string;
+      title: string;
+      default: number;
+      options?: undefined;
+    }
+)[] = [
   {
     name: "isRandom",
     id: "flashcard.isRandom",
@@ -25,18 +53,6 @@ export const flashcardOptions = [
     options: [
       { value: "ja-en", label: "日本語→英語" },
       { value: "en-ja", label: "英語→日本語" },
-    ],
-  },
-  {
-    name: "questionCount",
-    id: "flashcard.questionCount",
-    title: "出題数",
-    default: Infinity,
-    options: [
-      { value: Infinity, label: "すべて" },
-      { value: 5, label: "5問" },
-      { value: 10, label: "10問" },
-      { value: null, label: "カスタム", inputType: "number" },
     ],
   },
 ];

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { CgMaximizeAlt } from "react-icons/cg";
 import { MdOutlineZoomInMap } from "react-icons/md";
 
-export default function HeaderRight() {
+export default function HeaderNav() {
   const [isMaximized, setIsMaximized] = useState(false);
   useEffect(() => {
     document.addEventListener("fullscreenchange", () => {
