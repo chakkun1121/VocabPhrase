@@ -18,7 +18,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { toast } from "sonner";
 import { MoreHorizontal } from "lucide-react";
 import { MdOutlineModeEdit } from "react-icons/md";
-import { PiCardsLight, PiCardsThin } from "react-icons/pi";
+import { PiCardsLight } from "react-icons/pi";
 
 type TableInfo = {
   fileId: string;
@@ -148,6 +148,16 @@ export default function FilesTable() {
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
+  if (error)
+    return (
+      <div className="text-red-500 text-center">
+        エラーが発生しました
+        <br />
+        <Button asChild>
+          <Link href="./logout?redirectTo=dashboard">再度ログインする</Link>
+        </Button>
+      </div>
+    );
   if (isLoading) return <div>Loading...</div>;
   return <DataTable columns={columns} data={recentFile} />;
 }
