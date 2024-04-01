@@ -20,6 +20,7 @@ const formSchema = z.object({
   isAnswerWithKeyboard: z.boolean(),
   removeChecked: z.boolean(),
   mode: z.enum(["ja-en", "en-ja"]),
+  efficiencyMode: z.boolean(),
 });
 export default function FlashCardHome({
   setMode,
@@ -35,6 +36,7 @@ export default function FlashCardHome({
       mode: "ja-en",
       isAnswerWithKeyboard: false,
       removeChecked: true,
+      efficiencyMode: false,
     },
   });
   function onSubmit(values: z.infer<typeof formSchema>) {

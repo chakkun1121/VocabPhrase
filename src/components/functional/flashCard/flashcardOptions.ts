@@ -55,4 +55,10 @@ export const flashcardOptions: (
       { value: "en-ja", label: "英語→日本語" },
     ],
   },
+  {
+    name: "efficiencyMode",
+    id: "flashcard.efficiencyMode",
+    title: "効率モード - 達成率の低い問題から出題する",
+    default: false,
+  },
 ];

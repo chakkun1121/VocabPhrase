@@ -30,10 +30,14 @@ export function useResultFile(fileId: string, token: string) {
       setLoading(false);
     })();
   }, [fileId, token]);
-  async function saveResults() {
+  async function saveResults(newResult?: cardResult) {
     try {
       if (resultFileId) {
-        await uploadFile(token, resultFileId, JSON.stringify(results));
+        await uploadFile(
+          token,
+          resultFileId,
+          JSON.stringify(newResult || results)
+        );
       } else {
         const newResultFileId = await fetch(
           "https://www.googleapis.com/drive/v3/files",

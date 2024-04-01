@@ -33,11 +33,13 @@ export function useCard({
       problemIdList.sort(() => Math.random() - 0.5);
     }
     // 3.achievementの値を小さい順に
-    problemIdList.sort(
-      (a, b) =>
-        (cardResult?.achievement?.[flashCardSettings.mode]?.[a] ?? 0) -
-        (cardResult?.achievement?.[flashCardSettings.mode]?.[b] ?? 0)
-    );
+    if (flashCardSettings.efficiencyMode) {
+      problemIdList.sort(
+        (a, b) =>
+          (cardResult?.achievement?.[flashCardSettings.mode]?.[a] ?? 0) -
+          (cardResult?.achievement?.[flashCardSettings.mode]?.[b] ?? 0)
+      );
+    }
     setCurrentProblemIdList(problemIdList);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileContent.content]);

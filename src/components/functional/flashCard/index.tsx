@@ -20,6 +20,8 @@ export default function Card({ fileId }: { fileId: string }) {
       isRandom: false,
       mode: "ja-en",
       isAnswerWithKeyboard: false,
+      removeChecked: true,
+      efficiencyMode: false,
     }
   );
 

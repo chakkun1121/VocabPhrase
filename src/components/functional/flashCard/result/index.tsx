@@ -49,7 +49,7 @@ export default function CardResult({
   mode: flashCardMode;
   currentResult: { [problemId: string]: boolean };
   setResults: React.Dispatch<React.SetStateAction<cardResult>>;
-  saveResults: () => void;
+  saveResults: (newResult?: cardResult) => void;
 }) {
   useEffect(() => {
     /* achievementについて
@@ -60,32 +60,31 @@ export default function CardResult({
     90以降は開けておく
     */
     // 今回分の結果を全体の結果とマージ
-    setResults(prev => {
-      return {
-        ...prev,
-        achievement: {
-          ...prev.achievement,
-          [mode]: {
-            ...prev?.achievement?.[mode],
-            ...Object.fromEntries(
-              Object.entries(currentResult).map(([key, value]) => {
-                const prevResult = prev?.achievement?.[mode]?.[key] || 0;
-                if (prevResult === 0 && value) {
-                  return [key, 90];
-                }
-                return [
-                  key,
-                  value
-                    ? Math.min(prevResult + 20, 90)
-                    : Math.max(prevResult - 10, 10),
-                ];
-              })
-            ),
-          },
+    const newResult = {
+      ...results,
+      achievement: {
+        ...results?.achievement,
+        [mode]: {
+          ...results?.achievement?.[mode],
+          ...Object.fromEntries(
+            Object.entries(currentResult).map(([key, value]) => {
+              const prevResult = results?.achievement?.[mode]?.[key] || 0;
+              if (prevResult === 0 && value) {
+                return [key, 90];
+              }
+              return [
+                key,
+                value
+                  ? Math.min(prevResult + 20, 90)
+                  : Math.max(prevResult - 10, 10),
+              ];
+            })
+          ),
         },
-      };
-    });
-    saveResults();
+      },
+    };
+    setResults(newResult);
+    saveResults(newResult);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
@@ -113,7 +112,7 @@ export default function CardResult({
               };
             }
           );
-          console.log(data);
+
           return data;
         })()}
       />
