@@ -39,12 +39,12 @@ export default function FlashCard({
   });
   useHotkeys("right,d", next);
   useHotkeys("left,a", back);
-  const handles = useSwipeable({
-    onSwipedLeft: () => next(),
-    onSwipedRight: () => back(),
-    // preventDefaultTouchmoveEvent: true,
-    // trackMouse: true,
-  });
+  // const handles = useSwipeable({
+  //   onSwipedLeft: () => next(),
+  //   onSwipedRight: () => back(),
+  //   // preventDefaultTouchmoveEvent: true,
+  //   // trackMouse: true,
+  // });
   const currentQuestion = fileContent.content.find(
     c => c.id === currentProblemIdList[questionIndex]
   );
@@ -56,7 +56,7 @@ export default function FlashCard({
       >
         終了する
       </Button>
-      <div className="h-full p-4 w-full max-w-7xl mx-auto " {...handles}>
+      <div className="h-full p-4 w-full max-w-7xl mx-auto ">
         {currentQuestion && (
           <CardMain
             currentQuestion={currentQuestion}

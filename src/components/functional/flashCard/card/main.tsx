@@ -2,7 +2,6 @@ import { fileType } from "@/types/fileType";
 import SpeechButton from "./speechButton";
 import Answer from "./answer";
 import { flashCardSettings } from "@/types/flashCardSettings";
-import { set } from "zod";
 
 export function CardMain({
   currentQuestion,

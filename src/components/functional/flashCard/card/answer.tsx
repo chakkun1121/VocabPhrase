@@ -6,6 +6,8 @@ import { flashCardSettings } from "@/types/flashCardSettings";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 export default function Answer({
   currentQuestion,
@@ -59,16 +61,54 @@ export default function Answer({
       )}
       <div className="flex items-center gap-4 w-full">
         {isShowAnswer ? (
-          <p
-            className={cn(
-              "md:text-2xl p-4 flex-1 !select-text",
-              flashCardSettings.isAnswerWithKeyboard && "text-red-500"
-            )}
-          >
-            {flashCardSettings.mode == "ja-en"
-              ? currentQuestion?.en
-              : currentQuestion?.ja}
-          </p>
+          <>
+            <p
+              className={cn(
+                "md:text-2xl p-4 flex-1 !select-text",
+                flashCardSettings.isAnswerWithKeyboard && "text-red-500"
+              )}
+            >
+              {flashCardSettings.mode == "ja-en"
+                ? currentQuestion?.en
+                : currentQuestion?.ja}
+            </p>
+            <div className="flex-none flex h-full md:text-2xl gap-0">
+              <div>
+                <input
+                  type="radio"
+                  value="true"
+                  id="correct-true"
+                  className="sr-only peer"
+                  name="correct"
+                  onChange={() => setIsRight(true)}
+                  defaultChecked={inputAnswer == currentQuestion.en}
+                />
+                <label
+                  className="w-full h-full p-4 rounded border peer-checked:bg-green-300 block"
+                  htmlFor="correct-true"
+                >
+                  ◯
+                </label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  value="false"
+                  className="sr-only peer"
+                  name="correct"
+                  onChange={() => setIsRight(false)}
+                  id="correct-false"
+                  defaultChecked={inputAnswer != currentQuestion.en}
+                />
+                <label
+                  className="w-full h-full p-4 rounded border peer-checked:bg-green-300 block"
+                  htmlFor="correct-false"
+                >
+                  ✕
+                </label>
+              </div>
+            </div>
+          </>
         ) : (
           <Button
             className="md:text-2xl w-full h-full text-center flex-1 p-4"
