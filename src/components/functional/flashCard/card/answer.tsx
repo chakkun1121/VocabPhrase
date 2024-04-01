@@ -6,8 +6,6 @@ import { flashCardSettings } from "@/types/flashCardSettings";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 
 export default function Answer({
   currentQuestion,
@@ -21,12 +19,14 @@ export default function Answer({
   const [isShowAnswer, setIsShowAnswer] = useState<boolean>(false);
   const [inputAnswer, setInputAnswer] = useState<string>(""); // キーボードで解答するときの入力値
   useHotkeys("space", () => setIsShowAnswer(true));
-  function answer() {
+  const answer =
+    currentQuestion?.[flashCardSettings.mode == "ja-en" ? "en" : "ja"];
+  function showAnswer() {
     if (isShowAnswer || !flashCardSettings.isAnswerWithKeyboard) return;
     setIsShowAnswer(true);
-    inputAnswer == currentQuestion?.ja ? setIsRight(true) : setIsRight(false);
+    setInputAnswer((inputAnswer === answer).toString());
   }
-  useHotkeys("ctrl+enter", answer, {
+  useHotkeys("ctrl+enter", showAnswer, {
     enabled: flashCardSettings.isAnswerWithKeyboard,
     enableOnFormTags: true,
   });
@@ -81,7 +81,10 @@ export default function Answer({
                   className="sr-only peer"
                   name="correct"
                   onChange={() => setIsRight(true)}
-                  defaultChecked={inputAnswer == currentQuestion.en}
+                  defaultChecked={
+                    flashCardSettings.isAnswerWithKeyboard &&
+                    inputAnswer == answer
+                  }
                 />
                 <label
                   className="w-full h-full p-4 rounded border peer-checked:bg-green-300 block"
@@ -98,7 +101,10 @@ export default function Answer({
                   name="correct"
                   onChange={() => setIsRight(false)}
                   id="correct-false"
-                  defaultChecked={inputAnswer != currentQuestion.en}
+                  defaultChecked={
+                    flashCardSettings.isAnswerWithKeyboard &&
+                    inputAnswer != answer
+                  }
                 />
                 <label
                   className="w-full h-full p-4 rounded border peer-checked:bg-green-300 block"

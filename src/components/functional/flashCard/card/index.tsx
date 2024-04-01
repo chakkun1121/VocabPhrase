@@ -1,14 +1,13 @@
 import { fileType } from "@/types/fileType";
 import { flashCardSettings } from "@/types/flashCardSettings";
 import { useHotkeys } from "react-hotkeys-hook";
-import { useSwipeable } from "react-swipeable";
 import { CardMain } from "./main";
 import { cardResult } from "@/types/cardResult";
 import { useDisableSwiping } from "@/common/hooks/useDisableSwiping";
 import { useCard } from "./useCard";
 import ProgressBar from "@/components/ui-elements/ProgressBar";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect } from "react";
 
 export default function FlashCard({
   fileContent,
@@ -48,6 +47,16 @@ export default function FlashCard({
   const currentQuestion = fileContent.content.find(
     c => c.id === currentProblemIdList[questionIndex]
   );
+  useEffect(() => {
+    currentQuestion &&
+      setCurrentResult(prev => {
+        return {
+          ...prev,
+          [currentQuestion?.id]: false,
+        };
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentQuestion]);
   return (
     <>
       <Button
