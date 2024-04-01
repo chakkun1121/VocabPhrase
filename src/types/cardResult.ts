@@ -4,7 +4,7 @@ export type cardResult = {
     id: string;
   };
 
-  achievement: {
+  achievement?: {
     //達成度
     // 0: まだ一度もやっていない(ここで正解したら90へ)
     // 10 : 一回はやった(正解する事に+20)

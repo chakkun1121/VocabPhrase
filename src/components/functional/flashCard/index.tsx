@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { flashCardSettings } from "@/types/flashCardSettings";
 import FlashCard from "./card";
-import CardResult from "./result/cardResult";
+import CardResult from "./result";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import FlashCardHome from "./home/flashCardHome";
 import { useFile } from "@/googledrive/useFile";
@@ -40,7 +40,6 @@ export default function Card({ fileId }: { fileId: string }) {
   const [currentResult, setCurrentResult] = useState<{
     [problemId: string]: boolean;
   }>({});
-  console.log(currentResult);
   const loading = fileLoading || resultLoading;
   useLeavePageConfirmation(mode == "cards" || savingResults);
   useDocumentTitle(
@@ -66,7 +65,6 @@ export default function Card({ fileId }: { fileId: string }) {
                   flashCardSettings={flashCardSettings}
                   setMode={setMode}
                   cardResult={results}
-                  setResults={setResults}
                   setCurrentResult={setCurrentResult}
                   setFileContent={setFileContent}
                 />
@@ -77,6 +75,7 @@ export default function Card({ fileId }: { fileId: string }) {
                   fileContent={fileContent}
                   mode={flashCardSettings.mode}
                   currentResult={currentResult}
+                  setResults={setResults}
                   saveResults={saveResults}
                 />
               )}

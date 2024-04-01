@@ -6,11 +6,6 @@ import { cardResult } from "@/types/cardResult";
 export function useResultFile(fileId: string, token: string) {
   const [results, setResults] = useState<cardResult>({
     fileInfo: { id: fileId },
-    check: {
-      ["en-ja"]: [],
-      ["ja-en"]: [],
-    },
-    results: [],
   });
   const [resultFileId, setResultFileId] = useState<string | undefined>(); // resultsのファイルID
   const [savingResults, setSavingResults] = useState(false);
@@ -25,7 +20,7 @@ export function useResultFile(fileId: string, token: string) {
         undefined,
         undefined,
         "spaces=appDataFolder"
-      ).then(r => r.files[0]);
+      ).then(r => r.files?.[0]);
       if (resultFile) {
         setResultFileId(resultFile.id);
         setResults(

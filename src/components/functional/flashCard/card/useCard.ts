@@ -8,13 +8,11 @@ export function useCard({
   flashCardSettings,
   setMode,
   cardResult,
-  setResults,
 }: {
   fileContent: fileType;
   flashCardSettings: flashCardSettings;
   setMode: (mode: "home" | "cards" | "result") => void;
   cardResult: cardResult;
-  setResults: React.Dispatch<React.SetStateAction<cardResult>>;
 }) {
   // 出題順
   const [currentProblemIdList, setCurrentProblemIdList] = useState<string[]>(

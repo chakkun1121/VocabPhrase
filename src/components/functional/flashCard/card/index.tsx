@@ -14,7 +14,6 @@ export default function FlashCard({
   flashCardSettings,
   setMode,
   cardResult,
-  setResults,
   setCurrentResult,
   setFileContent,
 }: {
@@ -22,7 +21,6 @@ export default function FlashCard({
   flashCardSettings: flashCardSettings;
   setMode: (mode: "home" | "cards" | "result") => void;
   cardResult: cardResult;
-  setResults: React.Dispatch<React.SetStateAction<cardResult>>;
   setCurrentResult: React.Dispatch<
     React.SetStateAction<{ [problemId: string]: boolean }>
   >;
@@ -34,7 +32,6 @@ export default function FlashCard({
     flashCardSettings,
     setMode,
     cardResult,
-    setResults,
   });
   useHotkeys("right,d", next);
   useHotkeys("left,a", back);
