@@ -12,6 +12,7 @@ import Loading from "@/components/ui-elements/loading";
 import { fileType } from "@/types/fileType";
 import { toast } from "sonner";
 import Error from "@/app/error";
+import { set } from "zod";
 
 export default function Card({
   fileId,
@@ -58,6 +59,30 @@ export default function Card({
       toast.error(resultError.message);
     }
   }, [fileError, resultError]);
+  useEffect(() => {
+    // resultsのcheckは達成率80として保存
+    if (results && results.check) {
+      const newResults = { ...results };
+      newResults.achievement = newResults.achievement || {};
+      if (!newResults.check) return;
+      function setAchievement(mode: "en-ja" | "ja-en") {
+        if (!newResults.check?.[mode]) return;
+        newResults.achievement![mode] = {};
+        newResults.check[mode]?.forEach(id => {
+          newResults.achievement![mode]![id] = 80;
+        });
+      }
+      setAchievement("en-ja");
+      setAchievement("ja-en");
+      // checkを削除
+      delete newResults.check;
+      console.log("newResults: ", newResults);
+      setResults(newResults);
+      saveResults(newResults);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resultLoading]);
+
   if (fileError || resultError)
     return <Error error={fileError || resultError} />;
   return (

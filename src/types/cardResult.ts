@@ -3,7 +3,11 @@ export type cardResult = {
   fileInfo: {
     id: string;
   };
-
+  check?: {
+    //古いやつ
+    ["en-ja"]?: string[]; //チェック済みのカードのID 英語→日本語
+    ["ja-en"]?: string[]; //チェック済みのカードのID 日本語→英語
+  };
   achievement?: {
     //達成度
     // 0: まだ一度もやっていない(ここで正解したら90へ)
