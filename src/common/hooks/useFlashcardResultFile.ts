@@ -6,39 +6,44 @@ import { cardResult } from "@/types/cardResult";
 export function useResultFile(fileId: string, token: string) {
   const [results, setResults] = useState<cardResult>({
     fileInfo: { id: fileId },
-    check: {
-      ["en-ja"]: [],
-      ["ja-en"]: [],
-    },
-    results: [],
   });
   const [resultFileId, setResultFileId] = useState<string | undefined>(); // resultsのファイルID
   const [savingResults, setSavingResults] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<any | undefined>(undefined);
   useEffect(() => {
-    if (!token || !fileId) return;
-    (async () => {
-      setLoading(true);
-      const resultFile = await listFiles(
-        token,
-        "name='" + fileId + ".json'",
-        undefined,
-        undefined,
-        "spaces=appDataFolder"
-      ).then(r => r.files[0]);
-      if (resultFile) {
-        setResultFileId(resultFile.id);
-        setResults(
-          JSON.parse((await getFileContent(token, resultFile.id)) || "{}")
-        );
-      }
-      setLoading(false);
-    })();
+    try {
+      if (!token || !fileId) return;
+      (async () => {
+        setLoading(true);
+        const resultFile = await listFiles(
+          token,
+          "name='" + fileId + ".json'",
+          undefined,
+          undefined,
+          "spaces=appDataFolder"
+        ).then(r => r.files?.[0]);
+        if (resultFile) {
+          setResultFileId(resultFile.id);
+          setResults(
+            JSON.parse((await getFileContent(token, resultFile.id)) || "{}")
+          );
+        }
+        setLoading(false);
+      })();
+    } catch (e) {
+      console.error(e);
+      setError(e);
+    }
   }, [fileId, token]);
-  async function saveResults() {
+  async function saveResults(newResult?: cardResult) {
     try {
       if (resultFileId) {
-        await uploadFile(token, resultFileId, JSON.stringify(results));
+        await uploadFile(
+          token,
+          resultFileId,
+          JSON.stringify(newResult || results)
+        );
       } else {
         const newResultFileId = await fetch(
           "https://www.googleapis.com/drive/v3/files",
@@ -62,7 +67,8 @@ export function useResultFile(fileId: string, token: string) {
       setSavingResults(false);
     } catch (e) {
       console.error(e);
+      setError(e);
     }
   }
-  return { results, setResults, savingResults, saveResults, loading };
+  return { results, setResults, savingResults, saveResults, loading, error };
 }

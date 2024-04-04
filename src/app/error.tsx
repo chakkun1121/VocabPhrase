@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { useEffect } from "react";
 import { CONTACT_FORM_ERROR, CONTACT_FORM_URL } from "./[lang]/meta";
+import { Button } from "@/components/ui/button";
 
 export default function Error({
   error,
   reset,
 }: {
   error: Error & { digest?: string };
-  reset: () => void;
+  reset?: () => void;
 }) {
   useEffect(() => {
     // Log the error to an error reporting service
@@ -17,28 +18,26 @@ export default function Error({
   }, [error]);
 
   return (
-    <div>
-      <h2>エラーが発生しました。</h2>
-      <div className="">
-        <p>
-          <Link
-            href={
-              CONTACT_FORM_URL?.replace(
-                "{{content}}",
-                CONTACT_FORM_ERROR
-              ).replace("{{error}}", error.message) || ""
-            }
-            target="_blank"
-          >
-            お問い合わせフォーム
-          </Link>
-        </p>
-        <p>
-          <Link href="/logout?redirectTo=/login?redirectTo=app">
-            ログインし直す
-          </Link>
-        </p>
-      </div>
+    <div className="text-center">
+      <h2 className="text-2xl text-red-500">エラーが発生しました。</h2>
+      {/* <p>
+        <Link
+          href={
+            CONTACT_FORM_URL?.replace(
+              "{{content}}",
+              CONTACT_FORM_ERROR
+            ).replace("{{error}}", error.message) || ""
+          }
+          target="_blank"
+        >
+          お問い合わせフォーム
+        </Link>
+      </p> */}
+      <Button asChild>
+        <Link href="/logout?redirectTo=/login?redirectTo=dashboard">
+          ログインし直す
+        </Link>
+      </Button>
     </div>
   );
 }

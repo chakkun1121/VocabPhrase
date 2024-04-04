@@ -1,12 +1,14 @@
-import { flashCardMode } from "./flashCardSettings";
-
 // 保存するファイル名は result/<本体のファイルID>.jsonとすること
 export type cardResult = {
   fileInfo: {
     id: string;
   };
-
-  achievement: {
+  check?: {
+    //古いやつ
+    ["en-ja"]?: string[]; //チェック済みのカードのID 英語→日本語
+    ["ja-en"]?: string[]; //チェック済みのカードのID 日本語→英語
+  };
+  achievement?: {
     //達成度
     // 0: まだ一度もやっていない(ここで正解したら90へ)
     // 10 : 一回はやった(正解する事に+20)
