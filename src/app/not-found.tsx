@@ -4,7 +4,7 @@ export default function NotFound() {
   return (
     <>
       <Header />
-      <div className="text-center mt-20">Not Found</div>
+      <div className="text-center">Not Found</div>
     </>
   );
 }

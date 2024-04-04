@@ -20,7 +20,6 @@ export default async function Layout({
             {t("top:header")}
           </Link>
         }
-        className="opacity-80 backdrop-blur-3xl"
       />
       <main className="!select-text pt-20">{children}</main>{" "}
       <Footer lang={lang} />

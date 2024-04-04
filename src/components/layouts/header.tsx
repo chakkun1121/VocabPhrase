@@ -13,7 +13,7 @@ export default function Header({
   return (
     <header
       className={cn(
-        "flex px-4 flex-none bg-primary-200 h-20 fixed top-0 z-10 inset-x-0 shadow",
+        "flex px-4 flex-none bg-primary-200 h-20 fixed top-0 z-10 inset-x-0 shadow opacity-80 backdrop-blur-3xl",
         className
       )}
     >
