@@ -8,6 +8,6 @@ export default function Layout({
   params: { fileId: string };
   children: ReactNode;
 }) {
-  if (fileId.length !== 33) notFound();
-  return <>{children}</>;
+  if (fileId.length !== 33) return notFound();
+  return children;
 }
