@@ -28,7 +28,6 @@ export default function EditMenu({
   setFileContent: React.Dispatch<React.SetStateAction<fileType>>;
   readOnly: boolean;
 }) {
-  const [isShowImportBox, setIsShowImportBox] = useState(false);
   return (
     <div className="flex flex-col p-4 gap-4">
       <div className="flex-none flex gap-4 p-2">
