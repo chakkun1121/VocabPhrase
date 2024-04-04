@@ -6,6 +6,15 @@ import  withPlugins from "next-compose-plugins";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
+  redirects: async () => {
+    return [
+      {
+        source: "/app",
+        destination: "/dashboard",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 const withPWA = nextPWA({
