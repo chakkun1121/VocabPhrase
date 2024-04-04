@@ -11,10 +11,10 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <Header
-        className="hidden md:flex"
+        className="flex"
         rightContent={<Link href="/dashboard">ダッシュボード</Link>}
       />
-      <div className="h-20 hidden md:flex" />
+      <div className="h-20 flex" />
       {children}
     </>
   );

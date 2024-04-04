@@ -59,7 +59,7 @@ export default function Answer({
           )}
         </>
       )}
-      <div className="flex items-center gap-4 w-full">
+      <div className="flex md:items-center gap-4 w-full flex-col md:flex-row">
         {isShowAnswer ? (
           <>
             <p
@@ -72,7 +72,7 @@ export default function Answer({
                 ? currentQuestion?.en
                 : currentQuestion?.ja}
             </p>
-            <div className="flex-none flex h-full md:text-2xl gap-0">
+            <div className="flex-none flex md:text-2xl gap-0 content-center md:content-none">
               <div>
                 <input
                   type="radio"
@@ -113,6 +113,9 @@ export default function Answer({
                   ✕
                 </label>
               </div>
+              {flashCardSettings.mode == "ja-en" && (
+                <SpeechButton text={currentQuestion?.en} />
+              )}
             </div>
           </>
         ) : (
@@ -122,9 +125,6 @@ export default function Answer({
           >
             {flashCardSettings.isAnswerWithKeyboard ? "解答する" : "答えを見る"}
           </Button>
-        )}
-        {flashCardSettings.mode == "ja-en" && (
-          <SpeechButton text={currentQuestion?.en} />
         )}
       </div>
     </>
