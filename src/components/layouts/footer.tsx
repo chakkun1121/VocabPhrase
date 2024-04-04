@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CONTACT_FORM_URL } from "@/app/[lang]/meta";
+import { CONTACT_FORM_URL } from "@/app/meta";
 import { getTranslation } from "@/app/i18n/server";
 
 export default async function Footer({ lang }: { lang: string }) {

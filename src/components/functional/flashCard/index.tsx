@@ -12,7 +12,6 @@ import Loading from "@/components/ui-elements/loading";
 import { fileType } from "@/types/fileType";
 import { toast } from "sonner";
 import Error from "@/app/error";
-import { set } from "zod";
 
 export default function Card({
   fileId,
