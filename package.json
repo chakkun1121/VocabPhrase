@@ -53,6 +53,7 @@
     "recoil": "^0.7.7",
     "recoil-persist": "^5.1.0",
     "remark-gfm": "^4.0.0",
+    "sharp": "^0.33.3",
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
