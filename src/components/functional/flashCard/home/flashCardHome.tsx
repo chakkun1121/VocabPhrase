@@ -14,11 +14,11 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { defaultFlashCardSettings } from "..";
 
 const formSchema = z.object({
   isRandom: z.boolean(),
   isAnswerWithKeyboard: z.boolean(),
-  removeChecked: z.boolean(),
   mode: z.enum(["ja-en", "en-ja"]),
   efficiencyMode: z.boolean(),
 });
@@ -31,13 +31,7 @@ export default function FlashCardHome({
 }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      isRandom: false,
-      mode: "ja-en",
-      isAnswerWithKeyboard: false,
-      removeChecked: true,
-      efficiencyMode: false,
-    },
+    defaultValues: defaultFlashCardSettings,
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);

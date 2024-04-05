@@ -40,12 +40,6 @@ export const flashcardOptions: (
     default: false,
   },
   {
-    name: "removeChecked",
-    id: "flashcard.removeChecked",
-    title: "チェック済みの問題を除外する",
-    default: true,
-  },
-  {
     name: "mode",
     id: "flashcard.mode",
     title: "出題モード",

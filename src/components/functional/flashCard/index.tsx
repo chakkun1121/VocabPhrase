@@ -28,13 +28,7 @@ export default function Card({
 }) {
   const [mode, setMode] = useState<"home" | "cards" | "result">("home");
   const [flashCardSettings, setFlashCardSettings] = useState<flashCardSettings>(
-    {
-      isRandom: false,
-      mode: "ja-en",
-      isAnswerWithKeyboard: false,
-      removeChecked: true,
-      efficiencyMode: false,
-    }
+    defaultFlashCardSettings
   );
   const token = useToken();
   const {
@@ -125,3 +119,9 @@ export default function Card({
     </>
   );
 }
+export const defaultFlashCardSettings: flashCardSettings = {
+  isRandom: true,
+  mode: "ja-en",
+  isAnswerWithKeyboard: false,
+  efficiencyMode: true,
+};
