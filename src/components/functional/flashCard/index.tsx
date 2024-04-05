@@ -98,6 +98,7 @@ export default function Card({
                   flashCardSettings={flashCardSettings}
                   setMode={setMode}
                   cardResult={results}
+                  currentResult={currentResult}
                   setCurrentResult={setCurrentResult}
                   setFileContent={setFileContent}
                 />

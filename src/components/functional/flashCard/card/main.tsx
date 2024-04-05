@@ -6,14 +6,17 @@ import { flashCardSettings } from "@/types/flashCardSettings";
 export function CardMain({
   currentQuestion,
   flashCardSettings,
+  currentResult,
   setCurrentResult,
 }: {
   currentQuestion: fileType["content"][0];
   flashCardSettings: flashCardSettings;
+  currentResult: { [problemId: string]: boolean };
   setCurrentResult: React.Dispatch<
     React.SetStateAction<{ [problemId: string]: boolean }>
   >;
 }) {
+  const isRight = (currentResult[currentQuestion.id] ?? false) as boolean;
   function setIsRight(r: boolean) {
     setCurrentResult(prev => {
       return {
@@ -38,6 +41,7 @@ export function CardMain({
         <Answer
           currentQuestion={currentQuestion}
           flashCardSettings={flashCardSettings}
+          isRight={isRight}
           setIsRight={setIsRight}
         />
       </div>

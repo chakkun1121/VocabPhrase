@@ -1,5 +1,5 @@
 import { fileType } from "@/types/fileType";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SpeechButton from "./speechButton";
 import { useHotkeys } from "react-hotkeys-hook";
 import { flashCardSettings } from "@/types/flashCardSettings";
@@ -10,10 +10,12 @@ import { cn } from "@/lib/utils";
 export default function Answer({
   currentQuestion,
   flashCardSettings,
+  isRight,
   setIsRight,
 }: {
   currentQuestion: fileType["content"][0];
   flashCardSettings: flashCardSettings;
+  isRight: boolean;
   setIsRight: (r: boolean) => void;
 }) {
   const [isShowAnswer, setIsShowAnswer] = useState<boolean>(false);
@@ -30,6 +32,15 @@ export default function Answer({
     enabled: flashCardSettings.isAnswerWithKeyboard,
     enableOnFormTags: true,
   });
+  useHotkeys("c", () => setIsRight(true), {
+    enabled: isShowAnswer && !flashCardSettings.isAnswerWithKeyboard,
+  });
+  useEffect(() => {
+    if (isShowAnswer && flashCardSettings.isAnswerWithKeyboard) {
+      setInputAnswer(answer);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [answer, isShowAnswer]);
   return (
     <>
       {flashCardSettings.isAnswerWithKeyboard && (
@@ -81,10 +92,7 @@ export default function Answer({
                   className="sr-only peer"
                   name="correct"
                   onChange={() => setIsRight(true)}
-                  defaultChecked={
-                    flashCardSettings.isAnswerWithKeyboard &&
-                    inputAnswer == answer
-                  }
+                  checked={isRight}
                 />
                 <label
                   className="w-full h-full p-4 rounded border peer-checked:bg-green-300 block"
@@ -101,10 +109,7 @@ export default function Answer({
                   name="correct"
                   onChange={() => setIsRight(false)}
                   id="correct-false"
-                  defaultChecked={
-                    flashCardSettings.isAnswerWithKeyboard &&
-                    inputAnswer != answer
-                  }
+                  checked={!isRight}
                 />
                 <label
                   className="w-full h-full p-4 rounded border peer-checked:bg-green-300 block"

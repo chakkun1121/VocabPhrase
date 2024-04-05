@@ -14,6 +14,7 @@ export default function FlashCard({
   flashCardSettings,
   setMode,
   cardResult,
+  currentResult,
   setCurrentResult,
   setFileContent,
 }: {
@@ -21,6 +22,7 @@ export default function FlashCard({
   flashCardSettings: flashCardSettings;
   setMode: (mode: "home" | "cards" | "result") => void;
   cardResult: cardResult;
+  currentResult: { [problemId: string]: boolean };
   setCurrentResult: React.Dispatch<
     React.SetStateAction<{ [problemId: string]: boolean }>
   >;
@@ -68,6 +70,7 @@ export default function FlashCard({
             currentQuestion={currentQuestion}
             key={currentQuestion?.id}
             flashCardSettings={flashCardSettings}
+            currentResult={currentResult}
             setCurrentResult={setCurrentResult}
           />
         )}
