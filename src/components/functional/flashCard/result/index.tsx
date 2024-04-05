@@ -3,6 +3,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { cardResult } from "@/types/cardResult";
 import { fileType } from "@/types/fileType";
 import { flashCardMode } from "@/types/flashCardSettings";
+import { CaretSortIcon } from "@radix-ui/react-icons";
 import { ColumnDef } from "@tanstack/react-table";
 import { useEffect } from "react";
 type ShowResult = {
@@ -16,7 +17,17 @@ type ShowResult = {
 const columns: ColumnDef<ShowResult>[] = [
   {
     accessorKey: "index",
-    header: "No.",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          No.
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "question",
@@ -24,11 +35,21 @@ const columns: ColumnDef<ShowResult>[] = [
   },
   {
     accessorKey: "answer",
-    header: "答え",
+    header: "解答",
   },
   {
     accessorKey: "result",
-    header: "正誤",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          正誤
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) =>
       (() => {
         switch (row.getValue("result")) {
@@ -43,7 +64,17 @@ const columns: ColumnDef<ShowResult>[] = [
   },
   {
     accessorKey: "achievement",
-    header: "達成度",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          達成度
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
 ];
 export default function CardResult({
