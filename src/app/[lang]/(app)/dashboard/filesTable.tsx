@@ -50,6 +50,9 @@ export default function FilesTable() {
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       ),
+      cell: ({ row }) => (
+        <Link href={`./${row.original.fileId}`}>{row.original.title}</Link>
+      ),
     },
     {
       id: "lastModified",

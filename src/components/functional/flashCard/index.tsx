@@ -12,6 +12,7 @@ import Loading from "@/components/ui-elements/loading";
 import { fileType } from "@/types/fileType";
 import { toast } from "sonner";
 import Error from "@/app/error";
+import { cn } from "@/lib/utils";
 
 export default function Card({
   fileId,
@@ -19,12 +20,14 @@ export default function Card({
   fileLoading,
   setFileContent,
   fileError,
+  className,
 }: {
   fileId: string;
   fileContent?: fileType;
   fileLoading: boolean;
   setFileContent?: (content: fileType) => void;
   fileError?: Error | null;
+  className?: string;
 }) {
   const [mode, setMode] = useState<"home" | "cards" | "result">("home");
   const [flashCardSettings, setFlashCardSettings] = useState<flashCardSettings>(
@@ -80,7 +83,7 @@ export default function Card({
     return <Error error={fileError || resultError} />;
   return (
     <>
-      <main className="h-full">
+      <main className={cn("h-full", className)}>
         {loading ? (
           <Loading />
         ) : (
