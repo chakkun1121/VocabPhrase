@@ -1,5 +1,5 @@
 import { fileType } from "@/types/fileType";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SpeechButton from "./speechButton";
 import { useHotkeys } from "react-hotkeys-hook";
 import { flashCardSettings } from "@/types/flashCardSettings";
