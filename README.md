@@ -2,4 +2,4 @@
 
 VocabPhraseとは英文、英単語専用のwebで使える単語帳アプリです。
 
-![](/public/ogp.png)
+![](/public/ogp.webp)

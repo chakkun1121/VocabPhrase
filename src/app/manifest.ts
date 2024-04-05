@@ -18,7 +18,7 @@ export default function manifest(): MetadataRoute.Manifest {
     display: "standalone",
     screenshots: [
       {
-        src: "/ogp.png",
+        src: "/ogp.webp",
         sizes: "1366x768",
         type: "image/png",
       },

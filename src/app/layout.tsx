@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     siteName: APP_SHORT_TITLE,
     images: [
       {
-        url: "https://vocab-phrase.vercel.app/ogp.png",
+        url: "https://vocab-phrase.vercel.app/ogp.webp",
         width: 1200,
         height: 630,
         alt: "VocabPhrase",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@chakkun1121",
     creator: "@chakkun1121",
-    images: "https://vocab-phrase.vercel.app/ogp.png",
+    images: "https://vocab-phrase.vercel.app/ogp.webp",
   },
   verification: {
     google: GOOGLE_VERIFICATION,
