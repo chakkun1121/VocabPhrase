@@ -29,7 +29,17 @@ const columns: ColumnDef<ShowResult>[] = [
   {
     accessorKey: "result",
     header: "正誤",
-    cell: ({ row }) => (row.getValue("result") ? "○" : "×"),
+    cell: ({ row }) =>
+      (() => {
+        switch (row.getValue("result")) {
+          case true:
+            return "○";
+          case false:
+            return "✕";
+          default:
+            return "-";
+        }
+      })(),
   },
   {
     accessorKey: "achievement",
@@ -95,22 +105,33 @@ export default function CardResult({
       <DataTable
         columns={columns}
         data={(() => {
-          const data: ShowResult[] = Object.entries(currentResult).map(
-            ([key, value], index) => {
-              const currentContent = fileContent.content.find(
-                content => content.id === key
-              );
+          const data: ShowResult[] = fileContent.content.map(
+            (content, index) => {
               return {
-                id: key,
+                id: content.id,
                 index: index + 1,
-                question:
-                  mode == "en-ja" ? currentContent?.en : currentContent?.ja,
-                answer:
-                  mode == "en-ja" ? currentContent?.ja : currentContent?.en,
-                result: value,
-                achievement: results?.achievement?.[mode]?.[key] || 0,
+                question: mode == "en-ja" ? content.en : content.ja,
+                answer: mode == "en-ja" ? content.ja : content.en,
+                result: currentResult[content.id],
+                achievement: results?.achievement?.[mode]?.[content.id] || 0,
               };
             }
+            // Object.entries(currentResult).map(
+            // ([key, value], index) => {
+            //   const currentContent = fileContent.content.find(
+            //     content => content.id === key
+            //   );
+            //   return {
+            //     id: key,
+            //     index: index + 1,
+            //     question:
+            //       mode == "en-ja" ? currentContent?.en : currentContent?.ja,
+            //     answer:
+            //       mode == "en-ja" ? currentContent?.ja : currentContent?.en,
+            //     result: value,
+            //     achievement: results?.achievement?.[mode]?.[key] || 0,
+            //   };
+            // }
           );
 
           return data;
