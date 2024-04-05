@@ -26,7 +26,7 @@ export default function Answer({
   function showAnswer() {
     if (isShowAnswer || !flashCardSettings.isAnswerWithKeyboard) return;
     setIsShowAnswer(true);
-    setInputAnswer((inputAnswer === answer).toString());
+    setIsRight(inputAnswer === answer);
   }
   useHotkeys("ctrl+enter", showAnswer, {
     enabled: flashCardSettings.isAnswerWithKeyboard,
@@ -35,12 +35,7 @@ export default function Answer({
   useHotkeys("c", () => setIsRight(true), {
     enabled: isShowAnswer && !flashCardSettings.isAnswerWithKeyboard,
   });
-  useEffect(() => {
-    if (isShowAnswer && flashCardSettings.isAnswerWithKeyboard) {
-      setInputAnswer(answer);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [answer, isShowAnswer]);
+
   return (
     <>
       {flashCardSettings.isAnswerWithKeyboard && (

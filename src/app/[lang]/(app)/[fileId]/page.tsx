@@ -100,7 +100,7 @@ export default function Page({
                 <DialogTitle>フラッシュカード</DialogTitle>
               </DialogHeader>
               <Card
-                className="flex-1"
+                className="flex-1 overflow-y-scroll"
                 fileId={fileId}
                 fileContent={fileContent}
                 fileLoading={loading}
