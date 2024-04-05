@@ -21,6 +21,7 @@ import { MdOutlineModeEdit } from "react-icons/md";
 import { PiCardsLight } from "react-icons/pi";
 import Error from "@/app/error";
 import { RiSpeakLine } from "react-icons/ri";
+import { DataTablePagination } from "@/components/ui/data-table/pagination";
 
 type TableInfo = {
   fileId: string;

@@ -29,9 +29,9 @@ export default function CreateFile({
       })
         .then(res => res.json())
         .then(file => file.id);
-      router.push(`./${fileId}`);
+      router.replace(`/${fileId}/edit`);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [folderId, token]);
-  return <></>;
+  return null;
 }
