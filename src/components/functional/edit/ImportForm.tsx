@@ -102,7 +102,7 @@ export default function ImportForm({
                 その他ファイルからのインポート
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent side="top">
               <DropdownMenuLabel onClick={uploadWayakuFile}>
                 和訳ファイル(.wayaku)
               </DropdownMenuLabel>

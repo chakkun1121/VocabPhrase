@@ -2,27 +2,34 @@
 
 import { fileType } from "@/types/fileType";
 import React from "react";
-import EditMenu from "./EditMenu";
+import EditMenu from "./editMenu";
 import { useHotkeys } from "react-hotkeys-hook";
-import { useDocumentTitle } from "@uidotdev/usehooks";
 import EditHeader from "./editHeader";
-import { useFile } from "@/googledrive/useFile";
 import { removeExtension } from "@/common/library/removeExtension";
 import { useToken } from "@/common/hooks/useToken";
-export default function FileMenu({ fileId }: { fileId: string }) {
-  const token = useToken();
-  const {
-    title,
-    setTitle,
-    fileContent,
-    setFileContent,
-    loading,
-    saving,
-    saveFileContent,
-    saveFileInfo,
-    readOnly,
-  } = useFile(token, fileId);
-
+export default function FileMenu({
+  fileId,
+  title,
+  setTitle,
+  fileContent,
+  setFileContent,
+  loading,
+  saving,
+  saveFileContent,
+  saveFileInfo,
+  readOnly,
+}: {
+  fileId: string;
+  title: string;
+  fileContent: fileType | undefined;
+  setFileContent: React.Dispatch<React.SetStateAction<fileType>>;
+  loading: boolean;
+  saving: boolean;
+  saveFileContent: () => void;
+  saveFileInfo: () => void;
+  setTitle: React.Dispatch<React.SetStateAction<string>>;
+  readOnly: boolean;
+}) {
   useHotkeys(
     "ctrl+s",
     () => {
@@ -34,14 +41,8 @@ export default function FileMenu({ fileId }: { fileId: string }) {
       preventDefault: true,
     }
   );
-  useDocumentTitle(
-    title
-      ? `${title
-          .split(".")
-          .slice(0, -1)
-          .join(".")} | 編集ページ | vocabphrase | chakkun1121`
-      : "アプリ | vocabphrase | chakkun1121 "
-  );
+  const token = useToken();
+
   if (loading) return <div className="text-center p-4">loading...</div>;
   if (!loading && !fileContent)
     return (
@@ -59,6 +60,7 @@ export default function FileMenu({ fileId }: { fileId: string }) {
         saveFileContent={saveFileContent}
         saveFileInfo={saveFileInfo}
         readOnly={readOnly}
+        token={token}
       />
       <EditMenu
         key={fileId}

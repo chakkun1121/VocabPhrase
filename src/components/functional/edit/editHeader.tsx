@@ -3,10 +3,8 @@ import { deleteFile, listFiles } from "@/googledrive";
 import { sendGAEvent } from "@next/third-parties/google";
 import { useRouter } from "next/navigation";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import { IoSaveOutline, IoPrintOutline, IoAddOutline } from "react-icons/io5";
-import { PiCardsThin } from "react-icons/pi";
+import { IoSaveOutline, IoAddOutline } from "react-icons/io5";
 import { uuidv7 as createUUID } from "uuidv7";
-import { RiSpeakLine } from "react-icons/ri";
 import { useToken } from "@/common/hooks/useToken";
 import {
   DropdownMenu,
@@ -24,6 +22,7 @@ export default function EditHeader({
   saveFileContent,
   saveFileInfo,
   readOnly,
+  token,
 }: {
   fileId: string;
   fileContent: fileType;
@@ -32,9 +31,9 @@ export default function EditHeader({
   saveFileContent: () => void;
   saveFileInfo: () => void;
   readOnly: boolean;
+  token: string;
 }) {
   const router = useRouter();
-  const token = useToken();
   return (
     <nav className="flex justify-between items-center p-4">
       <div className="flex gap-4">
@@ -84,61 +83,6 @@ export default function EditHeader({
             </Button>
           </>
         )}
-        <Button
-          asChild
-          variant="outline"
-          disabled={fileContent?.content?.length == 0}
-        >
-          <a
-            className="flex items-center gap-2"
-            href="./print"
-            target="_blank"
-            title={
-              fileContent?.content?.length === 0
-                ? "コンテンツがない状態ではフラッシュカードを利用できません。"
-                : undefined
-            }
-          >
-            <IoPrintOutline />
-            <span className="hidden md:inline-block">印刷する</span>
-          </a>
-        </Button>
-        <Button
-          asChild
-          variant="outline"
-          disabled={fileContent?.content?.length == 0}
-        >
-          <a
-            className="flex items-center gap-2"
-            href="./flashCard"
-            title={
-              fileContent?.content?.length === 0
-                ? "コンテンツがない状態ではフラッシュカードを利用できません。"
-                : undefined
-            }
-          >
-            <PiCardsThin />
-            <span className="hidden md:inline-block">フラッシュカード</span>
-          </a>
-        </Button>
-        <Button
-          asChild
-          variant="outline"
-          disabled={fileContent?.content?.length == 0}
-        >
-          <a
-            className="flex items-center gap-2"
-            href="./speaking"
-            title={
-              fileContent?.content?.length === 0
-                ? "コンテンツがない状態ではスピーキング練習機能を利用できません。"
-                : undefined
-            }
-          >
-            <RiSpeakLine />
-            <span className="hidden md:inline-block">スピーキング練習</span>
-          </a>
-        </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="p-0 aspect-square">
