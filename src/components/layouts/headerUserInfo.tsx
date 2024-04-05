@@ -21,7 +21,7 @@ export function HeaderUserInfo() {
         <NavigationMenuItem>
           <NavigationMenuTrigger className="flex items-center gap-2 h-full">
             <Avatar>
-              <AvatarImage src={session?.user?.image} />
+              <AvatarImage src={session?.user?.image || ""} />
               <AvatarFallback>{session?.user?.name}</AvatarFallback>
             </Avatar>
             <p className="text-xl">{session?.user?.name}</p>
