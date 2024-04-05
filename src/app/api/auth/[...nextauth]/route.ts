@@ -1,6 +1,5 @@
 import NextAuth, { Session } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { customSession } from "../../../../types/customSession";
 
 const handler = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
@@ -12,10 +11,17 @@ const handler = NextAuth({
         params: {
           scope: [
             "openid",
+            "https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.googleapis.com/auth/userinfo.email",
             "https://www.googleapis.com/auth/drive.appdata",
             "https://www.googleapis.com/auth/drive.install",
             "https://www.googleapis.com/auth/drive.file",
           ].join(" "),
+          params: {
+            prompt: "consent",
+            access_type: "offline",
+            response_type: "code",
+          },
         },
       },
     }),

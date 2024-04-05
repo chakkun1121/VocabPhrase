@@ -1,4 +1,5 @@
 import Header from "@/components/layouts/header";
+import { HeaderUserInfo } from "@/components/layouts/headerUserInfo";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
@@ -12,7 +13,10 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     <>
       <Header
         className="flex"
-        rightContent={<Link href="/dashboard">ダッシュボード</Link>}
+        rightContent={
+          // <Link href="/dashboard">ダッシュボード</Link>
+          <HeaderUserInfo />
+        }
       />
       <div className="h-20 flex" />
       {children}
