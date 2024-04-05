@@ -20,6 +20,7 @@ import { MoreHorizontal } from "lucide-react";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { PiCardsLight } from "react-icons/pi";
 import Error from "@/app/error";
+import { RiSpeakLine } from "react-icons/ri";
 
 type TableInfo = {
   fileId: string;
@@ -76,6 +77,14 @@ export default function FilesTable() {
               <PiCardsLight title="フラッシュカード" />
             </Link>
           </Button>
+          <Button asChild variant="ghost" className="p-0">
+            <Link
+              href={`./${row.original.fileId}/speaking`}
+              className="aspect-square"
+            >
+              <RiSpeakLine title="スピーキング練習" />
+            </Link>
+          </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -98,6 +107,14 @@ export default function FilesTable() {
                   className="block"
                 >
                   フラッシュカード
+                </Link>
+              </DropdownMenuLabel>
+              <DropdownMenuLabel asChild>
+                <Link
+                  href={`./${row.original.fileId}/speaking`}
+                  className="block"
+                >
+                  スピーキング練習
                 </Link>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />

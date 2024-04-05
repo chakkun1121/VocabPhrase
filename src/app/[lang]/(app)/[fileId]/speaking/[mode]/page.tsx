@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import Speaking from "./main";
+import Speaking from "@/components/functional/speaking";
 import { speakingMode } from "../menu";
 import { getTranslation } from "@/app/i18n/server";
 

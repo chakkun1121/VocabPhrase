@@ -1,13 +1,15 @@
 "use client";
 
 import { useFile } from "@/googledrive/useFile";
-import { SpeakingMode, speakingMode } from "../menu";
+import {
+  SpeakingMode,
+  speakingMode,
+} from "../../../app/[lang]/(app)/[fileId]/speaking/menu";
 import { useEffect, useState } from "react";
 import SpeechButton from "@/components/ui-parts/speechButton";
 import { removeExtension } from "@/common/library/removeExtension";
 import { useToken } from "@/common/hooks/useToken";
 import { useSpeech } from "@/common/hooks/useSpeech";
-import { Select } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
