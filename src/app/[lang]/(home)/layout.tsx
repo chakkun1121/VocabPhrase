@@ -21,7 +21,7 @@ export default async function Layout({
           </Link>
         }
       />
-      <main className="!select-text pt-20">{children}</main>{" "}
+      <main className="!select-text">{children}</main>
       <Footer lang={lang} />
     </>
   );

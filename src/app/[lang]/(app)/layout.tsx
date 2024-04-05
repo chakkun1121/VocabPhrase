@@ -18,7 +18,6 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
           <HeaderUserInfo />
         }
       />
-      <div className="h-20 flex" />
       {children}
     </>
   );

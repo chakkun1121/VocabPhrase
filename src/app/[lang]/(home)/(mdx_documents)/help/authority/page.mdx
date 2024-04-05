@@ -1,0 +1,23 @@
+export const metadata = {
+  title: "権限について",
+  description: "vocabPhraseが要求する権限について",
+  alternates: {
+    canonical: "/help/authority",
+  },
+};
+
+# 権限について
+
+VocabPhrase では以下の目的で以下の権限を要求しています。
+
+## このアプリで使用する Google ドライブ上の特定のファイルのみの参照、編集、作成、削除
+
+これは単語帳データ(.vocabphrase)の読み込み、保存、削除のために必要です。この権限がない場合、アプリのすべての機能が使用できません。
+
+## Google ドライブでのアプリ独自の設定データの参照、作成、削除
+
+フラッシュカードの履歴、設定データを保存するために GoogleDrive 内のアプリ専用フォルダにアクセスします。このデータを削除するには[Google ドライブの設定](https://drive.google.com/drive/settings)のアプリの管理 →VocabPhrase→ オプション → アプリデータの削除から削除できます。この権限がない場合、フラッシュカードの履歴、設定データの保存ができないなど、アプリの一部機能が使用できません。
+
+## お使いの Google ドライブとの接続
+
+これは web 版 GoogleDrive からファイルを直接開くために必要です。
