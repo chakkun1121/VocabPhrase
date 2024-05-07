@@ -35,7 +35,7 @@
     "i18next-resources-to-backend": "^1.2.0",
     "lucide-react": "^0.363.0",
     "negotiator": "^0.6.3",
-    "next": "14.1.4",
+    "next": "14.2.1",
     "next-auth": "^4.24.7",
     "next-compose-plugins": "^2.2.1",
     "next-i18next": "^15.2.0",
