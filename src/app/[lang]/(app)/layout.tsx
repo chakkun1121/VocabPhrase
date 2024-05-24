@@ -2,7 +2,6 @@ import Header from "@/components/layouts/header";
 import { HeaderUserInfo } from "@/components/layouts/headerUserInfo";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 

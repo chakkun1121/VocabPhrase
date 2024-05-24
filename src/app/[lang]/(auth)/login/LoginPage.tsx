@@ -1,7 +1,7 @@
 "use client";
 import { signIn, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import Article from "../../(home)/(mdx_documents)/help/authority/page.mdx";
+import Article from "@/app/[lang]/(home)/(mdx_documents)/help/authority/page.mdx";
 import Header from "@/components/layouts/header";
 
 export default function LoginPage() {
