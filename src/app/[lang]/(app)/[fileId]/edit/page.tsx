@@ -25,6 +25,18 @@ import { Button } from "@/components/ui/button";
 import { uuidv7 as createUUID } from "uuidv7";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { Loader2 } from "lucide-react";
+import Loading from "@/components/ui-elements/loading";
+import { useLeavePageConfirmation } from "@/common/hooks/useLeavePageConfirmation";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { useHotkeys } from "react-hotkeys-hook";
 const fileFormSchema = z.object({
   title: z.string(),
   mode: z.union([
@@ -48,19 +60,10 @@ export default function Page({
   params: { fileId: string; lang: string };
 }) {
   const token = useToken();
-
-  // useDocumentTitle(
-  //   title
-  //     ? `${title
-  //         .split(".")
-  //         .slice(0, -1)
-  //         .join(".")} | 編集ページ | vocabphrase | chakkun1121`
-  //     : "アプリ | vocabphrase | chakkun1121 "
-  // );
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
-  console.log("saved: ", saved);
-
+  const [loading, setLoading] = useState(true);
+  useLeavePageConfirmation(!saved && !saving);
   const form = useForm<z.infer<typeof fileFormSchema>>({
     resolver: zodResolver(fileFormSchema),
     defaultValues: {
@@ -75,18 +78,17 @@ export default function Page({
       const fileInfo = await getFileInfo(token, fileId);
       const title = fileInfo.name;
       if (!title) throw new Error("file is not found");
-      const content: fileType = JSON.parse(await getFileContent(token, fileId));
-      console.log("content: ", content);
+      const file: fileType = JSON.parse(
+        (await getFileContent(token, fileId)) || "{}"
+      );
       form.setValue("title", removeExtension(title));
-      form.setValue("mode", content.mode);
-      form.setValue("content", content.content);
+      form.setValue("mode", file?.mode);
+      form.setValue("content", file?.content || []);
+      setLoading(false);
     })();
   }, [token, fileId]);
-  function onSubmit(data: z.infer<typeof fileFormSchema>) {
-    console.log("data: ", data);
-  }
-  // if (loading) return <Loading />;
-
+  function onSubmit(data: z.infer<typeof fileFormSchema>) {}
+  if (loading) return <Loading />;
   return (
     <main className="max-w-7xl p-2 mx-auto">
       <Form {...form}>
@@ -95,7 +97,7 @@ export default function Page({
           onChange={() => setSaved(false)}
           className="space-y-4"
         >
-          <div className="flex">
+          <div className="flex gap-2">
             <FormField
               control={form.control}
               name="title"
@@ -130,6 +132,7 @@ export default function Page({
                 </FormItem>
               )}
             />
+            {!form.watch("content").length && <ImportDialog form={form} />}
             <SaveButton
               token={token}
               fileId={fileId}
@@ -211,27 +214,68 @@ function SaveButton({
   setSaving: (saving: boolean) => void;
   saving: boolean;
 }) {
+  async function save() {
+    setSaving(true);
+    const content: fileType = {
+      mode: form.getValues("mode") || null,
+      content: form.getValues("content"),
+    };
+    await Promise.all([
+      updateFileInfo(token, fileId, {
+        name: form.getValues("title") + ".vocabphrase",
+      }),
+      uploadFile(token, fileId, JSON.stringify(content)),
+    ]);
+    setSaving(false);
+    setSaved(true);
+  }
+  useHotkeys("ctrl+s", save, {
+    enableOnFormTags: true,
+    enableOnContentEditable: true,
+    preventDefault: true,
+  });
   return (
-    <Button
-      onClick={async () => {
-        setSaving(true);
-        const content: fileType = {
-          mode: form.getValues("mode") || null,
-          content: form.getValues("content"),
-        };
-        await Promise.all([
-          updateFileInfo(token, fileId, {
-            name: form.getValues("title"),
-          }),
-          uploadFile(token, fileId, JSON.stringify(content)),
-        ]);
-        setSaving(false);
-        setSaved(true);
-      }}
-      disabled={saving}
-    >
+    <Button onClick={save} disabled={saving}>
       {saving && <Loader2 className="animate-spin" />}
       保存{saving && "中"}
     </Button>
+  );
+}
+function ImportDialog({ form }: { form: any }) {
+  const [content, setContent] = useState("");
+  const [open, setOpen] = useState(false);
+  function Import() {
+    const temp = content.split(/[\n\t]/).filter(e => e);
+    const fileContent: fileType["content"] = [];
+    for (let i = 0; i < temp.length; i += 2) {
+      fileContent.push({
+        id: createUUID(),
+        en: temp[i],
+        ja: temp[i + 1],
+      });
+    }
+    form.setValue("content", fileContent);
+    setOpen(false);
+  }
+  return (
+    <Dialog open={open} onOpenChange={o => setOpen(o)}>
+      <DialogTrigger asChild>
+        <Button variant="outline">インポート</Button>
+      </DialogTrigger>
+      <DialogContent className="w-5/6 h-5/6 max-w-none flex flex-col">
+        <DialogHeader>インポート</DialogHeader>
+        <Textarea
+          onChange={e => setContent(e.target.value)}
+          className="w-full resize-none h-full flex-1"
+          placeholder={`英文or単語,日本語訳の順に入力\nExcel,Googleスプレッドシートなどからコピペできます\n例) \n単語1\t日本語訳1\n単語2\t日本語訳2`}
+        />
+        <DialogFooter>
+          <Button onClick={Import}>インポート</Button>
+          <DialogClose asChild>
+            <Button>キャンセル</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
