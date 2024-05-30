@@ -1,7 +1,7 @@
 import remarkGfm from "remark-gfm";
 import createMDX from "@next/mdx";
 import nextPWA from "next-pwa";
-import  withPlugins from "next-compose-plugins";
+import withPlugins from "next-compose-plugins";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -15,6 +15,7 @@ const nextConfig = {
       },
     ];
   },
+  reactStrictMode: false,
 };
 
 const withPWA = nextPWA({
