@@ -11,7 +11,7 @@ export default function FlashCard({
   params: { fileId: string };
 }) {
   const token = useToken();
-  const { title, fileContent, loading, error } = useFile(token, fileId);
+  const { title, fileContent, loading } = useFile(token, fileId);
   useDocumentTitle(
     `${removeExtension(title)} | フラッシュカード | VocabPhrase | chakkun1121`
   );
@@ -21,7 +21,6 @@ export default function FlashCard({
       key={fileId}
       fileContent={fileContent}
       fileLoading={loading}
-      fileError={error}
     />
   );
 }

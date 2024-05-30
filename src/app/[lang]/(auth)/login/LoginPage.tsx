@@ -1,6 +1,7 @@
 "use client";
 import { signIn, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+// @ts-ignore
 import Article from "@/app/[lang]/(home)/(mdx_documents)/help/authority/page.mdx";
 import Header from "@/components/layouts/header";
 

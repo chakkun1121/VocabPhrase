@@ -63,12 +63,8 @@ export default function Page({
   params: { lang: string; fileId: string };
 }) {
   const token = useToken();
-  const { loading, error, title, fileContent, readOnly } = useFile(
-    token,
-    fileId
-  );
+  const { loading, title, fileContent, readOnly } = useFile(token, fileId);
   useDocumentTitle(`${removeExtension(title)}  | vocabphrase | chakkun1121`);
-  if (error) return <Error error={error} />;
   if (loading) return <Loading />;
   return (
     <main className="max-w-7xl p-2 mx-auto">
