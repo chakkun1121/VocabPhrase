@@ -9,11 +9,11 @@ export function createProblemIdList(
 ) {
   const problemIdList = fileContent.content.map(c => c.id);
   // 1.範囲設定があれば配列を切る
-  if (flashCardSettings.range) {
-    const [start, end] = flashCardSettings.range;
-    problemIdList.splice(end);
-    problemIdList.splice(0, start);
-  }
+  // if (flashCardSettings.range) {
+  //   const [start, end] = flashCardSettings.range;
+  //   problemIdList.splice(end);
+  //   problemIdList.splice(0, start);
+  // }
   // 2. ランダム設定の場合は混ぜる
   if (flashCardSettings.isRandom) {
     problemIdList.sort(() => Math.random() - 0.5);

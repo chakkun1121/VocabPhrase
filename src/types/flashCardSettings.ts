@@ -3,7 +3,7 @@ export type flashCardSettings = {
   isAnswerWithKeyboard: boolean;
   mode: flashCardMode;
   efficiencyMode: boolean;
-  range?: [number, number];
+  // range?: [number, number];
 };
 
 export type flashCardMode = "ja-en" | "en-ja";

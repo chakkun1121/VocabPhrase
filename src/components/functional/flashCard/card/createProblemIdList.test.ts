@@ -42,20 +42,20 @@ describe("createProblemIdList", () => {
     expect(result).toEqual(["1", "2", "3", "4"]);
   });
 
-  test("should return problemIdList with range applied", () => {
-    const modifiedFlashCardSettings: flashCardSettings = {
-      ...flashCardSettings,
-      range: [1, 2],
-    };
+  // test("should return problemIdList with range applied", () => {
+  //   const modifiedFlashCardSettings: flashCardSettings = {
+  //     ...flashCardSettings,
+  //     range: [1, 2],
+  //   };
 
-    const result = createProblemIdList(
-      fileContent,
-      modifiedFlashCardSettings,
-      cardResult
-    );
+  //   const result = createProblemIdList(
+  //     fileContent,
+  //     modifiedFlashCardSettings,
+  //     cardResult
+  //   );
 
-    expect(result).toEqual(["2"]);
-  });
+  //   expect(result).toEqual(["2"]);
+  // });
 
   test("should return problemIdList with random order", () => {
     const modifiedFlashCardSettings = {
