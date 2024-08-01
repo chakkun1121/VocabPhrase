@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { fileType } from "@/types/fileType";
 import { flashCardSettings } from "@/types/flashCardSettings";
 import { cardResult } from "@/types/cardResult";
+import { createProblemIdList } from "./createProblemIdList";
 
 export function useCard({
   fileContent,
@@ -21,26 +22,9 @@ export function useCard({
   const [questionIndex, setQuestionIndex] = useState(0);
   useEffect(() => {
     // 初期設定
-    const problemIdList = fileContent.content.map(c => c.id);
-    // 1.範囲設定があれば配列を切る
-    // if (flashCardSettings.range) {
-    //   const [start, end] = flashCardSettings.range;
-    //   problemIdList.splice(end);
-    //   problemIdList.splice(0, start);
-    // }
-    // 2. ランダム設定の場合は混ぜる
-    if (flashCardSettings.isRandom) {
-      problemIdList.sort(() => Math.random() - 0.5);
-    }
-    // 3.achievementの値を小さい順に
-    if (flashCardSettings.efficiencyMode) {
-      problemIdList.sort(
-        (a, b) =>
-          (cardResult?.achievement?.[flashCardSettings.mode]?.[a] ?? 0) -
-          (cardResult?.achievement?.[flashCardSettings.mode]?.[b] ?? 0)
-      );
-    }
-    setCurrentProblemIdList(problemIdList);
+    setCurrentProblemIdList(
+      createProblemIdList(fileContent, flashCardSettings, cardResult)
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileContent.content]);
   function next() {
