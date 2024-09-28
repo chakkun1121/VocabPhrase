@@ -27,16 +27,9 @@ import { TrashIcon } from "@radix-ui/react-icons";
 import { Loader2 } from "lucide-react";
 import Loading from "@/components/ui-elements/loading";
 import { useLeavePageConfirmation } from "@/common/hooks/useLeavePageConfirmation";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
+
 import { useHotkeys } from "react-hotkeys-hook";
+import ImportDialog from "@/components/functional/edit/ImportDialog";
 const fileFormSchema = z.object({
   title: z.string(),
   mode: z.union([
@@ -95,8 +88,7 @@ export default function Page({
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           onChange={() => setSaved(false)}
-          className="space-y-4"
-        >
+          className="space-y-4">
           <div className="flex gap-2">
             <FormField
               control={form.control}
@@ -116,8 +108,7 @@ export default function Page({
                 <FormItem>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value ?? undefined}
-                  >
+                    defaultValue={field.value ?? undefined}>
                     <FormControl className="flex-none w-48">
                       <SelectTrigger>
                         <SelectValue placeholder="モードを選択" />
@@ -177,8 +168,7 @@ export default function Page({
                       form.getValues("content").filter((_, i) => i !== index)
                     )
                   }
-                  variant="ghost"
-                >
+                  variant="ghost">
                   <TrashIcon />
                 </Button>
               </div>
@@ -189,8 +179,7 @@ export default function Page({
                   ...form.getValues("content"),
                   { id: createUUID(), en: "", ja: "" },
                 ]);
-              }}
-            >
+              }}>
               Add
             </Button>
           </section>
@@ -241,41 +230,4 @@ function SaveButton({
     </Button>
   );
 }
-function ImportDialog({ form }: { form: any }) {
-  const [content, setContent] = useState("");
-  const [open, setOpen] = useState(false);
-  function Import() {
-    const temp = content.split(/[\n\t]/).filter(e => e);
-    const fileContent: fileType["content"] = [];
-    for (let i = 0; i < temp.length; i += 2) {
-      fileContent.push({
-        id: createUUID(),
-        en: temp[i],
-        ja: temp[i + 1],
-      });
-    }
-    form.setValue("content", fileContent);
-    setOpen(false);
-  }
-  return (
-    <Dialog open={open} onOpenChange={o => setOpen(o)}>
-      <DialogTrigger asChild>
-        <Button variant="outline">インポート</Button>
-      </DialogTrigger>
-      <DialogContent className="w-5/6 h-5/6 max-w-none flex flex-col">
-        <DialogHeader>インポート</DialogHeader>
-        <Textarea
-          onChange={e => setContent(e.target.value)}
-          className="w-full resize-none h-full flex-1"
-          placeholder={`英文or単語,日本語訳の順に入力\nExcel,Googleスプレッドシートなどからコピペできます\n例) \n単語1\t日本語訳1\n単語2\t日本語訳2`}
-        />
-        <DialogFooter>
-          <Button onClick={Import}>インポート</Button>
-          <DialogClose asChild>
-            <Button>キャンセル</Button>
-          </DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
+
