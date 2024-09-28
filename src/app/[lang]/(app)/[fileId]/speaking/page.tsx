@@ -18,7 +18,10 @@ export default async function Speaking({
         <ul className="list-disc pl-6">
           {speakingMode.map(mode => (
             <li key={mode.id}>
-              <Link className="text-xl" href={`./speaking/${mode.id}`}>
+              <Link
+                className="text-xl underline text-blue-800"
+                href={`./speaking/${mode.id}`}
+                prefetch={false}>
                 {mode.name[lang]}
               </Link>
               <p>{mode.description[lang]}</p>

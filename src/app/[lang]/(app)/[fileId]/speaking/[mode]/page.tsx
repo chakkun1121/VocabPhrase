@@ -13,7 +13,9 @@ export default async function Page({
   return (
     <>
       {/* 録音を強制的に止めるためにaタグを使用 */}
-      <a href="./">{t("speaking:backToSelect")}</a>
+      <a href="./" className="underline text-blue-800">
+        {t("speaking:backToSelect")}
+      </a>
       <Speaking fileId={fileId} mode={mode} lang={lang} />
     </>
   );
