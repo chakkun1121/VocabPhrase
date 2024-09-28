@@ -28,7 +28,7 @@ export default function FlashCard({
   >;
   setFileContent?: (fileContent: fileType) => void;
 }) {
-  useDisableSwiping();
+  // useDisableSwiping();
   const { next, back, questionIndex, finish, currentProblemIdList } = useCard({
     fileContent,
     flashCardSettings,
@@ -60,8 +60,7 @@ export default function FlashCard({
     <>
       <Button
         onClick={() => window.confirm("終了しますか?") && finish()}
-        className="fixed top-24 right-2"
-      >
+        className="fixed top-24 right-2">
         終了する
       </Button>
       <div className="h-full p-4 w-full max-w-7xl mx-auto ">
