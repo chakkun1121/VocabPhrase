@@ -6,6 +6,7 @@ import { flashCardMode } from "@/types/flashCardSettings";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { ColumnDef } from "@tanstack/react-table";
 import { useEffect } from "react";
+import { updateResults } from "../../../../common/library/updateResults";
 type ShowResult = {
   id: string;
   index: number;
@@ -21,8 +22,7 @@ const columns: ColumnDef<ShowResult>[] = [
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           No.
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
@@ -43,8 +43,7 @@ const columns: ColumnDef<ShowResult>[] = [
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           正誤
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
@@ -68,8 +67,7 @@ const columns: ColumnDef<ShowResult>[] = [
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           達成度
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
@@ -93,37 +91,7 @@ export default function CardResult({
   saveResults: (newResult?: cardResult) => void;
 }) {
   useEffect(() => {
-    /* achievementについて
-    0: まだ一度もやっていない(ここで正解したら90へ)
-    10 : 一回はやった(正解する事に+20)
-    20~80: 正解する事に+20
-    90: これが今のチェック状態(間違えたら-10)
-    90以降は開けておく
-    */
-    // 今回分の結果を全体の結果とマージ
-    const newResult = {
-      ...results,
-      achievement: {
-        ...results?.achievement,
-        [mode]: {
-          ...results?.achievement?.[mode],
-          ...Object.fromEntries(
-            Object.entries(currentResult).map(([key, value]) => {
-              const prevResult = results?.achievement?.[mode]?.[key] || 0;
-              if (prevResult === 0 && value) {
-                return [key, 90];
-              }
-              return [
-                key,
-                value
-                  ? Math.min(prevResult + 20, 90)
-                  : Math.max(prevResult - 10, 10),
-              ];
-            })
-          ),
-        },
-      },
-    };
+    const newResult = updateResults(results, currentResult, mode);
     setResults(newResult);
     saveResults(newResult);
     // eslint-disable-next-line react-hooks/exhaustive-deps

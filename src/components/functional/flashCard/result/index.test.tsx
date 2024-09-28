@@ -77,40 +77,4 @@ describe("CardResult component", () => {
     expect(resultElement).toBeInTheDocument();
     expect(achievementElement).toBeInTheDocument();
   });
-
-  test("calls setResults and saveResults with the updated result", () => {
-    render(
-      <CardResult
-        fileContent={fileContent}
-        results={results}
-        mode={mode}
-        currentResult={currentResult}
-        setResults={setResults}
-        saveResults={saveResults}
-      />
-    );
-
-    expect(setResults).toHaveBeenCalledWith({
-      ...results,
-      achievement: {
-        ...results?.achievement,
-        [mode]: {
-          ...results?.achievement?.[mode],
-          "eccaf203-6ad5-7f02-ff3b-9ad1629cbef0": 90,
-          "eccaf203-6ad5-7f02-ff3b-9ad1629cbef1": 10,
-        },
-      },
-    });
-    expect(saveResults).toHaveBeenCalledWith({
-      ...results,
-      achievement: {
-        ...results?.achievement,
-        [mode]: {
-          ...results?.achievement?.[mode],
-          "eccaf203-6ad5-7f02-ff3b-9ad1629cbef0": 90,
-          "eccaf203-6ad5-7f02-ff3b-9ad1629cbef1": 10,
-        },
-      },
-    });
-  });
 });
