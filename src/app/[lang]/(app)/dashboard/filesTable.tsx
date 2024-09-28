@@ -43,14 +43,15 @@ export default function FilesTable() {
       header: ({ column }) => (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           タイトル
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       ),
       cell: ({ row }) => (
-        <Link href={`./${row.original.fileId}`}>{row.original.title}</Link>
+        <Link href={`./${row.original.fileId}`} prefetch={false}>
+          {row.original.title}
+        </Link>
       ),
     },
     {
@@ -68,7 +69,7 @@ export default function FilesTable() {
             <Link
               href={`./${row.original.fileId}/edit`}
               className="aspect-square"
-            >
+              prefetch={false}>
               <MdOutlineModeEdit title="編集" />
             </Link>
           </Button>
@@ -76,7 +77,7 @@ export default function FilesTable() {
             <Link
               href={`./${row.original.fileId}/flashCard`}
               className="aspect-square"
-            >
+              prefetch={false}>
               <PiCardsLight title="フラッシュカード" />
             </Link>
           </Button>
@@ -84,7 +85,7 @@ export default function FilesTable() {
             <Link
               href={`./${row.original.fileId}/speaking`}
               className="aspect-square"
-            >
+              prefetch={false}>
               <RiSpeakLine title="スピーキング練習" />
             </Link>
           </Button>
@@ -92,31 +93,33 @@ export default function FilesTable() {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="h-8 w-8 p-0 data-[state=open]:bg-muted aspect-square"
-              >
+                className="h-8 w-8 p-0 data-[state=open]:bg-muted aspect-square">
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel asChild>
-                <Link href={`/${row.original.fileId}/edit`} className="block">
+                <Link
+                  href={`/${row.original.fileId}/edit`}
+                  className="block"
+                  prefetch={false}>
                   編集
                 </Link>
               </DropdownMenuLabel>
               <DropdownMenuLabel asChild>
                 <Link
                   href={`./${row.original.fileId}/flashCard`}
-                  className="block"
-                >
+                  prefetch={false}
+                  className="block">
                   フラッシュカード
                 </Link>
               </DropdownMenuLabel>
               <DropdownMenuLabel asChild>
                 <Link
                   href={`./${row.original.fileId}/speaking`}
-                  className="block"
-                >
+                  prefetch={false}
+                  className="block">
                   スピーキング練習
                 </Link>
               </DropdownMenuLabel>
@@ -128,8 +131,7 @@ export default function FilesTable() {
                       await deleteFile(token, row.original.fileId);
                       getRecentFile();
                     })();
-                }}
-              >
+                }}>
                 削除
               </DropdownMenuLabel>
             </DropdownMenuContent>
