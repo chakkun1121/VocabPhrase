@@ -7,6 +7,7 @@ import { CaretSortIcon } from "@radix-ui/react-icons";
 import { ColumnDef } from "@tanstack/react-table";
 import { useEffect } from "react";
 import { updateResults } from "../../../../common/library/updateResults";
+import { toast } from "sonner";
 type ShowResult = {
   id: string;
   index: number;
@@ -91,9 +92,15 @@ export default function CardResult({
   saveResults: (newResult?: cardResult) => void;
 }) {
   useEffect(() => {
-    const newResult = updateResults(results, currentResult, mode);
-    setResults(newResult);
-    saveResults(newResult);
+    try {
+      const newResult = updateResults(results, currentResult, mode);
+      setResults(newResult);
+      saveResults(newResult);
+      toast.success("結果を保存しました");
+    } catch (e: any) {
+      console.error(e);
+      toast.error(`エラーが発生しました\n${e.message}`);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
