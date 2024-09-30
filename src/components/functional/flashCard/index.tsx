@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { flashCardSettings } from "@/types/flashCardSettings";
 import FlashCard from "./card";
 import CardResult from "./result";
@@ -13,6 +13,7 @@ import { fileType } from "@/types/fileType";
 import { toast } from "sonner";
 import Error from "@/app/error";
 import { cn } from "@/lib/utils";
+import { cardResult } from "@/types/cardResult";
 
 export default function Card({
   fileId,
@@ -45,6 +46,12 @@ export default function Card({
   const [currentResult, setCurrentResult] = useState<{
     [problemId: string]: boolean;
   }>({});
+  useConvertChecks({
+    results,
+    setResults,
+    resultLoading,
+    saveResults,
+  });
   const loading = fileLoading || resultLoading;
   useLeavePageConfirmation(mode == "cards" || savingResults);
   useEffect(() => {
@@ -55,29 +62,6 @@ export default function Card({
       toast.error(resultError.message);
     }
   }, [fileError, resultError]);
-  useEffect(() => {
-    // resultsのcheckは達成率80として保存
-    if (results && results.check) {
-      const newResults = { ...results };
-      newResults.achievement = newResults.achievement || {};
-      if (!newResults.check) return;
-      function setAchievement(mode: "en-ja" | "ja-en") {
-        if (!newResults.check?.[mode]) return;
-        newResults.achievement![mode] = {};
-        newResults.check[mode]?.forEach(id => {
-          newResults.achievement![mode]![id] = 80;
-        });
-      }
-      setAchievement("en-ja");
-      setAchievement("ja-en");
-      // checkを削除
-      delete newResults.check;
-      console.log("newResults: ", newResults);
-      setResults(newResults);
-      saveResults(newResults);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resultLoading]);
 
   if (fileError || resultError)
     return <Error error={fileError || resultError} />;
@@ -129,3 +113,38 @@ export const defaultFlashCardSettings: flashCardSettings = {
   isAnswerWithKeyboard: false,
   efficiencyMode: true,
 };
+export function useConvertChecks({
+  results,
+  setResults,
+  resultLoading,
+  saveResults,
+}: {
+  results: cardResult;
+  setResults: React.Dispatch<React.SetStateAction<cardResult>>;
+  resultLoading: boolean;
+  saveResults: (results: cardResult) => void;
+}) {
+  useEffect(() => {
+    // resultsのcheckは達成率80として保存
+    if (results && results.check) {
+      const newResults = { ...results };
+      newResults.achievement = newResults.achievement || {};
+      if (!newResults.check) return;
+      function setAchievement(mode: "en-ja" | "ja-en") {
+        if (!newResults.check?.[mode]) return;
+        newResults.achievement![mode] = {};
+        newResults.check[mode]?.forEach(id => {
+          newResults.achievement![mode]![id] = 80;
+        });
+      }
+      setAchievement("en-ja");
+      setAchievement("ja-en");
+      // checkを削除
+      delete newResults.check;
+      console.log("newResults: ", newResults);
+      setResults(newResults);
+      saveResults(newResults);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resultLoading]);
+}

@@ -1,32 +1,6 @@
-import { flashCardSettings } from "@/types/flashCardSettings";
+import { Option } from "@/common/formContent";
 
-export const flashcardOptions: (
-  | {
-      name: keyof flashCardSettings;
-      id: string;
-      title: string;
-      default: string;
-      options?: {
-        value: string;
-        label: string;
-        inputType?: string;
-      }[];
-    }
-  | {
-      name: keyof flashCardSettings;
-      id: string;
-      title: string;
-      default: boolean;
-      options?: undefined;
-    }
-  | {
-      name: keyof flashCardSettings;
-      id: string;
-      title: string;
-      default: number;
-      options?: undefined;
-    }
-)[] = [
+export const flashcardOptions: Option[] = [
   {
     name: "isRandom",
     id: "flashcard.isRandom",
