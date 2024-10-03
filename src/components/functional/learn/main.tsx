@@ -56,7 +56,7 @@ export default function Main({
       });
     }
     const remindIds = problemList?.filter(
-      id => !currentResult?.[id]?.isFinished
+      id => !currentResult?.[id]?.isFinished && id !== currentProblemId
     );
     if (!remindIds || remindIds?.length === 0) {
       setMode("result");

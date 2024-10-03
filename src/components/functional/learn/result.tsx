@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import type { Result } from ".";
 import { updateResults } from "@/common/library/updateResults";
+import { useHotkeys } from "react-hotkeys-hook";
 
 // type ShowResult = {
 //   id: string;
@@ -109,7 +110,7 @@ export default function Result({
           mode
         );
         setResults(newResult);
-        console.log('newResult: ', newResult);
+        console.log("newResult: ", newResult);
         await saveResults(newResult);
         toast.success("結果を保存しました");
       } catch (e: any) {
@@ -120,14 +121,8 @@ export default function Result({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      next();
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+  useHotkeys("*", next, [next]);
   return (
     <div>
       {/* <DataTable

@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { fileType } from "@/types/fileType";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { LearnSettings } from ".";
 import { cn } from "@/lib/utils";
+import { useHotkeys } from "react-hotkeys-hook";
 
 export default function Problem({
   currentProblem,
@@ -15,18 +16,12 @@ export default function Problem({
 }) {
   const [showAnswer, setShowAnswer] = useState(false);
   const [isRemembered, setIsRemembered] = useState<boolean | null>(null);
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === " ") setShowAnswer(true);
-      if (e.key === "1") next(false);
-      if (e.key === "2") next(true);
-      if (e.key === "c") setIsRemembered(!isRemembered);
-      if (e.key === "ArrowRight") next(isRemembered!);
-      if (e.key === "d") next(isRemembered!);
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  });
+  useHotkeys("1", () => next(false), [next]);
+  useHotkeys("2", () => next(true), [next]);
+  useHotkeys("c", () => setIsRemembered(!isRemembered));
+  useHotkeys("ArrowRight", () => next(isRemembered!));
+  useHotkeys("d", () => next(isRemembered!));
+  useHotkeys("space", () => setShowAnswer(true));
   return (
     <div className="flex items-center p-4 h-full">
       <div className="w-full max-w-7xl mx-auto space-y-24">
@@ -58,7 +53,8 @@ export default function Problem({
               isRemembered === false && "bg-accent text-accent-foreground"
             )}
             // variant={isRemembered ? "secondary" : "outline"}
-            variant="outline">
+            variant="outline"
+            disabled={!showAnswer}>
             覚えていない
           </Button>
           <Button
@@ -67,7 +63,8 @@ export default function Problem({
               "flex-1 p-6",
               isRemembered && "bg-accent text-accent-foreground"
             )}
-            variant="outline">
+            variant="outline"
+            disabled={!showAnswer}>
             覚えた
           </Button>
         </div>
