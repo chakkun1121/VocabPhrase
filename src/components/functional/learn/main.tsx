@@ -69,6 +69,7 @@ export default function Main({
       currentProblem={currentProblem}
       key={currentProblem?.id}
       next={next}
+      learnSettings={learnSettings}
     />
   );
 }
