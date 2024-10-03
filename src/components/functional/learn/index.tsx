@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { flashCardMode } from "@/types/flashCardSettings";
 import { useResultFile } from "@/common/hooks/useFlashcardResultFile";
 import { useToken } from "@/common/hooks/useToken";
@@ -43,9 +43,8 @@ export default function Learn({
     loading: resultLoading,
     error: resultError,
   } = useResultFile(fileId, token);
-  const [currentResult, setCurrentResult] = useState<{
-    [problemId: string]: boolean;
-  }>({});
+  const [currentResult, setCurrentResult] = useState<Result>({});
+  const [turn, setTurn] = useState(0);
   const loading = fileLoading || resultLoading;
   useLeavePageConfirmation(mode == "cards" || savingResults);
   useEffect(() => {
@@ -72,7 +71,7 @@ export default function Learn({
           <Loading />
         ) : (
           fileContent && (
-            <>
+            <React.Fragment key={turn}>
               {mode === "home" && (
                 <Home setMode={setMode} setLearnSettings={setLearnSettings} />
               )}
@@ -82,28 +81,39 @@ export default function Learn({
                   learnSettings={learnSettings}
                   setMode={setMode}
                   cardResult={results}
-                  // currentResult={currentResult}
-                  // setCurrentResult={setCurrentResult}
+                  currentResult={currentResult}
+                  setCurrentResult={setCurrentResult}
                   // setFileContent={setFileContent}
                 />
               )}
               {mode === "result" && (
                 <Result
-                  // results={results}
+                  results={results}
                   fileContent={fileContent}
-                  // mode={flashCardSettings.mode}
-                  // currentResult={currentResult}
-                  // setResults={setResults}
-                  // saveResults={saveResults}
+                  mode={learnSettings.mode}
+                  currentResult={currentResult}
+                  setResults={setResults}
+                  saveResults={saveResults}
+                  next={() => {
+                    setCurrentResult({});
+                    setTurn(turn + 1);
+                    setMode("cards");
+                  }}
                 />
               )}
-            </>
+            </React.Fragment>
           )
         )}
       </main>
     </>
   );
 }
+export type Result = {
+  [problemId: string]: {
+    isFinished: boolean; // この問題を終了 = 一度以上正解したか
+    isCorrectOnce: boolean; // 1度目で正解したかどうか
+  };
+};
 export const defaultLearnSettings: LearnSettings = {
   mode: "ja-en",
   isAnswerWithKeyboard: false,
