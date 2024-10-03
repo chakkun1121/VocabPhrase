@@ -1,35 +1,31 @@
-import { flashCardSettings } from "@/types/flashCardSettings";
-import { flashcardOptions } from "../flashcardOptions";
-import React from "react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { defaultLearnSettings, learnOptions, LearnSettings } from ".";
+import React from "react";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { defaultFlashCardSettings } from "..";
-import FormContent from "@/common/formContent";
-
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import FormContent from "../../../common/formContent";
 const formSchema = z.object({
-  isRandom: z.boolean(),
   isAnswerWithKeyboard: z.boolean(),
   mode: z.enum(["ja-en", "en-ja"]),
-  efficiencyMode: z.boolean(),
 });
-export default function FlashCardHome({
+
+export default function Home({
   setMode,
-  setFlashCardSettings,
+  setLearnSettings,
 }: {
   setMode: (mode: "cards") => void;
-  setFlashCardSettings: React.Dispatch<React.SetStateAction<flashCardSettings>>;
+  setLearnSettings: React.Dispatch<React.SetStateAction<LearnSettings>>;
 }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: defaultFlashCardSettings,
+    defaultValues: defaultLearnSettings,
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     const settings = values;
-    setFlashCardSettings(settings);
+    setLearnSettings(settings);
     setMode("cards");
   }
   return (
@@ -38,7 +34,7 @@ export default function FlashCardHome({
         className="flex flex-col gap-4 p-4 w-full max-w-5xl mx-auto"
         onSubmit={form.handleSubmit(onSubmit)}>
         <div className="p-2 [&>*]:flex [&>*]:items-center grid gap-3 [&>*]:p-2 [&>*]:justify-between ">
-          {flashcardOptions.map(option => (
+          {learnOptions.map(option => (
             <FormContent option={option} form={form} key={option.name} />
           ))}
         </div>
