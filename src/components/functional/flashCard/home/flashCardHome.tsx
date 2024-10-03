@@ -8,6 +8,7 @@ import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { defaultFlashCardSettings } from "..";
 import FormContent from "@/common/formContent";
+import Link from "next/link";
 
 const formSchema = z.object({
   isRandom: z.boolean(),
@@ -45,6 +46,9 @@ export default function FlashCardHome({
         <Button type="submit" className="text-center w-full">
           Start
         </Button>
+        <Link prefetch={false} href="./learn">
+          学習機能(Beta)
+        </Link>
       </form>
     </Form>
   );

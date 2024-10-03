@@ -43,11 +43,12 @@ export default function Main({
           ...currentResult,
           [currentProblemId!]: { isFinished: true, isCorrectOnce: true },
         });
+      } else {
+        setCurrentResult({
+          ...currentResult,
+          [currentProblemId!]: { isFinished: true, isCorrectOnce: false },
+        });
       }
-      setCurrentResult({
-        ...currentResult,
-        [currentProblemId!]: { isFinished: true, isCorrectOnce: false },
-      });
     } else if (result === false) {
       setCurrentResult({
         ...currentResult,

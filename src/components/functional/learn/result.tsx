@@ -109,6 +109,7 @@ export default function Result({
           mode
         );
         setResults(newResult);
+        console.log('newResult: ', newResult);
         await saveResults(newResult);
         toast.success("結果を保存しました");
       } catch (e: any) {
