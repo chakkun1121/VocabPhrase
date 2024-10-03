@@ -1,21 +1,22 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { flashCardSettings } from "@/types/flashCardSettings";
-import FlashCard from "./card";
-import CardResult from "./result";
-import FlashCardHome from "./home/flashCardHome";
+import { flashCardMode } from "@/types/flashCardSettings";
 import { useResultFile } from "@/common/hooks/useFlashcardResultFile";
 import { useToken } from "@/common/hooks/useToken";
 import { useLeavePageConfirmation } from "@/common/hooks/useLeavePageConfirmation";
 import Loading from "@/components/ui-elements/loading";
 import { fileType } from "@/types/fileType";
 import { toast } from "sonner";
-import Error from "@/app/error";
 import { cn } from "@/lib/utils";
-import { cardResult } from "@/types/cardResult";
+import Home from "./home";
+import { useConvertChecks } from "../flashCard";
+import Main from "./main";
+import Result from "./result";
+import { Option } from "@/common/formContent";
+import Error from "@/app/error";
 
-export default function Card({
+export default function Learn({
   fileId,
   fileContent,
   fileLoading,
@@ -31,9 +32,8 @@ export default function Card({
   className?: string;
 }) {
   const [mode, setMode] = useState<"home" | "cards" | "result">("home");
-  const [flashCardSettings, setFlashCardSettings] = useState<flashCardSettings>(
-    defaultFlashCardSettings
-  );
+  const [learnSettings, setLearnSettings] =
+    useState<LearnSettings>(defaultLearnSettings);
   const token = useToken();
   const {
     results,
@@ -43,15 +43,8 @@ export default function Card({
     loading: resultLoading,
     error: resultError,
   } = useResultFile(fileId, token);
-  const [currentResult, setCurrentResult] = useState<{
-    [problemId: string]: boolean;
-  }>({});
-  useConvertChecks({
-    results,
-    setResults,
-    resultLoading,
-    saveResults,
-  });
+  const [currentResult, setCurrentResult] = useState<Result>({});
+  const [turn, setTurn] = useState(0);
   const loading = fileLoading || resultLoading;
   useLeavePageConfirmation(mode == "cards" || savingResults);
   useEffect(() => {
@@ -62,6 +55,12 @@ export default function Card({
       toast.error(resultError.message);
     }
   }, [fileError, resultError]);
+  useConvertChecks({
+    results,
+    setResults,
+    resultLoading,
+    saveResults,
+  });
 
   if (fileError || resultError)
     return <Error error={fileError || resultError} />;
@@ -72,79 +71,73 @@ export default function Card({
           <Loading />
         ) : (
           fileContent && (
-            <>
+            <React.Fragment key={turn}>
               {mode === "home" && (
-                <FlashCardHome
-                  setMode={setMode}
-                  setFlashCardSettings={setFlashCardSettings}
-                />
+                <Home setMode={setMode} setLearnSettings={setLearnSettings} />
               )}
               {mode === "cards" && (
-                <FlashCard
+                <Main
                   fileContent={fileContent}
-                  flashCardSettings={flashCardSettings}
+                  learnSettings={learnSettings}
                   setMode={setMode}
                   cardResult={results}
                   currentResult={currentResult}
                   setCurrentResult={setCurrentResult}
-                  setFileContent={setFileContent}
+                  // setFileContent={setFileContent}
                 />
               )}
               {mode === "result" && (
-                <CardResult
+                <Result
                   results={results}
                   fileContent={fileContent}
-                  mode={flashCardSettings.mode}
+                  mode={learnSettings.mode}
                   currentResult={currentResult}
                   setResults={setResults}
                   saveResults={saveResults}
+                  next={() => {
+                    setCurrentResult({});
+                    setTurn(turn + 1);
+                    setMode("cards");
+                  }}
                 />
               )}
-            </>
+            </React.Fragment>
           )
         )}
       </main>
     </>
   );
 }
-export const defaultFlashCardSettings: flashCardSettings = {
-  isRandom: true,
+export type Result = {
+  [problemId: string]: {
+    isFinished: boolean; // この問題を終了 = 一度以上正解したか
+    isCorrectOnce: boolean; // 1度目で正解したかどうか
+  };
+};
+export const defaultLearnSettings: LearnSettings = {
   mode: "ja-en",
   isAnswerWithKeyboard: false,
-  efficiencyMode: true,
 };
-export function useConvertChecks({
-  results,
-  setResults,
-  resultLoading,
-  saveResults,
-}: {
-  results: cardResult;
-  setResults: React.Dispatch<React.SetStateAction<cardResult>>;
-  resultLoading: boolean;
-  saveResults: (results: cardResult) => void;
-}) {
-  useEffect(() => {
-    // resultsのcheckは達成率80として保存
-    if (results && results.check) {
-      const newResults = { ...results };
-      newResults.achievement = newResults.achievement || {};
-      if (!newResults.check) return;
-      function setAchievement(mode: "en-ja" | "ja-en") {
-        if (!newResults.check?.[mode]) return;
-        newResults.achievement![mode] = {};
-        newResults.check[mode]?.forEach(id => {
-          newResults.achievement![mode]![id] = 80;
-        });
-      }
-      setAchievement("en-ja");
-      setAchievement("ja-en");
-      // checkを削除
-      delete newResults.check;
-      console.log("newResults: ", newResults);
-      setResults(newResults);
-      saveResults(newResults);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resultLoading]);
-}
+export type LearnSettings = {
+  mode: flashCardMode;
+  isAnswerWithKeyboard: boolean;
+};
+
+export const learnOptions: Option[] = [
+  {
+    name: "isAnswerWithKeyboard",
+    id: "flashcard.isAnswerWithKeyboard",
+    title: "キーボードで解答する",
+    default: false,
+  },
+  {
+    name: "mode",
+    id: "flashcard.mode",
+    title: "出題モード",
+    default: "ja-en",
+    options: [
+      { value: "ja-en", label: "日本語→英語" },
+      { value: "en-ja", label: "英語→日本語" },
+    ],
+  },
+];
