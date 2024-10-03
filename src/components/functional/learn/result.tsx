@@ -1,82 +1,83 @@
-import { fileType } from "@/types/fileType";
-import type { Result } from ".";
+import { Button } from "@/components/ui/button";
+// import { DataTable } from "@/components/ui/data-table";
 import { cardResult } from "@/types/cardResult";
-import { updateResults } from "@/common/library/updateResults";
+import { fileType } from "@/types/fileType";
+import { flashCardMode } from "@/types/flashCardSettings";
+// import { CaretSortIcon } from "@radix-ui/react-icons";
+// import { ColumnDef } from "@tanstack/react-table";
 import { useEffect } from "react";
 import { toast } from "sonner";
-import { flashCardMode } from "@/types/flashCardSettings";
-import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table";
-import { CaretSortIcon } from "@radix-ui/react-icons";
-import { ColumnDef } from "@tanstack/react-table";
-type ShowResult = {
-  id: string;
-  index: number;
-  question?: string;
-  answer?: string;
-  result: boolean;
-  achievement: number;
-};
-const columns: ColumnDef<ShowResult>[] = [
-  {
-    accessorKey: "index",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          No.
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "question",
-    header: "問題",
-  },
-  {
-    accessorKey: "answer",
-    header: "解答",
-  },
-  {
-    accessorKey: "result",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          正誤
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) =>
-      (() => {
-        switch (row.getValue("result")) {
-          case true:
-            return "○";
-          case false:
-            return "✕";
-          default:
-            return "-";
-        }
-      })(),
-  },
-  {
-    accessorKey: "achievement",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          達成度
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-];
+import type { Result } from ".";
+import { updateResults } from "@/common/library/updateResults";
+
+// type ShowResult = {
+//   id: string;
+//   index: number;
+//   question?: string;
+//   answer?: string;
+//   result: boolean;
+//   achievement: number;
+// };
+// const columns: ColumnDef<ShowResult>[] = [
+//   {
+//     accessorKey: "index",
+//     header: ({ column }) => {
+//       return (
+//         <Button
+//           variant="ghost"
+//           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+//           No.
+//           <CaretSortIcon className="ml-2 h-4 w-4" />
+//         </Button>
+//       );
+//     },
+//   },
+//   {
+//     accessorKey: "question",
+//     header: "問題",
+//   },
+//   {
+//     accessorKey: "answer",
+//     header: "解答",
+//   },
+//   {
+//     accessorKey: "result",
+//     header: ({ column }) => {
+//       return (
+//         <Button
+//           variant="ghost"
+//           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+//           正誤
+//           <CaretSortIcon className="ml-2 h-4 w-4" />
+//         </Button>
+//       );
+//     },
+//     cell: ({ row }) =>
+//       (() => {
+//         switch (row.getValue("result")) {
+//           case true:
+//             return "○";
+//           case false:
+//             return "✕";
+//           default:
+//             return "-";
+//         }
+//       })(),
+//   },
+//   {
+//     accessorKey: "achievement",
+//     header: ({ column }) => {
+//       return (
+//         <Button
+//           variant="ghost"
+//           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+//           達成度
+//           <CaretSortIcon className="ml-2 h-4 w-4" />
+//         </Button>
+//       );
+//     },
+//   },
+// ];
 export default function Result({
   fileContent,
   currentResult,
@@ -124,10 +125,11 @@ export default function Result({
     }
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [next]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div>
-      <DataTable
+      {/* <DataTable
         columns={columns}
         data={(() => {
           const data: ShowResult[] = fileContent.content.map(
@@ -145,9 +147,9 @@ export default function Result({
 
           return data;
         })()}
-      />
+      /> */}
 
-      {/* {Object.entries(currentResult).map(([id, { isCorrectOnce }]) => {
+      {Object.entries(currentResult).map(([id, { isCorrectOnce }]) => {
         const problem = fileContent.content.find(c => c.id === id);
         return (
           <div key={id}>
@@ -156,7 +158,7 @@ export default function Result({
             <p>{isCorrectOnce ? "覚えた" : "覚えていない"}</p>
           </div>
         );
-      })} */}
+      })}
       <Button onClick={next}>次のターン(なにかのキーを押して続行)</Button>
     </div>
   );
