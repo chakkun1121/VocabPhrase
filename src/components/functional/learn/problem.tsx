@@ -16,11 +16,17 @@ export default function Problem({
 }) {
   const [showAnswer, setShowAnswer] = useState(false);
   const [isRemembered, setIsRemembered] = useState<boolean | null>(null);
-  useHotkeys("1", () => next(false), [next]);
-  useHotkeys("2", () => next(true), [next]);
-  useHotkeys("c", () => setIsRemembered(!isRemembered));
-  useHotkeys("ArrowRight", () => next(isRemembered ? false : true));
-  useHotkeys("d", () => next(isRemembered ? false : true));
+  useHotkeys("1", () => next(false), { enabled: showAnswer }, [next]);
+  useHotkeys("2", () => next(true), { enabled: showAnswer }, [next]);
+  useHotkeys("c", () => setIsRemembered(!isRemembered), {
+    enabled: showAnswer,
+  });
+  useHotkeys("ArrowRight", () => next(isRemembered ? false : true), {
+    enabled: showAnswer,
+  });
+  useHotkeys("d", () => next(isRemembered ? false : true), {
+    enabled: showAnswer,
+  });
   useHotkeys("space", () => setShowAnswer(true));
   return (
     <div className="flex items-center p-4 h-full">
