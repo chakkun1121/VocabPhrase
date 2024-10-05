@@ -19,8 +19,8 @@ export default function Problem({
   useHotkeys("1", () => next(false), [next]);
   useHotkeys("2", () => next(true), [next]);
   useHotkeys("c", () => setIsRemembered(!isRemembered));
-  useHotkeys("ArrowRight", () => next(isRemembered!));
-  useHotkeys("d", () => next(isRemembered!));
+  useHotkeys("ArrowRight", () => next(isRemembered ? false : true));
+  useHotkeys("d", () => next(isRemembered ? false : true));
   useHotkeys("space", () => setShowAnswer(true));
   return (
     <div className="flex items-center p-4 h-full">

@@ -37,24 +37,31 @@ export default function Main({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   function next(result: boolean) {
-    if (result) {
-      if (!currentResult?.[currentProblemId!]?.isCorrectOnce) {
-        setCurrentResult({
-          ...currentResult,
-          [currentProblemId!]: { isFinished: true, isCorrectOnce: true },
-        });
-      } else {
+    (() => {
+      if (result === true) {
+        if (!currentResult?.[currentProblemId!]) {
+          setCurrentResult({
+            ...currentResult,
+            [currentProblemId!]: { isFinished: true, isCorrectOnce: true },
+          });
+          return;
+        }
         setCurrentResult({
           ...currentResult,
           [currentProblemId!]: { isFinished: true, isCorrectOnce: false },
         });
+        return;
       }
-    } else if (result === false) {
-      setCurrentResult({
-        ...currentResult,
-        [currentProblemId!]: { isFinished: false, isCorrectOnce: false },
-      });
-    }
+      if (result === false) {
+        setCurrentResult({
+          ...currentResult,
+          [currentProblemId!]: { isFinished: false, isCorrectOnce: false },
+        });
+        return;
+      }
+      throw new Error("result is not boolean");
+    })();
+
     const remindIds = problemList?.filter(
       id => !currentResult?.[id]?.isFinished && id !== currentProblemId
     );
