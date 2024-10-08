@@ -74,6 +74,8 @@ export default function Main({
   if (!currentProblem) return <div>loading...</div>;
   return (
     <Problem
+      problemList={problemList}
+      currentResult={currentResult}
       currentProblem={currentProblem}
       key={currentProblem?.id}
       next={next}
