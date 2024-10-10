@@ -65,7 +65,7 @@ export default function Problem({
           </Button>
         )}
       </div>
-      <div className="flex fixed bottom-8 w-full max-w-7xl gap-4 inset-x-0 mx-auto">
+      <div className="flex fixed bottom-8 w-full max-w-7xl gap-4 inset-x-0 mx-auto p-4">
         <Button
           onClick={() => next(false)}
           className={cn(
