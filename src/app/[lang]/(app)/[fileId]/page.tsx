@@ -20,19 +20,8 @@ import { DataTable } from "@/components/ui/data-table";
 import { removeExtension } from "@/common/library/removeExtension";
 import Loading from "@/components/ui-elements/loading";
 import { useDocumentTitle } from "@uidotdev/usehooks";
-import Error from "@/app/error";
 import Link from "next/link";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { PiCardsThin } from "react-icons/pi";
-import FlashCard from "@/components/functional/flashCard/card";
-import Card from "@/components/functional/flashCard";
 const columns: ColumnDef<fileType["content"][number]>[] = [
   {
     accessorKey: "index",
@@ -40,8 +29,7 @@ const columns: ColumnDef<fileType["content"][number]>[] = [
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           No.
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
@@ -76,50 +64,32 @@ export default function Page({
               <span className="hidden md:inline-block">編集</span>
             </Link>
           </Button>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button
-                variant="outline"
-                className="flex items-center gap-2"
-                disabled={fileContent?.content?.length == 0}
-              >
-                <PiCardsThin />
-                <span className="hidden md:inline-block">フラッシュカード</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent
-              className="w-5/6 h-5/6 max-w-none flex flex-col"
-              onEscapeKeyDown={e => e.preventDefault()}
-              onPointerDownOutside={e => e.preventDefault()}
-            >
-              <DialogHeader className="flex-none">
-                <DialogTitle>フラッシュカード</DialogTitle>
-              </DialogHeader>
-              <Card
-                className="flex-1 overflow-y-scroll"
-                fileId={fileId}
-                fileContent={fileContent}
-                fileLoading={loading}
-              />
-            </DialogContent>
-          </Dialog>
+          <Button
+            variant="outline"
+            disabled={fileContent?.content?.length == 0}
+            asChild>
+            <Link
+              href={`./${fileId}/flashcard`}
+              className="flex items-center gap-2"
+            />
+            <PiCardsThin />
+            <span className="hidden md:inline-block">フラッシュカード</span>
+          </Button>
           <Button
             asChild
             variant="outline"
-            disabled={fileContent?.content?.length == 0}
-          >
-            <a
+            disabled={fileContent?.content?.length == 0}>
+            <Link
               className="flex items-center gap-2"
               href={`./${fileId}/speaking`}
               title={
                 fileContent?.content?.length === 0
                   ? "コンテンツがない状態ではスピーキング練習機能を利用できません。"
                   : undefined
-              }
-            >
+              }>
               <RiSpeakLine />
               <span className="hidden md:inline-block">スピーキング練習</span>
-            </a>
+            </Link>
           </Button>
         </div>
         <DropdownMenu>
@@ -145,8 +115,7 @@ export default function Page({
                   if (deleteFileId) await deleteFile(token, deleteFileId);
                   console.info("deleted");
                 }
-              }}
-            >
+              }}>
               フラッシュカードの履歴を削除
             </DropdownMenuLabel>
             {!readOnly && (
@@ -157,8 +126,7 @@ export default function Page({
                       router.push("/app");
                       await deleteFile(token, fileId);
                     })();
-                }}
-              >
+                }}>
                 ファイルを削除
               </DropdownMenuLabel>
             )}
