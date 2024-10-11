@@ -70,10 +70,10 @@ export default function Page({
             asChild>
             <Link
               href={`./${fileId}/flashcard`}
-              className="flex items-center gap-2"
-            />
-            <PiCardsThin />
-            <span className="hidden md:inline-block">フラッシュカード</span>
+              className="flex items-center gap-2">
+              <PiCardsThin />
+              <span className="hidden md:inline-block">フラッシュカード</span>
+            </Link>
           </Button>
           <Button
             asChild
