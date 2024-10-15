@@ -84,13 +84,7 @@ export default function Speaking({
       setRecordingIndex(fileContent?.content.indexOf(content));
       let start = Date.now();
       const useLang = mode == "ja2en" ? "ja" : "en";
-      const utterance = new SpeechSynthesisUtterance(content[useLang]);
-      utterance.lang = useLang;
-      utterance.rate = speed;
-      speechSynthesis.speak(utterance);
-      await new Promise(resolve => {
-        utterance.onend = resolve;
-      });
+      await speech(content[useLang], useLang);
       const end = Date.now();
       await new Promise(resolve =>
         setTimeout(resolve, (end - start) / (mode == "shadowing" ? 10 : 1))
@@ -205,9 +199,7 @@ function Content({
 }) {
   return (
     <div
-      className={` p-2 rounded ${
-        isForced ? "bg-Pizazz-100" : "bg-primary-100"
-      }`}
+      className={` p-2 rounded ${isForced && "bg-card"}`}
       id={"content_" + index}>
       <div className="flex items-center">
         <div className="flex-1">
@@ -257,4 +249,12 @@ function Speech({
       disabled={!canPlay}
     />
   );
+}
+export async function speech(text: string, lang = "en") {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = lang;
+  speechSynthesis.speak(utterance);
+  await new Promise(resolve => {
+    utterance.onend = resolve;
+  });
 }
