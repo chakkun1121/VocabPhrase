@@ -155,15 +155,13 @@ export default function Speaking({
           <Button
             onClick={recording}
             disabled={isRecording || isPlaying}
-            className="p-2 disabled:opacity-50"
-          >
+            className="p-2 disabled:opacity-50">
             録音{isRecording && "中"}
           </Button>
           <Button
             onClick={play}
             disabled={isRecording || isPlaying}
-            className="p-2 disabled:opacity-50"
-          >
+            className="p-2 disabled:opacity-50">
             再生{isPlaying && "中"}
           </Button>
         </div>
@@ -173,17 +171,18 @@ export default function Speaking({
           <h2 className="text-2xl">{removeExtension(title)}</h2>
         </div>
         <div className="grid gap-2">
-          {fileContent?.content.map((content, index) => (
-            <Content
-              key={index}
-              index={index}
-              content={content}
-              isShowEn={isShowEn}
-              isShowJa={isShowJa}
-              canPlay={!isRecording}
-              isForced={index === recordingIndex || index === playingIndex}
-            />
-          ))}
+          {fileContent &&
+            fileContent?.content?.map((content, index) => (
+              <Content
+                key={index}
+                index={index}
+                content={content}
+                isShowEn={isShowEn}
+                isShowJa={isShowJa}
+                canPlay={!isRecording}
+                isForced={index === recordingIndex || index === playingIndex}
+              />
+            ))}
         </div>
       </div>
     </>
@@ -209,8 +208,7 @@ function Content({
       className={` p-2 rounded ${
         isForced ? "bg-Pizazz-100" : "bg-primary-100"
       }`}
-      id={"content_" + index}
-    >
+      id={"content_" + index}>
       <div className="flex items-center">
         <div className="flex-1">
           {isShowEn ? (
