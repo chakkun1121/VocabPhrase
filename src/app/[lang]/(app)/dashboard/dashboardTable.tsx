@@ -1,8 +1,4 @@
-"use client";
-
-import { useToken } from "@/common/hooks/useToken";
-import { deleteFile, listFiles } from "@/googledrive";
-import { useState, useEffect } from "react";
+import { deleteFile } from "@/googledrive";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
@@ -15,27 +11,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DataTable } from "@/components/ui/data-table";
-import { toast } from "sonner";
 import { MoreHorizontal } from "lucide-react";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { PiCardsLight } from "react-icons/pi";
-import Error from "@/app/error";
 import { RiSpeakLine } from "react-icons/ri";
+import { TableInfo } from "./main";
 
-type TableInfo = {
-  fileId: string;
-  title: string;
-  lastModified?: Date;
-};
-
-export default function FilesTable() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [recentFile, setRecentFile] = useState<TableInfo[]>([]);
-  const [error, setError] = useState<any>(undefined);
-  const token = useToken();
-  useEffect(() => {
-    if (error) toast.error(error.message);
-  }, [error]);
+export default function DashboardTable({
+  recentFile,
+  token,
+  getRecentFile,
+}: {
+  recentFile: TableInfo[];
+  token: string;
+  getRecentFile: () => Promise<void>;
+}) {
   const columns: ColumnDef<TableInfo>[] = [
     {
       id: "title",
@@ -140,38 +130,5 @@ export default function FilesTable() {
       ),
     },
   ];
-  async function getRecentFile() {
-    try {
-      setIsLoading(true);
-      const files = await listFiles(token, "trashed=false")
-        .then(res => res.files)
-        .catch(e => {
-          throw e;
-        });
-      console.log(files);
-      setRecentFile(
-        files
-          .filter((file: { name: string }) =>
-            file.name.endsWith(".vocabphrase")
-          )
-          .map((file: { name: string; id: string }) => ({
-            title: file.name.replace(/\.vocabphrase$/, ""),
-            fileId: file.id,
-          }))
-      );
-      setIsLoading(false);
-    } catch (e) {
-      setError(e);
-    }
-  }
-  useEffect(() => {
-    (async () => {
-      if (!token) return;
-      await getRecentFile();
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
-  if (error) return <Error error={error} />;
-  if (isLoading) return <div>Loading...</div>;
   return <DataTable columns={columns} data={recentFile} />;
 }
