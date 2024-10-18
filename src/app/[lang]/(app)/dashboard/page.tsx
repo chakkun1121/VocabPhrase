@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import FilesTable from "./filesTable";
+import FilesTable from "./main";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
